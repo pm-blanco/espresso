@@ -41,7 +41,7 @@ public:
   void do_construct(VariantMap const &params) override {
     m_re = std::make_shared<::ReactionMethods::ReactionEnsemble>(
         get_value<int>(params, "seed"), get_value<double>(params, "kT"),
-        get_value<double>(params, "exclusion_radius"));
+        get_value<std::map<int, double>>(params, "exclusion_radius"));
   }
 
 private:

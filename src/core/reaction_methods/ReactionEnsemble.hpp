@@ -36,7 +36,7 @@ namespace ReactionMethods {
  */
 class ReactionEnsemble : public ReactionAlgorithm {
 public:
-  ReactionEnsemble(int seed, double kT, double exclusion_radius)
+  ReactionEnsemble(int seed, double kT, std::map<int, double> exclusion_radius)
       : ReactionAlgorithm(seed, kT, exclusion_radius) {}
 
 protected:

@@ -47,18 +47,30 @@ struct StoredParticleProperty {
 class ReactionAlgorithm {
 
 public:
-  ReactionAlgorithm(int seed, double kT, double exclusion_radius)
+  ReactionAlgorithm(int seed, double kT, std::map<int, double> exclusion_radius)
       : m_generator(Random::mt19937(std::seed_seq({seed, seed, seed}))),
         m_normal_distribution(0.0, 1.0), m_uniform_real_distribution(0.0, 1.0) {
     if (kT < 0.) {
       throw std::domain_error("Invalid value for 'kT'");
     }
-    if (exclusion_radius < 0.) {
-      throw std::domain_error("Invalid value for 'exclusion_radius'");
-    }
+
+  /*  Check that all provided values for the exclusion radius are => 0 */
+
+    for (auto const& item : exclusion_radius){
+      auto particle_type=item.first;
+      auto particle_exclusion_radius=item.second;   
+      if (particle_exclusion_radius < 0){
+        std::stringstream ss;
+        ss << "Invalid value for 'exclusion_radius', type: " << particle_type << " value: " << particle_exclusion_radius;
+        std::string error_message = ss.str();
+        throw std::domain_error(error_message);
+        }
+}
+
     this->kT = kT;
     this->exclusion_radius = exclusion_radius;
     update_volume();
+  
   }
 
   virtual ~ReactionAlgorithm() = default;
@@ -67,12 +79,12 @@ public:
   std::map<int, double> charges_of_types;
   double kT;
   /**
-   * Hard sphere radius. If particles are closer than this value,
+   * Hard sphere radius of each particle type. If particles are closer than the sum of their exclusion radii,
    * it is assumed that their interaction energy gets approximately
    * infinite, therefore these configurations do not contribute
    * to the partition function and ensemble averages.
    */
-  double exclusion_radius;
+  std::map<int, double> exclusion_radius;
   double volume;
   int non_interacting_type = 100;
 
@@ -82,7 +94,7 @@ public:
     return static_cast<double>(m_accepted_configurational_MC_moves) /
            static_cast<double>(m_tried_configurational_MC_moves);
   }
-
+  
   auto get_kT() const { return kT; }
   auto get_exclusion_radius() const { return exclusion_radius; }
   auto get_volume() const { return volume; }

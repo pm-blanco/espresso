@@ -28,7 +28,7 @@ namespace ReactionMethods {
 /** Widom insertion method */
 class WidomInsertion : public ReactionAlgorithm {
 public:
-  WidomInsertion(int seed, double kT, double exclusion_radius)
+  WidomInsertion(int seed, double kT, std::map<int, double> exclusion_radius)
       : ReactionAlgorithm(seed, kT, exclusion_radius) {}
   double calculate_particle_insertion_potential_energy(
       SingleReaction &current_reaction);

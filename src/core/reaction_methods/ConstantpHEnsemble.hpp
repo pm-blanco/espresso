@@ -40,7 +40,7 @@ namespace ReactionMethods {
  */
 class ConstantpHEnsemble : public ReactionAlgorithm {
 public:
-  ConstantpHEnsemble(int seed, double kT, double exclusion_radius,
+  ConstantpHEnsemble(int seed, double kT, std::map<int, double> exclusion_radius,
                      double constant_pH)
       : ReactionAlgorithm(seed, kT, exclusion_radius),
         m_constant_pH(constant_pH) {}
