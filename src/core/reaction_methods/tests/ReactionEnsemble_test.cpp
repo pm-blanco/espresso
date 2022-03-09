@@ -61,7 +61,8 @@ BOOST_AUTO_TEST_CASE(ReactionEnsemble_test) {
 
   // check basic interface
   {
-    ReactionEnsembleTest r_algo(42, 20., 0.);
+    std::unordered_map<int, double> exclusion_radius;
+    ReactionEnsembleTest r_algo(42, 20., exclusion_radius);
     r_algo.set_volume(10.);
 
     // exception if no reaction was added
@@ -97,7 +98,8 @@ BOOST_AUTO_TEST_CASE(ReactionEnsemble_test) {
 
   // check that the system energy is updated after a succesful reaction
   {
-    ReactionEnsembleTest test_reaction(42, 1., 0.);
+    std::unordered_map<int, double> exclusion_radius;
+    ReactionEnsembleTest test_reaction(42, 1., exclusion_radius);
     test_reaction.set_volume(1.);
 
     // create a generic identity exchange reaction D <-> E

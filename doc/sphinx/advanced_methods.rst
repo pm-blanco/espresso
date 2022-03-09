@@ -1821,7 +1821,7 @@ As before in the Reaction Ensemble one can define multiple reactions (e.g. for a
 .. code-block:: python
 
     cpH=reaction_ensemble.ConstantpHEnsemble(
-        temperature=1, exclusion_radius=1, seed=77)
+        temperature=1, exclusion_radius={0: 1, 1: 1, 2: 1}, seed=77)
     cpH.add_reaction(gamma=K_diss, reactant_types=[0], reactant_coefficients=[1],
                     product_types=[1, 2], product_coefficients=[1, 1],
                     default_charges={0: 0, 1: -1, 2: +1})

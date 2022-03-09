@@ -378,43 +378,49 @@ void ReactionAlgorithm::hide_particle(int p_id) const {
  * Check if the modified particle is too close to neighboring particles.
  */
 void ReactionAlgorithm::check_exclusion_radius(int inserted_particle_id) {
-  
+
   auto const &inserted_particle = get_particle_data(inserted_particle_id);
 
   /* If the exclusion radius of the particule is 0 or it is not defined,
      no exclusion radius is considered */
   auto exclusion_diameter = 0.;
 
-  if (exclusion_radius.count(inserted_particle.type())){
-    if (exclusion_radius[inserted_particle.type()] == 0.) {return;}
+  if (exclusion_radius.count(inserted_particle.type())) {
+    if (exclusion_radius[inserted_particle.type()] == 0.) {
+      return;
     }
-  else{return;}
-  
-  for(const auto& particle_id: get_particle_ids()) {
-    
-    if (particle_id != inserted_particle_id){
-      
-      auto const &particle_data = get_particle_data(particle_id);
-      if (exclusion_radius.count(particle_data.type())){
-        
-        if (exclusion_radius[particle_data.type()] == 0.) {continue;}
-        exclusion_diameter=exclusion_radius[inserted_particle.type()]+exclusion_radius[particle_data.type()];
-        }
-
-      else{continue;}
-      
-      auto const d_min = box_geo.get_mi_vector(particle_data.r.p, inserted_particle.r.p).norm();
-      
-      if (d_min < exclusion_diameter){
-        particle_inside_exclusion_radius_touched = true;
-        break;
-        }
-      
-
-    }
-  
+  } else {
+    return;
   }
 
+  for (const auto &particle_id : get_particle_ids()) {
+
+    if (particle_id != inserted_particle_id) {
+
+      auto const &particle_data = get_particle_data(particle_id);
+      if (exclusion_radius.count(particle_data.type())) {
+
+        if (exclusion_radius[particle_data.type()] == 0.) {
+          continue;
+        }
+        exclusion_diameter = exclusion_radius[inserted_particle.type()] +
+                             exclusion_radius[particle_data.type()];
+      }
+
+      else {
+        continue;
+      }
+
+      auto const d_min =
+          box_geo.get_mi_vector(particle_data.r.p, inserted_particle.r.p)
+              .norm();
+
+      if (d_min < exclusion_diameter) {
+        particle_inside_exclusion_radius_touched = true;
+        break;
+      }
+    }
+  }
 }
 
 /**

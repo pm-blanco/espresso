@@ -57,9 +57,9 @@ BOOST_AUTO_TEST_CASE(ReactionAlgorithm_test) {
     using ReactionAlgorithm::ReactionAlgorithm;
   };
   constexpr double tol = 100 * std::numeric_limits<double>::epsilon();
-
+  std::unordered_map<int, double> exclusion_radius;
   // check acceptance rate
-  ReactionAlgorithmTest r_algo(42, 1., 0.);
+  ReactionAlgorithmTest r_algo(42, 1., exclusion_radius);
   for (int tried_moves = 1; tried_moves < 5; ++tried_moves) {
     for (int accepted_moves = 0; accepted_moves < 5; ++accepted_moves) {
       r_algo.m_tried_configurational_MC_moves = tried_moves;
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(ReactionAlgorithm_test) {
     // update particle positions and velocities
     BOOST_CHECK(!r_algo.particle_inside_exclusion_radius_touched);
     r_algo.particle_inside_exclusion_radius_touched = false;
-    r_algo.exclusion_radius = box_l;
+    r_algo.exclusion_radius[type_A] = box_l;
     auto const bookkeeping = r_algo.generate_new_particle_positions(0, 2);
     BOOST_CHECK(r_algo.particle_inside_exclusion_radius_touched);
     // check moves and bookkeeping
@@ -197,7 +197,8 @@ BOOST_AUTO_TEST_CASE(ReactionAlgorithm_test) {
     BOOST_REQUIRE(!r_algo.do_global_mc_move_for_particles_of_type(type_A, 0));
     // force all MC moves to be rejected by picking particles inside
     // their exclusion radius
-    r_algo.exclusion_radius = box_l;
+
+    r_algo.exclusion_radius[type_A] = box_l;
     r_algo.particle_inside_exclusion_radius_touched = false;
     BOOST_REQUIRE(!r_algo.do_global_mc_move_for_particles_of_type(type_A, 2));
     // check none of the particles moved
@@ -208,7 +209,7 @@ BOOST_AUTO_TEST_CASE(ReactionAlgorithm_test) {
       BOOST_CHECK_LE((new_pos - ref_old_pos).norm(), tol);
     }
     // force a MC move to be accepted by using a constant Hamiltonian
-    r_algo.exclusion_radius = 0.;
+    r_algo.exclusion_radius[type_A] = 0.;
     r_algo.particle_inside_exclusion_radius_touched = false;
     BOOST_REQUIRE(r_algo.do_global_mc_move_for_particles_of_type(type_A, 1));
     std::vector<double> distances(2);

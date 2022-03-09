@@ -22,6 +22,7 @@
 #include "reaction_methods/ReactionAlgorithm.hpp"
 
 #include <map>
+#include <unordered_map>
 
 namespace ReactionMethods {
 
@@ -36,7 +37,8 @@ namespace ReactionMethods {
  */
 class ReactionEnsemble : public ReactionAlgorithm {
 public:
-  ReactionEnsemble(int seed, double kT, std::map<int, double> exclusion_radius)
+  ReactionEnsemble(int seed, double kT,
+                   std::unordered_map<int, double> exclusion_radius)
       : ReactionAlgorithm(seed, kT, exclusion_radius) {}
 
 protected:

@@ -51,7 +51,7 @@ class ReactionEnsembleTest(ut.TestCase):
     # the exact sequence of random numbers and does not require hard-coded
     # output values
     temperature = 1.0
-    exclusion_radius = 1.0
+    exclusion_radius = {}
     # could be in this test for example anywhere in the range 0.000001 ... 9,
     reactant_types = [types["HA"]]
     reactant_coefficients = [1]
