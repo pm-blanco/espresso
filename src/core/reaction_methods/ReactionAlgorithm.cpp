@@ -563,9 +563,9 @@ ReactionAlgorithm::generate_new_particle_positions(int type, int n_particles) {
     drawn_pids.emplace_back(p_id);
     // store original position
     auto const &p = get_particle_data(p_id);
-    old_positions.emplace_back(std::pair<int, Utils::Vector3d>{p_id, p.r.p});
+    old_positions.emplace_back(std::pair<int, Utils::Vector3d>{p_id, p.pos()});
     // write new position
-    auto const prefactor = std::sqrt(kT / p.p.mass);
+    auto const prefactor = std::sqrt(kT / p.mass());
     auto const new_pos = get_random_position_in_box();
     move_particle(p_id, new_pos, prefactor);
     check_exclusion_radius(p_id);

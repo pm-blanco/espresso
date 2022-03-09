@@ -106,7 +106,7 @@ public:
   }
 
   Cell *particle_to_cell(Particle const &p) override {
-    return position_to_cell(p.r.p);
+    return position_to_cell(p.pos());
   }
 
   void resort(bool global, std::vector<ParticleChange> &diff) override;
@@ -116,6 +116,7 @@ public:
   boost::optional<BoxGeometry> minimum_image_distance() const override {
     return {};
   }
+  BoxGeometry box() const override { return m_box; }
 
 private:
   /** Fill @c m_local_cells list and @c m_ghost_cells list for use with regular
