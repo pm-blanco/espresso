@@ -88,10 +88,10 @@ for type_1 in types:
         system.non_bonded_inter[type_1, type_2].wca.set_params(
             epsilon=wca_eps, sigma=wca_sig)
 
-exclusion_radius={}
+exclusion_radius = {}
 
 for particle_type in types:
-    exclusion_radius[particle_type]=wca_sig
+    exclusion_radius[particle_type] = wca_sig
 
 RE = espressomd.reaction_ensemble.ReactionEnsemble(
     kT=temperature, exclusion_radius=exclusion_radius, seed=3)
