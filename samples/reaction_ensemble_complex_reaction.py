@@ -81,8 +81,14 @@ for i in range(N0):
         system.part.add(pos=np.random.random(3) * system.box_l, type=type_B)
 
 # use an exclusion radius of 0 to simulate an ideal gas
+exclusion_radius = {}
+
+for particle_type in types:
+
+    exclusion_radius[particle_type] = 0
+
 RE = espressomd.reaction_ensemble.ReactionEnsemble(
-    kT=1, exclusion_radius={}, seed=4)
+    kT=1, exclusion_radius=exclusion_radius, seed=4)
 
 
 RE.add_reaction(

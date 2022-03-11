@@ -42,9 +42,12 @@ double WidomInsertion::calculate_particle_insertion_potential_energy(
   std::vector<int> p_ids_created_particles;
   std::vector<StoredParticleProperty> hidden_particles_properties;
   std::vector<StoredParticleProperty> changed_particles_properties;
+
+  bool use_exclusion_radius = false;
+
   std::tie(changed_particles_properties, p_ids_created_particles,
            hidden_particles_properties) =
-      make_reaction_attempt(current_reaction);
+      make_reaction_attempt(current_reaction, use_exclusion_radius);
 
   auto const E_pot_new = calculate_current_potential_energy_of_system();
   // reverse reaction attempt

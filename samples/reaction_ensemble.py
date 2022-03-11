@@ -69,9 +69,12 @@ charge_dict = {
 }
 
 # Since it is a non-interacting system, no exclusion radius is needed
-# If no exclusion radius is not provided, it is assumed to be 0 for all
-# particle types
+
 exclusion_radius = {}
+
+for particle_type in types.values():
+
+    exclusion_radius[particle_type] = 0
 
 N0 = 50  # number of titratable units
 K_diss = 0.0088

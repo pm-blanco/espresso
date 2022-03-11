@@ -52,6 +52,9 @@ class ReactionEnsembleTest(ut.TestCase):
     # output values
     temperature = 1.0
     exclusion_radius = {}
+    for particle_type in types.values():
+
+        exclusion_radius[particle_type] = 0    
     # could be in this test for example anywhere in the range 0.000001 ... 9,
     reactant_types = [types["HA"]]
     reactant_coefficients = [1]

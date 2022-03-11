@@ -155,7 +155,8 @@ protected:
 
   std::tuple<std::vector<StoredParticleProperty>, std::vector<int>,
              std::vector<StoredParticleProperty>>
-  make_reaction_attempt(SingleReaction const &current_reaction);
+  make_reaction_attempt(SingleReaction const &current_reaction,
+                        bool const use_exclusion_radius);
   std::vector<std::pair<int, Utils::Vector3d>>
   generate_new_particle_positions(int type, int n_particles);
   void
@@ -193,6 +194,7 @@ private:
   int create_particle(int desired_type);
   void hide_particle(int p_id) const;
   void check_exclusion_radius(int p_id);
+  bool check_particle_type_exclusion_radius(int p_type);
   void move_particle(int p_id, Utils::Vector3d const &new_pos,
                      double velocity_prefactor);
 

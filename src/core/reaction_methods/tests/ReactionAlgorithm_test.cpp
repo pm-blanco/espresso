@@ -57,7 +57,14 @@ BOOST_AUTO_TEST_CASE(ReactionAlgorithm_test) {
     using ReactionAlgorithm::ReactionAlgorithm;
   };
   constexpr double tol = 100 * std::numeric_limits<double>::epsilon();
+  // create a reaction A -> 3 B + 4 C
+  int const type_A = 0;
+  int const type_B = 1;
+  int const type_C = 2;
   std::unordered_map<int, double> exclusion_radius;
+  exclusion_radius[type_A] = 0;
+  exclusion_radius[type_B] = 0;
+  exclusion_radius[type_C] = 0;
   // check acceptance rate
   ReactionAlgorithmTest r_algo(42, 1., exclusion_radius);
   for (int tried_moves = 1; tried_moves < 5; ++tried_moves) {
@@ -74,10 +81,6 @@ BOOST_AUTO_TEST_CASE(ReactionAlgorithm_test) {
   // exception if no reaction was added
   BOOST_CHECK_THROW(r_algo.check_reaction_method(), std::runtime_error);
 
-  // create a reaction A -> 3 B + 4 C
-  int const type_A = 0;
-  int const type_B = 1;
-  int const type_C = 2;
   SingleReaction const reaction(2., {type_A}, {1}, {type_B, type_C}, {3, 4});
 
   // track particles

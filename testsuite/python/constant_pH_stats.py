@@ -51,8 +51,13 @@ class ReactionEnsembleTest(ut.TestCase):
     np.random.seed(69)  # make reaction code fully deterministic
     system.cell_system.skin = 0.4
     system.time_step = 0.01
+    exclusion_radius = {}
+
+    for particle_type in types.values():
+
+        exclusion_radius[particle_type] = 0
     RE = espressomd.reaction_ensemble.ConstantpHEnsemble(
-        kT=1.0, exclusion_radius={}, seed=44, constant_pH=pH)
+        kT=1.0, exclusion_radius=exclusion_radius, seed=44, constant_pH=pH)
 
     @classmethod
     def setUpClass(cls):
