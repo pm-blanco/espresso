@@ -281,6 +281,8 @@ class ReactionAlgorithm(ScriptInterfaceHelper):
                         )
 
     def __init__(self, **kwargs):
+        if 'exclusion_radius' in kwargs:
+            raise KeyError('the keyword `exclusion_radius` is obsolete. Currently, the equivalent keyword is `exclusion_range`')
         super().__init__(**kwargs)
         if not 'sip' in kwargs:
             utils.check_valid_keys(self.valid_keys(), kwargs.keys())
