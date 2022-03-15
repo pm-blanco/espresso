@@ -65,7 +65,7 @@ class ReactionAlgorithm(ScriptInterfaceHelper):
     ----------
     kT : :obj:`float`
         Thermal energy of the system in simulation units
-    exclusion_radius : :obj:`float`
+    exclusion_range : :obj:`float`
         Minimal distance from any particle, within which new particle will not
         be inserted. This is useful to avoid integrator failures if particles
         are too close and there is a diverging repulsive interaction, or to
@@ -133,7 +133,7 @@ class ReactionAlgorithm(ScriptInterfaceHelper):
         >>> elc = espressomd.electrostatics.ELC(p3m_actor=p3m, maxPWerror=1.0, gap_size=elc_gap)
         >>> system.actors.add(elc)
         >>> # add constant pH method
-        >>> RE = espressomd.reaction_ensemble.ConstantpHEnsemble(kT=1, exclusion_radius=1, seed=77)
+        >>> RE = espressomd.reaction_ensemble.ConstantpHEnsemble(kT=1, exclusion_range=1, seed=77)
         >>> RE.constant_pH = 2
         >>> RE.add_reaction(gamma=0.0088, reactant_types=[types["HA"]],
         ...                 product_types=[types["A-"], types["H+"]],
@@ -286,10 +286,10 @@ class ReactionAlgorithm(ScriptInterfaceHelper):
             utils.check_valid_keys(self.valid_keys(), kwargs.keys())
 
     def valid_keys(self):
-        return {"kT", "exclusion_radius", "seed"}
+        return {"kT", "exclusion_range", "seed"}
 
     def required_keys(self):
-        return {"kT", "exclusion_radius", "seed"}
+        return {"kT", "exclusion_range", "seed"}
 
     def add_reaction(self, **kwargs):
         """
@@ -376,7 +376,7 @@ class ReactionAlgorithm(ScriptInterfaceHelper):
             reactions_list.append(reaction)
 
         return {"reactions": reactions_list, "kT": self.kT, 
-                "exclusion_radius": self.exclusion_radius}
+                "exclusion_range": self.exclusion_range}
 
 
 @script_interface_register
@@ -408,10 +408,10 @@ class ConstantpHEnsemble(ReactionAlgorithm):
     _so_creation_policy = "LOCAL"
 
     def valid_keys(self):
-        return {"kT", "exclusion_radius", "seed", "constant_pH"}
+        return {"kT", "exclusion_range", "seed", "constant_pH"}
 
     def required_keys(self):
-        return {"kT", "exclusion_radius", "seed", "constant_pH"}
+        return {"kT", "exclusion_range", "seed", "constant_pH"}
 
     def add_reaction(self, *args, **kwargs):
         warn_msg = (

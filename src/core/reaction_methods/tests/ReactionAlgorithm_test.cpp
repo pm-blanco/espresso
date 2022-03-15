@@ -156,11 +156,11 @@ BOOST_AUTO_TEST_CASE(ReactionAlgorithm_test) {
     set_particle_type(0, type_A);
     set_particle_type(1, type_A);
     // update particle positions and velocities
-    BOOST_CHECK(!r_algo.particle_inside_exclusion_radius_touched);
-    r_algo.particle_inside_exclusion_radius_touched = false;
-    r_algo.exclusion_radius = box_l;
+    BOOST_CHECK(!r_algo.particle_inside_exclusion_range_touched);
+    r_algo.particle_inside_exclusion_range_touched = false;
+    r_algo.exclusion_range = box_l;
     auto const bookkeeping = r_algo.generate_new_particle_positions(0, 2);
-    BOOST_CHECK(r_algo.particle_inside_exclusion_radius_touched);
+    BOOST_CHECK(r_algo.particle_inside_exclusion_range_touched);
     // check moves and bookkeeping
     for (auto const &item : bookkeeping) {
       auto const pid = item.first;
@@ -197,8 +197,8 @@ BOOST_AUTO_TEST_CASE(ReactionAlgorithm_test) {
     BOOST_REQUIRE(!r_algo.do_global_mc_move_for_particles_of_type(type_A, 0));
     // force all MC moves to be rejected by picking particles inside
     // their exclusion radius
-    r_algo.exclusion_radius = box_l;
-    r_algo.particle_inside_exclusion_radius_touched = false;
+    r_algo.exclusion_range = box_l;
+    r_algo.particle_inside_exclusion_range_touched = false;
     BOOST_REQUIRE(!r_algo.do_global_mc_move_for_particles_of_type(type_A, 2));
     // check none of the particles moved
     for (auto const pid : {0, 1}) {
@@ -208,8 +208,8 @@ BOOST_AUTO_TEST_CASE(ReactionAlgorithm_test) {
       BOOST_CHECK_LE((new_pos - ref_old_pos).norm(), tol);
     }
     // force a MC move to be accepted by using a constant Hamiltonian
-    r_algo.exclusion_radius = 0.;
-    r_algo.particle_inside_exclusion_radius_touched = false;
+    r_algo.exclusion_range = 0.;
+    r_algo.particle_inside_exclusion_range_touched = false;
     BOOST_REQUIRE(r_algo.do_global_mc_move_for_particles_of_type(type_A, 1));
     std::vector<double> distances(2);
     // check that only one particle moved

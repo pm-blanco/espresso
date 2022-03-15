@@ -66,8 +66,8 @@ public:
            return out;
          }},
         {"kT", AutoParameter::read_only, [this]() { return RE()->get_kT(); }},
-        {"exclusion_radius", AutoParameter::read_only,
-         [this]() { return RE()->get_exclusion_radius(); }},
+        {"exclusion_range", AutoParameter::read_only,
+         [this]() { return RE()->get_exclusion_range(); }},
     });
   }
 
