@@ -39,19 +39,9 @@ public:
   }
 
   void do_construct(VariantMap const &params) override {
-    std::unordered_map<int, double> exclusion_radius;
-
-    for (auto const &item : get_value<std::unordered_map<int, Variant>>(
-             params, "exclusion_radius")) {
-      exclusion_radius[item.first] =
-          get_value<double>(get_value<std::unordered_map<int, Variant>>(
-                                params, "exclusion_radius")
-                                .at(item.first));
-    }
-
     m_re = std::make_shared<::ReactionMethods::ReactionEnsemble>(
         get_value<int>(params, "seed"), get_value<double>(params, "kT"),
-        exclusion_radius);
+        get_value<double>(params, "exclusion_radius"));
   }
 
 private:

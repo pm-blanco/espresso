@@ -154,8 +154,8 @@ void ReactionAlgorithm::append_particle_property_of_random_particle(
  */
 std::tuple<std::vector<StoredParticleProperty>, std::vector<int>,
            std::vector<StoredParticleProperty>>
-ReactionAlgorithm::make_reaction_attempt(SingleReaction const &current_reaction,
-                                         bool const use_exclusion_radius) {
+ReactionAlgorithm::make_reaction_attempt(
+    SingleReaction const &current_reaction) {
   // create or hide particles of types with corresponding types in reaction
   std::vector<int> p_ids_created_particles;
   std::vector<StoredParticleProperty> hidden_particles_properties;
@@ -185,9 +185,7 @@ ReactionAlgorithm::make_reaction_attempt(SingleReaction const &current_reaction,
                               current_reaction.reactant_coefficients[i];
            j++) {
         int p_id = create_particle(current_reaction.product_types[i]);
-        if (use_exclusion_radius) {
-          check_exclusion_radius(p_id);
-        }
+        check_exclusion_radius(p_id);
         p_ids_created_particles.push_back(p_id);
       }
     } else if (current_reaction.reactant_coefficients[i] -
@@ -198,6 +196,7 @@ ReactionAlgorithm::make_reaction_attempt(SingleReaction const &current_reaction,
            j++) {
         append_particle_property_of_random_particle(
             current_reaction.reactant_types[i], hidden_particles_properties);
+        check_exclusion_radius(hidden_particles_properties.back().p_id);
         hide_particle(hidden_particles_properties.back().p_id);
       }
     }
@@ -214,15 +213,14 @@ ReactionAlgorithm::make_reaction_attempt(SingleReaction const &current_reaction,
       for (int j = 0; j < current_reaction.reactant_coefficients[i]; j++) {
         append_particle_property_of_random_particle(
             current_reaction.reactant_types[i], hidden_particles_properties);
+        check_exclusion_radius(hidden_particles_properties.back().p_id);
         hide_particle(hidden_particles_properties.back().p_id);
       }
     } else {
       // create additional product_types particles
       for (int j = 0; j < current_reaction.product_coefficients[i]; j++) {
         int p_id = create_particle(current_reaction.product_types[i]);
-        if (use_exclusion_radius) {
-          check_exclusion_radius(p_id);
-        }
+        check_exclusion_radius(p_id);
         p_ids_created_particles.push_back(p_id);
       }
     }
@@ -273,7 +271,6 @@ void ReactionAlgorithm::generic_oneway_reaction(
 
   current_reaction.tried_moves += 1;
   particle_inside_exclusion_radius_touched = false;
-  bool use_exclusion_radius = true;
   if (!all_reactant_particles_exist(current_reaction)) {
     // makes sure, no incomplete reaction is performed -> only need to consider
     // rollback of complete reactions
@@ -293,7 +290,7 @@ void ReactionAlgorithm::generic_oneway_reaction(
 
   std::tie(changed_particles_properties, p_ids_created_particles,
            hidden_particles_properties) =
-      make_reaction_attempt(current_reaction, use_exclusion_radius);
+      make_reaction_attempt(current_reaction);
 
   auto const E_pot_new = (particle_inside_exclusion_radius_touched)
                              ? std::numeric_limits<double>::max()
@@ -380,58 +377,14 @@ void ReactionAlgorithm::hide_particle(int p_id) const {
 /**
  * Check if the modified particle is too close to neighboring particles.
  */
-void ReactionAlgorithm::check_exclusion_radius(int inserted_particle_id) {
-
-  auto const &inserted_particle = get_particle_data(inserted_particle_id);
-
-  /* If the exclusion radius of the particule is 0,
-     no exclusion diameter is considered */
-  auto exclusion_diameter = 0.;
-
-  check_particle_type_exclusion_radius(inserted_particle.type());
-  if (exclusion_radius[inserted_particle.type()] == 0.) {
+void ReactionAlgorithm::check_exclusion_radius(int p_id) {
+  if (exclusion_radius == 0.) {
     return;
   }
-
-  for (const auto &particle_id : get_particle_ids()) {
-
-    if (particle_id != inserted_particle_id) {
-
-      auto const &particle_data = get_particle_data(particle_id);
-      check_particle_type_exclusion_radius(particle_data.type());
-
-      if (exclusion_radius[particle_data.type()] == 0.) {
-        continue;
-      }
-
-      exclusion_diameter = exclusion_radius[inserted_particle.type()] +
-                           exclusion_radius[particle_data.type()];
-
-      auto const d_min =
-          box_geo.get_mi_vector(particle_data.r.p, inserted_particle.r.p)
-              .norm();
-
-      if (d_min < exclusion_diameter) {
-        particle_inside_exclusion_radius_touched = true;
-        break;
-      }
-    }
-  }
-}
-
-/**
- * Check if the exclusion radius is defined for a particle type
- */
-bool ReactionAlgorithm::check_particle_type_exclusion_radius(int p_type) {
-
-  if (exclusion_radius.count(p_type)) {
-    return true;
-  } else {
-    std::stringstream ss;
-    ss << "`exclusion_radius` not defined for particle type " << p_type;
-    std::string error_message = ss.str();
-    throw std::domain_error(error_message);
-  }
+  auto const &p = get_particle_data(p_id);
+  auto const d_min = distto(partCfg(), p.pos(), p_id);
+  if (d_min < exclusion_radius)
+    particle_inside_exclusion_radius_touched = true;
 }
 
 /**

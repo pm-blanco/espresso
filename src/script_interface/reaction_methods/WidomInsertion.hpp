@@ -30,7 +30,6 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include <unordered_map>
 
 namespace ScriptInterface {
 namespace ReactionMethods {
@@ -42,10 +41,8 @@ public:
   }
 
   void do_construct(VariantMap const &params) override {
-    std::unordered_map<int, double> exclusion_radius;
     m_re = std::make_shared<::ReactionMethods::WidomInsertion>(
-        get_value<int>(params, "seed"), get_value<double>(params, "kT"),
-        exclusion_radius);
+        get_value<int>(params, "seed"), get_value<double>(params, "kT"), 0.);
   }
 
   Variant do_call_method(std::string const &name,

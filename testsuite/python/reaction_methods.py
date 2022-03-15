@@ -148,21 +148,17 @@ class ReactionMethods(ut.TestCase):
     def test_interface(self):
         # reaction ensemble
         method = espressomd.reaction_ensemble.ReactionEnsemble(
-            kT=1.5, exclusion_radius={0: 0.8}, seed=12)
-        self.check_interface(
-            method, kT=1.5, exclusion_radius={
-                0: 0.8}, gamma=1.2)
+            kT=1.5, exclusion_radius=0.8, seed=12)
+        self.check_interface(method, kT=1.5, exclusion_radius=0.8, gamma=1.2)
 
         # constant pH ensemble
         method = espressomd.reaction_ensemble.ConstantpHEnsemble(
-            kT=1.5, exclusion_radius={0: 0.8}, seed=12, constant_pH=10)
-        self.check_interface(
-            method, kT=1.5, exclusion_radius={
-                0: 0.8}, gamma=1.2)
+            kT=1.5, exclusion_radius=0.8, seed=12, constant_pH=10)
+        self.check_interface(method, kT=1.5, exclusion_radius=0.8, gamma=1.2)
 
         # Widom insertion
         method = espressomd.reaction_ensemble.WidomInsertion(kT=1.6, seed=12)
-        self.check_interface(method, kT=1.6, exclusion_radius={}, gamma=1.)
+        self.check_interface(method, kT=1.6, exclusion_radius=0., gamma=1.)
 
     def test_exceptions(self):
         single_reaction_params = {
@@ -178,7 +174,7 @@ class ReactionMethods(ut.TestCase):
         }
         widom = espressomd.reaction_ensemble.WidomInsertion(kT=1., seed=12)
         method = espressomd.reaction_ensemble.ReactionEnsemble(
-            kT=1.5, exclusion_radius={0: 0.8}, seed=12)
+            kT=1.5, exclusion_radius=0.8, seed=12)
         method.add_reaction(**reaction_params)
         widom.add_reaction(**reaction_params)
 
@@ -258,19 +254,19 @@ class ReactionMethods(ut.TestCase):
                 x=1, **single_reaction_params)
         with self.assertRaisesRegex(ValueError, err_msg):
             espressomd.reaction_ensemble.ReactionEnsemble(
-                kT=1., exclusion_radius={0: 1}, seed=12, x=1)
+                kT=1., exclusion_radius=1., seed=12, x=1)
         with self.assertRaisesRegex(ValueError, err_msg):
             espressomd.reaction_ensemble.ConstantpHEnsemble(
-                kT=1., exclusion_radius={0: 1}, seed=12, x=1, constant_pH=2)
+                kT=1., exclusion_radius=1., seed=12, x=1, constant_pH=2)
         with self.assertRaisesRegex(ValueError, err_msg):
             espressomd.reaction_ensemble.WidomInsertion(
                 kT=1., seed=12, x=1)
         with self.assertRaisesRegex(ValueError, "Invalid value for 'kT'"):
             espressomd.reaction_ensemble.ReactionEnsemble(
-                kT=-1., exclusion_radius={0: 1}, seed=12)
+                kT=-1., exclusion_radius=1., seed=12)
         with self.assertRaisesRegex(ValueError, "Invalid value for 'exclusion_radius'"):
             espressomd.reaction_ensemble.ReactionEnsemble(
-                kT=1., exclusion_radius={0: -1}, seed=12)
+                kT=1., exclusion_radius=-1., seed=12)
 
 
 if __name__ == "__main__":

@@ -68,14 +68,6 @@ charge_dict = {
     types["H+"]: +1,
 }
 
-# Since it is a non-interacting system, no exclusion radius is needed
-
-exclusion_radius = {}
-
-for particle_type in types.values():
-
-    exclusion_radius[particle_type] = 0
-
 N0 = 50  # number of titratable units
 K_diss = 0.0088
 
@@ -88,8 +80,7 @@ RE = None
 if args.mode == "reaction_ensemble":
     RE = espressomd.reaction_ensemble.ReactionEnsemble(
         kT=1,
-        exclusion_radius=exclusion_radius,
-        # If no exclusion radius is not provided, it is assumed to be 0 
+        exclusion_radius=1,
         seed=77)
     RE.add_reaction(gamma=K_diss,
                     reactant_types=[types["HA"]],
@@ -99,7 +90,7 @@ if args.mode == "reaction_ensemble":
                     default_charges=charge_dict)
 elif args.mode == "constant_pH_ensemble":
     RE = espressomd.reaction_ensemble.ConstantpHEnsemble(
-        kT=1, exclusion_radius=exclusion_radius, seed=77, constant_pH=2)
+        kT=1, exclusion_radius=1, seed=77, constant_pH=2)
     RE.add_reaction(gamma=K_diss, reactant_types=[types["HA"]],
                     product_types=[types["A-"], types["H+"]],
                     default_charges=charge_dict)

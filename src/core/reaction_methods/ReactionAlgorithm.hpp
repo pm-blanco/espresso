@@ -32,7 +32,6 @@
 #include <random>
 #include <stdexcept>
 #include <tuple>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -48,28 +47,15 @@ struct StoredParticleProperty {
 class ReactionAlgorithm {
 
 public:
-  ReactionAlgorithm(int seed, double kT,
-                    std::unordered_map<int, double> exclusion_radius)
+  ReactionAlgorithm(int seed, double kT, double exclusion_radius)
       : m_generator(Random::mt19937(std::seed_seq({seed, seed, seed}))),
         m_normal_distribution(0.0, 1.0), m_uniform_real_distribution(0.0, 1.0) {
     if (kT < 0.) {
       throw std::domain_error("Invalid value for 'kT'");
     }
-
-    /*  Check that all provided values for the exclusion radius are => 0 */
-
-    for (auto const &item : exclusion_radius) {
-      auto particle_type = item.first;
-      auto particle_exclusion_radius = item.second;
-      if (particle_exclusion_radius < 0) {
-        std::stringstream ss;
-        ss << "Invalid value for 'exclusion_radius', type: " << particle_type
-           << " value: " << particle_exclusion_radius;
-        std::string error_message = ss.str();
-        throw std::domain_error(error_message);
-      }
+    if (exclusion_radius < 0.) {
+      throw std::domain_error("Invalid value for 'exclusion_radius'");
     }
-
     this->kT = kT;
     this->exclusion_radius = exclusion_radius;
     update_volume();
@@ -81,12 +67,12 @@ public:
   std::map<int, double> charges_of_types;
   double kT;
   /**
-   * Hard sphere radius of each particle type. If particles are closer than the
-   * sum of their exclusion radii, it is assumed that their interaction energy
-   * gets approximately infinite, therefore these configurations do not
-   * contribute to the partition function and ensemble averages.
+   * Hard sphere radius. If particles are closer than this value,
+   * it is assumed that their interaction energy gets approximately
+   * infinite, therefore these configurations do not contribute
+   * to the partition function and ensemble averages.
    */
-  std::unordered_map<int, double> exclusion_radius;
+  double exclusion_radius;
   double volume;
   int non_interacting_type = 100;
 
@@ -155,8 +141,7 @@ protected:
 
   std::tuple<std::vector<StoredParticleProperty>, std::vector<int>,
              std::vector<StoredParticleProperty>>
-  make_reaction_attempt(SingleReaction const &current_reaction,
-                        bool const use_exclusion_radius);
+  make_reaction_attempt(SingleReaction const &current_reaction);
   std::vector<std::pair<int, Utils::Vector3d>>
   generate_new_particle_positions(int type, int n_particles);
   void
@@ -194,7 +179,6 @@ private:
   int create_particle(int desired_type);
   void hide_particle(int p_id) const;
   void check_exclusion_radius(int p_id);
-  bool check_particle_type_exclusion_radius(int p_type);
   void move_particle(int p_id, Utils::Vector3d const &new_pos,
                      double velocity_prefactor);
 

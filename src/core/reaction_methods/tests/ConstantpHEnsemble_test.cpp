@@ -50,22 +50,15 @@ BOOST_AUTO_TEST_CASE(ConstantpHEnsemble_test) {
   };
   constexpr double tol = 100 * std::numeric_limits<double>::epsilon();
 
-  // create a reaction A -> B + C
-  int const type_A = 0;
-  int const type_B = 1;
-  int const type_C = 2;
-
-  std::unordered_map<int, double> exclusion_radius;
-
-  exclusion_radius[type_A] = 0;
-  exclusion_radius[type_B] = 0;
-  exclusion_radius[type_C] = 0;
-
-  ConstantpHEnsembleTest r_algo(42, 20., exclusion_radius, 1.);
+  ConstantpHEnsembleTest r_algo(42, 20., 0., 1.);
 
   // exception if no reaction was added
   BOOST_CHECK_THROW(r_algo.check_reaction_method(), std::runtime_error);
 
+  // create a reaction A -> B + C
+  int const type_A = 0;
+  int const type_B = 1;
+  int const type_C = 2;
   SingleReaction const reaction(2., {type_A}, {1}, {type_B, type_C}, {1, 1});
 
   // check acceptance probability

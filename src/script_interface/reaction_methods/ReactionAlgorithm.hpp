@@ -67,13 +67,7 @@ public:
          }},
         {"kT", AutoParameter::read_only, [this]() { return RE()->get_kT(); }},
         {"exclusion_radius", AutoParameter::read_only,
-         [this]() {
-           std::unordered_map<int, Variant> exclusion_radius;
-           for (auto const &item : RE()->get_exclusion_radius()) {
-             exclusion_radius[item.first] = item.second;
-           }
-           return exclusion_radius;
-         }},
+         [this]() { return RE()->get_exclusion_radius(); }},
     });
   }
 

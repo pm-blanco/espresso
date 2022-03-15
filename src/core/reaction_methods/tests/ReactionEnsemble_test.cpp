@@ -61,22 +61,16 @@ BOOST_AUTO_TEST_CASE(ReactionEnsemble_test) {
 
   // check basic interface
   {
-    // create a reaction A -> 3 B + 4 C
-    int const type_A = 0;
-    int const type_B = 1;
-    int const type_C = 2;
-    std::unordered_map<int, double> exclusion_radius;
-
-    exclusion_radius[type_A] = 0;
-    exclusion_radius[type_B] = 0;
-    exclusion_radius[type_C] = 0;
-
-    ReactionEnsembleTest r_algo(42, 20., exclusion_radius);
+    ReactionEnsembleTest r_algo(42, 20., 0.);
     r_algo.set_volume(10.);
 
     // exception if no reaction was added
     BOOST_CHECK_THROW(r_algo.check_reaction_method(), std::runtime_error);
 
+    // create a reaction A -> 3 B + 4 C
+    int const type_A = 0;
+    int const type_B = 1;
+    int const type_C = 2;
     SingleReaction const reaction(2., {type_A}, {1}, {type_B, type_C}, {3, 4});
 
     // check acceptance probability
@@ -103,15 +97,12 @@ BOOST_AUTO_TEST_CASE(ReactionEnsemble_test) {
 
   // check that the system energy is updated after a succesful reaction
   {
+    ReactionEnsembleTest test_reaction(42, 1., 0.);
+    test_reaction.set_volume(1.);
+
     // create a generic identity exchange reaction D <-> E
     int const type_D = 0;
     int const type_E = 1;
-    std::unordered_map<int, double> exclusion_radius;
-    exclusion_radius[type_D] = 0;
-    exclusion_radius[type_E] = 0;
-
-    ReactionEnsembleTest test_reaction(42, 1., exclusion_radius);
-    test_reaction.set_volume(1.);
 
     test_reaction.charges_of_types[type_D] = 0;
     test_reaction.charges_of_types[type_E] = 0;

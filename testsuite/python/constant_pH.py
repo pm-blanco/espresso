@@ -50,15 +50,10 @@ class ConstantpHTest(ut.TestCase):
         system.time_step = 0.01
         system.part.add(pos=np.random.random((2 * N0, 3)) * system.box_l,
                         type=N0 * [types["A-"], types["H+"]])
-        exclusion_radius = {}
-
-        for particle_type in types.values():
-
-            exclusion_radius[particle_type] = 0
 
         RE = espressomd.reaction_ensemble.ConstantpHEnsemble(
             kT=1.0,
-            exclusion_radius=exclusion_radius,
+            exclusion_radius=1,
             seed=44,
             constant_pH=pH)
         RE.add_reaction(

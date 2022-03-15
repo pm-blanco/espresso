@@ -227,13 +227,7 @@ else:
 system.actors.add(coulomb)
 
 # ### Set up the constant pH ensemble using the reaction ensemble module
-
-exclusion_radius = {}
-
-for type in TYPES.values():
-
-    exclusion_radius[type] = PARTICLE_SIZE_REDUCED
-
+exclusion_radius = PARTICLE_SIZE_REDUCED
 RE = espressomd.reaction_ensemble.ReactionEnsemble(
     kT=KT_REDUCED,
     exclusion_radius=exclusion_radius,
