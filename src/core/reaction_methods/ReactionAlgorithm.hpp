@@ -32,6 +32,7 @@
 #include <random>
 #include <stdexcept>
 #include <tuple>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -73,6 +74,7 @@ public:
    * to the partition function and ensemble averages.
    */
   double exclusion_range;
+  std::unordered_map<int, double> exclusion_radius_per_type;
   double volume;
   int non_interacting_type = 100;
 
@@ -85,6 +87,9 @@ public:
 
   auto get_kT() const { return kT; }
   auto get_exclusion_range() const { return exclusion_range; }
+  auto get_exclusion_radius_per_type() const {
+    return exclusion_radius_per_type;
+  }
   auto get_volume() const { return volume; }
   void set_volume(double new_volume) {
     if (new_volume <= 0.) {
@@ -98,6 +103,8 @@ public:
   void remove_constraint() { m_reaction_constraint = ReactionConstraint::NONE; }
   void set_cyl_constraint(double center_x, double center_y, double radius);
   void set_slab_constraint(double slab_start_z, double slab_end_z);
+  void set_exclusion_radius_per_type(
+      std::unordered_map<int, double> exclusion_radii);
   Utils::Vector2d get_slab_constraint_parameters() const {
     if (m_reaction_constraint != ReactionConstraint::SLAB_Z) {
       throw std::runtime_error("no slab constraint is currently active");
@@ -146,7 +153,7 @@ protected:
   generate_new_particle_positions(int type, int n_particles);
   void
   restore_properties(std::vector<StoredParticleProperty> const &property_list);
-
+  bool check_exclusion_radius_defined(int type);
   /**
    * @brief draws a random integer from the uniform distribution in the range
    * [0,maxint-1]
@@ -178,7 +185,7 @@ private:
   void replace_particle(int p_id, int desired_type) const;
   int create_particle(int desired_type);
   void hide_particle(int p_id) const;
-  void check_exclusion_range(int p_id);
+  void check_exclusion_range(int inserted_particle_id);
   void move_particle(int p_id, Utils::Vector3d const &new_pos,
                      double velocity_prefactor);
 

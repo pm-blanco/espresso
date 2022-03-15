@@ -56,19 +56,18 @@ public:
   virtual std::shared_ptr<::ReactionMethods::ReactionAlgorithm> RE() = 0;
 
   ReactionAlgorithm() {
-    add_parameters({
-        {"reactions", AutoParameter::read_only,
-         [this]() {
-           std::vector<Variant> out;
-           for (auto const &e : m_reactions) {
-             out.emplace_back(e);
-           }
-           return out;
-         }},
-        {"kT", AutoParameter::read_only, [this]() { return RE()->get_kT(); }},
-        {"exclusion_range", AutoParameter::read_only,
-         [this]() { return RE()->get_exclusion_range(); }},
-    });
+    add_parameters(
+        {{"reactions", AutoParameter::read_only,
+          [this]() {
+            std::vector<Variant> out;
+            for (auto const &e : m_reactions) {
+              out.emplace_back(e);
+            }
+            return out;
+          }},
+         {"kT", AutoParameter::read_only, [this]() { return RE()->get_kT(); }},
+         {"exclusion_range", AutoParameter::read_only,
+          [this]() { return RE()->get_exclusion_range(); }}});
   }
 
   Variant do_call_method(std::string const &name,
@@ -129,6 +128,29 @@ public:
       auto const type = get_value<int>(parameters, "type");
       auto const charge = get_value<double>(parameters, "charge");
       RE()->charges_of_types[type] = charge;
+    } else if (name == "set_exclusion_radius_per_type") {
+      std::unordered_map<int, double> exclusion_radius_per_type;
+
+      for (auto const &item : get_value<std::unordered_map<int, Variant>>(
+               parameters, "exclusion_radius_per_type")) {
+
+        exclusion_radius_per_type[item.first] =
+            get_value<double>(get_value<std::unordered_map<int, Variant>>(
+                                  parameters, "exclusion_radius_per_type")
+                                  .at(item.first));
+      }
+
+      RE()->set_exclusion_radius_per_type(exclusion_radius_per_type);
+
+    }
+
+    else if (name == "get_exclusion_radius_per_type") {
+      std::unordered_map<int, Variant> exclusion_radius_per_type;
+      for (auto const &item : RE()->get_exclusion_radius_per_type()) {
+        exclusion_radius_per_type[item.first] = item.second;
+      }
+      return exclusion_radius_per_type;
+
     } else {
       throw std::runtime_error(("unknown method '" + name + "()'").c_str());
     }

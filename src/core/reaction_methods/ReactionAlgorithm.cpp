@@ -375,16 +375,70 @@ void ReactionAlgorithm::hide_particle(int p_id) const {
 }
 
 /**
- * Check if the modified particle is too close to neighboring particles.
+ * Check if the inserted particle is too close to neighboring particles.
+ * Two particles are considered to be too close if their distance <
+ * exclusion_range In case that the radius of both particles is defined in
+ * `exclusion_radius_per_type` the exclusion_range is calculated instead using
+ * the Lorentz-Berthelot combining rule except if
+ * `exclusion_radius_per_type[type] = 0` where `exclusion_range = 0` is
+ * considered
  */
-void ReactionAlgorithm::check_exclusion_range(int p_id) {
-  if (exclusion_range == 0.) {
-    return;
+void ReactionAlgorithm::check_exclusion_range(int inserted_particle_id) {
+
+  auto const &inserted_particle = get_particle_data(inserted_particle_id);
+
+  /* Check the excluded radius of the inserted particle */
+
+  if (check_exclusion_radius_defined(inserted_particle.type())) {
+    if (exclusion_radius_per_type[inserted_particle.type()] == 0) {
+      return;
+    }
   }
-  auto const &p = get_particle_data(p_id);
-  auto const d_min = distto(partCfg(), p.pos(), p_id);
-  if (d_min < exclusion_range)
-    particle_inside_exclusion_range_touched = true;
+
+  auto particle_ids = get_particle_ids();
+  /* remove the inserted particle id*/
+  particle_ids.erase(std::remove(particle_ids.begin(), particle_ids.end(),
+                                 inserted_particle_id),
+                     particle_ids.end());
+
+  /* Check  if the inserted particle within the excluded_range of any other
+   * particle*/
+  double excluded_distance;
+  for (const auto &particle_id : particle_ids) {
+    auto const &already_present_particle = get_particle_data(particle_id);
+    if (not check_exclusion_radius_defined(inserted_particle.type()) ||
+        not check_exclusion_radius_defined(already_present_particle.type())) {
+      excluded_distance = exclusion_range;
+    } else if (exclusion_radius_per_type[already_present_particle.type()] ==
+               0.) {
+      continue;
+    } else {
+      excluded_distance =
+          exclusion_radius_per_type[inserted_particle.type()] +
+          exclusion_radius_per_type[already_present_particle.type()];
+    }
+
+    auto const d_min =
+        box_geo
+            .get_mi_vector(already_present_particle.r.p, inserted_particle.r.p)
+            .norm();
+
+    if (d_min < excluded_distance) {
+      particle_inside_exclusion_range_touched = true;
+      return;
+    }
+  }
+}
+
+/*Check if the exclusion radius of a particle type is defined in
+ * exclusion_radius_per_type*/
+bool ReactionAlgorithm::check_exclusion_radius_defined(const int type) {
+
+  if (exclusion_radius_per_type.find(type) == exclusion_radius_per_type.end()) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 /**
@@ -442,6 +496,24 @@ void ReactionAlgorithm::set_slab_constraint(double slab_start_z,
   m_slab_start_z = slab_start_z;
   m_slab_end_z = slab_end_z;
   m_reaction_constraint = ReactionConstraint::SLAB_Z;
+}
+
+void ReactionAlgorithm::set_exclusion_radius_per_type(
+    std::unordered_map<int, double> exclusion_radii) {
+  /*  Check that all provided values for the exclusion radius are => 0 */
+
+  for (auto const &item : exclusion_radii) {
+    auto type = item.first;
+    auto exclusion_radius = item.second;
+    if (exclusion_radius < 0) {
+      std::stringstream ss;
+      ss << "Invalid excluded_radius value for type " << type
+         << " value: " << exclusion_radius;
+      std::string error_message = ss.str();
+      throw std::domain_error(error_message);
+    }
+    exclusion_radius_per_type[type] = exclusion_radius;
+  }
 }
 
 /**

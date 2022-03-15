@@ -278,11 +278,14 @@ class ReactionAlgorithm(ScriptInterfaceHelper):
                         "change_reaction_constant",
                         "delete_reaction",
                         "delete_particle",
+                        "set_exclusion_radius_per_type",
+                        "get_exclusion_radius_per_type"
                         )
 
     def __init__(self, **kwargs):
         if 'exclusion_radius' in kwargs:
-            raise KeyError('the keyword `exclusion_radius` is obsolete. Currently, the equivalent keyword is `exclusion_range`')
+            raise KeyError(
+                'the keyword `exclusion_radius` is obsolete. Currently, the equivalent keyword is `exclusion_range`')
         super().__init__(**kwargs)
         if not 'sip' in kwargs:
             utils.check_valid_keys(self.valid_keys(), kwargs.keys())
