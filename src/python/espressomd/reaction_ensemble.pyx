@@ -58,10 +58,10 @@ cdef class ReactionAlgorithm:
     cdef CReactionAlgorithm * RE
 
     def _valid_keys(self):
-        return "temperature", "exclusion_radius", "seed"
+        return "temperature", "exclusion_radius", "seed", "exclusion_radius_per_type"
 
     def _required_keys(self):
-        return "temperature", "exclusion_radius", "seed"
+        return "temperature", "exclusion_radius", "seed", "exclusion_radius_per_type"
 
     def _set_params_in_es_core(self):
         deref(self.RE).temperature = self._params["temperature"]
@@ -422,7 +422,7 @@ cdef class ReactionEnsemble(ReactionAlgorithm):
                     "At least the following keys have to be given as keyword arguments: " + self._required_keys().__str__() + " got " + kwargs.__str__())
             self._params[k] = kwargs[k]
 
-        self.REptr.reset(new CReactionEnsemble(int(self._params["seed"])))
+        self.REptr.reset(new CReactionEnsemble(int(self._params["seed"]), self._params["exclusion_radius_per_type"]))
         self.RE = <CReactionAlgorithm * > self.REptr.get()
 
         for k in kwargs:
@@ -445,7 +445,7 @@ cdef class ConstantpHEnsemble(ReactionAlgorithm):
                     "At least the following keys have to be given as keyword arguments: " + self._required_keys().__str__() + " got " + kwargs.__str__())
             self._params[k] = kwargs[k]
 
-        self.constpHptr.reset(new CConstantpHEnsemble(int(self._params["seed"])))
+        self.constpHptr.reset(new CConstantpHEnsemble(int(self._params["seed"]),self._params["exclusion_radius_per_type"]))
         self.RE = <CReactionAlgorithm * > self.constpHptr.get()
 
         for k in kwargs:
@@ -500,7 +500,7 @@ cdef class WangLandauReactionEnsemble(ReactionAlgorithm):
             else:
                 raise KeyError("%s is not a valid key" % k)
 
-        self.WLRptr.reset(new CWangLandauReactionEnsemble(int(self._params["seed"])))
+        self.WLRptr.reset(new CWangLandauReactionEnsemble(int(self._params["seed"]),self._params["exclusion_radius_per_type"]))
         self.RE = <CReactionAlgorithm * > self.WLRptr.get()
 
         self._set_params_in_es_core()
@@ -733,10 +733,10 @@ cdef class WidomInsertion(ReactionAlgorithm):
     cdef unique_ptr[CWidomInsertion] WidomInsertionPtr
 
     def _required_keys(self):
-        return "temperature", "seed"
+        return "temperature", "seed", "exclusion_radius_per_type"
 
     def _valid_keys(self):
-        return "temperature", "seed"
+        return "temperature", "seed", "exclusion_radius_per_type"
 
     def _valid_keys_add(self):
         return "reactant_types", "reactant_coefficients", "product_types", "product_coefficients", "default_charges", "check_for_electroneutrality"
@@ -757,7 +757,7 @@ cdef class WidomInsertion(ReactionAlgorithm):
         self._params[
             "gamma"] = 1.0  # this is not used by the widom insertion method
 
-        self.WidomInsertionPtr.reset(new CWidomInsertion(int(self._params["seed"])))
+        self.WidomInsertionPtr.reset(new CWidomInsertion(int(self._params["seed"]),self._params["exclusion_radius_per_type"]))
         self.RE = <CReactionAlgorithm * > self.WidomInsertionPtr.get()
         for k in kwargs:
             if k in self._valid_keys():

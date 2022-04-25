@@ -110,10 +110,11 @@ private:
 class ReactionAlgorithm {
 
 public:
-  ReactionAlgorithm(int seed)
+  ReactionAlgorithm(int seed,const std::unordered_map<int, double> &exclusion_radius_per_type)
       : m_seeder({seed, seed, seed}), m_generator(m_seeder),
         m_normal_distribution(0.0, 1.0), m_uniform_real_distribution(0.0, 1.0) {
     m_generator.discard(1'000'000);
+    set_exclusion_radius_per_type(exclusion_radius_per_type);
   }
 
   virtual ~ReactionAlgorithm() = default;
@@ -127,6 +128,7 @@ public:
            // their interaction energy gets approximately
            // infinite => these configurations do not contribute
            // to the partition function and ensemble averages.
+  std::unordered_map<int, double> exclusion_radius_per_type;
   double volume = -10.0;
   bool box_is_cylindric_around_z_axis = false;
   double cyl_radius = -10.0;
@@ -147,6 +149,19 @@ public:
   void set_cuboid_reaction_ensemble_volume();
   virtual int do_reaction(int reaction_steps);
   void check_reaction_ensemble();
+    void
+  set_exclusion_radius_per_type(std::unordered_map<int, double> const &map) {
+  for (auto const &item : map) {
+      auto const type = item.first;
+      auto const exclusion_radius = item.second;
+      if (exclusion_radius < 0.) {
+        throw std::domain_error("Invalid excluded_radius value for type " +
+                                std::to_string(type) + ": radius " +
+                                std::to_string(exclusion_radius));
+      }
+    }
+    exclusion_radius_per_type = map;
+  }
 
   int delete_particle(int p_id);
   void add_reaction(double gamma, const std::vector<int> &_reactant_types,
@@ -204,7 +219,7 @@ private:
   std::uniform_real_distribution<double> m_uniform_real_distribution;
 
   std::map<int, int> save_old_particle_numbers(int reaction_id);
-
+  void check_exclusion_radius(int inserted_particle_id);
   int calculate_nu_bar(
       std::vector<int> &reactant_coefficients,
       std::vector<int> &product_coefficients); // should only be used when
@@ -242,7 +257,7 @@ private:
  */
 class ReactionEnsemble : public ReactionAlgorithm {
 public:
-  ReactionEnsemble(int seed) : ReactionAlgorithm(seed) {}
+  ReactionEnsemble(int seed, const std::unordered_map<int, double> &exclusion_radius_per_type) : ReactionAlgorithm(seed, exclusion_radius_per_type) {}
 
 private:
   double calculate_acceptance_probability(
@@ -255,7 +270,7 @@ private:
 /** Wang-Landau reaction ensemble method */
 class WangLandauReactionEnsemble : public ReactionAlgorithm {
 public:
-  WangLandauReactionEnsemble(int seed) : ReactionAlgorithm(seed) {}
+  WangLandauReactionEnsemble(int seed, const std::unordered_map<int, double> &exclusion_radius_per_type) : ReactionAlgorithm(seed, exclusion_radius_per_type) {}
   bool do_energy_reweighting = false;
   bool do_not_sample_reaction_partition_function = false;
   double final_wang_landau_parameter = 0.00001;
@@ -369,7 +384,7 @@ private:
  */
 class ConstantpHEnsemble : public ReactionAlgorithm {
 public:
-  ConstantpHEnsemble(int seed) : ReactionAlgorithm(seed) {}
+  ConstantpHEnsemble(int seed, const std::unordered_map<int, double> &exclusion_radius_per_type) : ReactionAlgorithm(seed, exclusion_radius_per_type) {}
   double m_constant_pH = -10;
   int do_reaction(int reaction_steps) override;
 
@@ -385,7 +400,7 @@ private:
 /** Widom insertion method */
 class WidomInsertion : public ReactionAlgorithm {
 public:
-  WidomInsertion(int seed) : ReactionAlgorithm(seed) {}
+  WidomInsertion(int seed, const std::unordered_map<int, double> &exclusion_radius_per_type) : ReactionAlgorithm(seed, exclusion_radius_per_type) {}
   std::pair<double, double> measure_excess_chemical_potential(int reaction_id);
 };
 

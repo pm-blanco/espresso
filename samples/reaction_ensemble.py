@@ -70,14 +70,17 @@ for i in range(N0, 2 * N0):
     system.part.add(id=i, pos=np.random.random(3) * system.box_l, type=2)
 
 RE = None
+exclusion_radius_per_type={0:1, 1:2, 2:3}
+
 if args.mode == "reaction_ensemble":
     RE = reaction_ensemble.ReactionEnsemble(
         temperature=1,
         exclusion_radius=1,
-        seed=77)
+        seed=77,
+        exclusion_radius_per_type=exclusion_radius_per_type)
 elif args.mode == "constant_pH_ensemble":
     RE = reaction_ensemble.ConstantpHEnsemble(
-        temperature=1, exclusion_radius=1, seed=77)
+        temperature=1, exclusion_radius=1, seed=77, exclusion_radius_per_type=exclusion_radius_per_type)
     RE.constant_pH = 2
 else:
     raise RuntimeError(

@@ -25,6 +25,7 @@
 #include "integrate.hpp"
 #include "partCfg_global.hpp"
 #include "particle_data.hpp"
+#include "cells.hpp"
 
 #include <utils/constants.hpp>
 #include <utils/index.hpp>
@@ -572,9 +573,7 @@ void ReactionAlgorithm::replace_particle(int p_id, int desired_type) {
 void ReactionAlgorithm::hide_particle(int p_id, int previous_type) {
 
   auto part = get_particle_data(p_id);
-  double d_min = distto(partCfg(), part.r.p, p_id);
-  if (d_min < exclusion_radius)
-    particle_inside_exclusion_radius_touched = true;
+  check_exclusion_radius(p_id);
 
 #ifdef ELECTROSTATICS
   // set charge
@@ -715,16 +714,72 @@ int ReactionAlgorithm::create_particle(int desired_type) {
 #endif
   // set velocities
   set_particle_v(p_id, vel);
-  double d_min = distto(partCfg(), pos_vec, p_id);
-  if (d_min < exclusion_radius) {
-    // setting of a minimal distance is allowed to avoid overlapping
-    // configurations if there is a repulsive potential. States with
-    // very high energies have a probability of almost zero and
-    // therefore do not contribute to ensemble averages.
-    particle_inside_exclusion_radius_touched = true;
-  }
+  check_exclusion_radius(p_id);
   return p_id;
 }
+
+
+
+/**
+ * Check if the inserted particle is too close to neighboring particles.
+ */
+void ReactionAlgorithm::check_exclusion_radius(int inserted_particle_id) {
+
+  auto const &inserted_particle = get_particle_data(inserted_particle_id);
+  
+  
+
+  /* Check the excluded radius of the inserted particle */
+
+  if (exclusion_radius_per_type.count(inserted_particle.p.type) != 0) {
+    if (exclusion_radius_per_type[inserted_particle.p.type] == 0) {
+      return;
+    }
+  }
+  
+
+  auto all_particles = cell_structure.local_cells().particles();
+
+  std::vector<int> particle_ids;
+
+  for (auto const &p : all_particles) {
+    if (not p.p.is_virtual) {
+      particle_ids.push_back(p.p.identity);
+      
+    }
+  }
+
+  /* remove the inserted particle id*/
+  particle_ids.erase(std::remove(particle_ids.begin(), particle_ids.end(),
+                                 inserted_particle_id),
+                     particle_ids.end());
+
+  /* Check  if the inserted particle within the excluded_range of any other
+   * particle*/
+  double excluded_distance;
+  for (const auto &particle_id : particle_ids) {
+    auto const &already_present_particle = get_particle_data(particle_id);
+    if (exclusion_radius_per_type.count(inserted_particle.p.type) == 0 ||
+        exclusion_radius_per_type.count(inserted_particle.p.type) == 0) {
+      excluded_distance = exclusion_radius;
+    } else if (exclusion_radius_per_type[already_present_particle.p.type] ==
+               0.) {
+      continue;
+    } else {
+      excluded_distance =
+          exclusion_radius_per_type[inserted_particle.p.type] +
+          exclusion_radius_per_type[already_present_particle.p.type];
+    }
+
+    auto const d_min = get_mi_vector(already_present_particle.r.p, inserted_particle.r.p, box_geo).norm();
+
+    if (d_min < excluded_distance) {
+      particle_inside_exclusion_radius_touched = true;
+      return;
+    }
+  }
+}
+
 
 void WangLandauReactionEnsemble::on_mc_rejection_directly_after_entry(
     int &old_state_index) {
@@ -814,9 +869,7 @@ bool ReactionAlgorithm::do_global_mc_move_for_particles_of_type(
     // new_pos=get_random_position_in_box_enhanced_proposal_of_small_radii();
     // //enhanced proposal of small radii
     place_particle(p_id, new_pos.data());
-    double d_min = distto(partCfg(), new_pos, p_id);
-    if (d_min < exclusion_radius)
-      particle_inside_exclusion_radius_touched = true;
+    check_exclusion_radius(p_id);    
   }
 
   double E_pot_new;

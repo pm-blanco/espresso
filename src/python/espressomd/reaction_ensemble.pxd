@@ -21,6 +21,7 @@ from libcpp.vector cimport vector
 from libcpp.pair cimport pair
 from libcpp.string cimport string
 from libcpp.map cimport map
+from libcpp.unordered_map cimport unordered_map
 
 cdef extern from "reaction_ensemble.hpp" namespace "ReactionEnsemble":
 
@@ -34,7 +35,7 @@ cdef extern from "reaction_ensemble.hpp" namespace "ReactionEnsemble":
         double get_acceptance_rate()
 
     cdef cppclass CReactionAlgorithm "ReactionEnsemble::ReactionAlgorithm":
-        int CReactionAlgorithm(int seed)
+        int CReactionAlgorithm(int seed, unordered_map[int, double] exclusion_radius_per_type)
         int do_reaction(int reaction_steps) except +
         bool do_global_mc_move_for_particles_of_type(int type, int particle_number_of_type, bool use_wang_landau)
         void set_cuboid_reaction_ensemble_volume()
@@ -48,6 +49,7 @@ cdef extern from "reaction_ensemble.hpp" namespace "ReactionEnsemble":
         map[int, double] charges_of_types
         double temperature
         double exclusion_radius
+        unordered_map[int, double] exclusion_radius_per_type;
         double volume
         bool box_is_cylindric_around_z_axis
         double cyl_radius
@@ -59,10 +61,10 @@ cdef extern from "reaction_ensemble.hpp" namespace "ReactionEnsemble":
         int non_interacting_type
 
     cdef cppclass CReactionEnsemble "ReactionEnsemble::ReactionEnsemble"(CReactionAlgorithm):
-        CReactionEnsemble(int seed)
+        CReactionEnsemble(int seed, unordered_map[int, double] exclusion_radius_per_type)
 
     cdef cppclass CWangLandauReactionEnsemble "ReactionEnsemble::WangLandauReactionEnsemble"(CReactionAlgorithm):
-        CWangLandauReactionEnsemble(int seed)
+        CWangLandauReactionEnsemble(int seed,  unordered_map[int, double] exclusion_radius_per_type)
         double wang_landau_parameter
         double final_wang_landau_parameter
         string output_filename
@@ -78,9 +80,9 @@ cdef extern from "reaction_ensemble.hpp" namespace "ReactionEnsemble":
         void write_wang_landau_results_to_file(string full_path_to_output_filename)
 
     cdef cppclass CConstantpHEnsemble "ReactionEnsemble::ConstantpHEnsemble"(CReactionAlgorithm):
-        CConstantpHEnsemble(int seed)
+        CConstantpHEnsemble(int seed, unordered_map[int, double] exclusion_radius_per_type)
         double m_constant_pH
 
     cdef cppclass CWidomInsertion "ReactionEnsemble::WidomInsertion"(CReactionAlgorithm):
-        CWidomInsertion(int seed)
+        CWidomInsertion(int seed, unordered_map[int, double] exclusion_radius_per_type)
         pair[double, double] measure_excess_chemical_potential(int reaction_id) except +
