@@ -166,72 +166,7 @@ class ReactionMethods:
       system.by_id(pid).q=0
       return
 """
-ReactionAlgorithm::make_reaction_attempt(SingleReaction const &reaction) {
-  // create or hide particles of types with corresponding types in reaction
-  auto const n_product_types = reaction.product_types.size();
-  auto const n_reactant_types = reaction.reactant_types.size();
-  auto const get_random_p_id_of_type = [this](int type) {
-    auto const random_index = i_random(number_of_particles_with_type(type));
-    return get_random_p_id(type, random_index);
-  };
-  ParticleChangeRecorder tracker{[this](int p_id) { delete_particle(p_id); }};
-  for (int i = 0; i < std::min(n_product_types, n_reactant_types); i++) {
-    auto const n_product_coef = reaction.product_coefficients[i];
-    auto const n_reactant_coef = reaction.reactant_coefficients[i];
-    // change std::min(reactant_coefficients(i),product_coefficients(i)) many
-    // particles of reactant_types(i) to product_types(i)
-    auto const type = reaction.reactant_types[i];
-    for (int j = 0; j < std::min(n_product_coef, n_reactant_coef); j++) {
-      auto const p_id = get_random_p_id_of_type(type);
-      tracker.save_changed_particle({p_id, type, charges_of_types[type]});
-      replace_particle(p_id, reaction.product_types[i]);
-    }
-    // create product_coefficients(i)-reactant_coefficients(i) many product
-    // particles iff product_coefficients(i)-reactant_coefficients(i)>0,
-    // iff product_coefficients(i)-reactant_coefficients(i)<0, hide this number
-    // of reactant particles
-    auto const delta_n = n_product_coef - n_reactant_coef;
-    if (delta_n > 0) {
-      auto const type = reaction.product_types[i];
-      for (int j = 0; j < delta_n; j++) {
-        auto const p_id = create_particle(type);
-        check_exclusion_range(p_id);
-        tracker.save_created_particle(p_id);
-      }
-    } else if (delta_n < 0) {
-      auto const type = reaction.reactant_types[i];
-      for (int j = 0; j < -delta_n; j++) {
-        auto const p_id = get_random_p_id_of_type(type);
-        tracker.save_hidden_particle({p_id, type, charges_of_types[type]});
-        check_exclusion_range(p_id);
-        hide_particle(p_id);
-      }
-    }
-  }
-  // create or hide particles of types with noncorresponding replacement types
-  for (auto i = std::min(n_product_types, n_reactant_types);
-       i < std::max(n_product_types, n_reactant_types); i++) {
-    if (n_product_types < n_reactant_types) {
-      auto const type = reaction.reactant_types[i];
-      // hide superfluous reactant_types particles
-      for (int j = 0; j < reaction.reactant_coefficients[i]; j++) {
-        auto const p_id = get_random_p_id_of_type(type);
-        tracker.save_hidden_particle({p_id, type, charges_of_types[type]});
-        check_exclusion_range(p_id);
-        hide_particle(p_id);
-      }
-    } else {
-      // create additional product_types particles
-      for (int j = 0; j < reaction.product_coefficients[i]; j++) {
-        auto const p_id = create_particle(reaction.product_types[i]);
-        check_exclusion_range(p_id);
-        tracker.save_created_particle(p_id);
-      }
-    }
-  }
 
-  return tracker;
-}
 
 int ReactionAlgorithm::create_particle(int desired_type) {
   int p_id;
