@@ -4,11 +4,14 @@ class ReactionMethods:
     import numpy as np
     particle_inside_exclusion_range_touched = False
     default_charges={}
+    m_empty_p_ids_smaller_than_max_seen_particle=[]
+
     def __init__(self, **kwargs):
         self.kT=kwargs.pop("kT")
         self.exclusion_range=kwargs.pop("exclusion_range")
         self.seed=kwargs.pop("seed")
-        ReactionMethods.np.random.seed(seed=self.seed)
+        self.exclusion_radius_per_type=kwargs.pop('exclusion_radius_per_type',{})
+        self.np.random.seed(seed=self.seed)
         return
 
     def add_reaction(self, **kwargs):
@@ -45,26 +48,26 @@ class ReactionMethods:
         old_particle_numbers = self.save_old_particle_numbers(reaction=current_reaction,
                                                                 system=system)
 
-        change_tracker = self.make_reaction_attempt(current_reaction) # WIP
+        p_properties_old_state = self.make_reaction_attempt(current_reaction)
         if (self.particle_inside_exclusion_range_touched):
-            self.restore_system() # TODO
+            # reject
+            self.restore_system(system=system, p_properties_old_state=p_properties_old_state)
             return
         
         E_pot_new=system.analysis.energy()['non_bonded']
         bf = calculate_acceptance_probability(
             current_reaction, E_pot_old, E_pot_new, old_particle_numbers) # WIP
         
-        #exponential = self.np.exp(-1.0 / self.kT * (E_pot_new - E_pot_old))
-        #current_reaction.accumulator_potential_energy_difference_exponential(
-        #    exponential);
+        exponential = self.np.exp(-1.0 / self.kT * (E_pot_new - E_pot_old))
+        current_reaction.accumulator_potential_energy_difference_exponential.append(exponential)
 
         if (self.np.random.uniform(1) < bf):
-            change_tracker.delete_hidden_particles()
+            self.delete_hidden_particles(system=system, p_properties_old_state=p_properties_old_state)
             current_reaction.accepted_moves += 1
             E_pot_old = E_pot_new # Update the system energy
         else:
             # reject
-            self.restore_system() # TODO
+            self.restore_system(system=system, p_properties_old_state=p_properties_old_state) 
         
 
         return
@@ -122,8 +125,8 @@ class ReactionMethods:
         if delta_n > 0:
           ptype=reaction.product_types[index]
           for _ in range(delta_n):
-            pid = self.create_particle(p_type) # WIP
-            self.check_exclusion_range(pid) # WIP
+            pid = self.create_particle(system=system, ptype=ptype) 
+            self.check_exclusion_range(system=system, inserted_pid=pid) 
             p_properties_old_state['created_particle'].append({'pid':random_pid,
                                                               'type':ptype,
                                                               'charge':self.default_charges[ptype]})
@@ -133,10 +136,10 @@ class ReactionMethods:
             p_properties_old_state['hidden_particle'].append({'pid':random_pid,
                                                               'type':ptype,
                                                               'charge':self.default_charges[ptype]})
-            self.check_exclusion_range(p_id); # WIP
+            self.check_exclusion_range(system=system, inserted_pid=pid)
             self.hide_particle(system=system, pid=pid)
 
-    # create or hide particles of types with noncorresponding replacement types
+      # create or hide particles of types with noncorresponding replacement types
       maximum_number_of_types=max(len(reaction.reactant_types), len(reaction.product_types))
       for index in range(minimum_number_of_types,maximum_number_of_types):
         if len(reaction.product_types) < len(reaction.reactant_types):
@@ -147,111 +150,99 @@ class ReactionMethods:
             p_properties_old_state['hidden_particle'].append({'pid':random_pid,
                                                               'type':ptype,
                                                               'charge':self.default_charges[ptype]})
-            self.check_exclusion_range(pid) # WIP
+            self.check_exclusion_range(system=system, inserted_pid=pid)
             self.hide_particle(system=system, pid=pid)
         else:
           # create additional product_types particles
           for _ in range(reaction.product_coefficients[index]):
-            pid = self.create_particle(reaction.product_types[index]) # WIP
-            self.check_exclusion_range(pid) # WIP
+            pid = self.create_particle(system=system, ptype=reaction.product_types[index])
+            self.check_exclusion_range(system=system, inserted_pid=pid)
             p_properties_old_state['created_particle'].append({'pid':random_pid,
                                                               'type':ptype,
                                                               'charge':self.default_charges[ptype]})
 
+      return p_properties_old_state
+    
+    def restore_system(self, **kwargs):
 
+      system=kwargs.pop('system')
+      p_properties_old_state=kwargs.pop('p_properties_old_state')
+
+      # Restore the properties of changed_particles and hidden_particles
+
+      for particle_info in p_properties_old_state['changed_particle']+p_properties_old_state['hidden_particle']:
+        system.part.by_id(particle_info['pid']).type=particle_info['type']
+        system.part.by_id(particle_info['pid']).q=particle_info['charge']
+
+      # Destroy the created particles
+
+      for particle_info in p_properties_old_state['created_particle']:
+        system.by_id(particle_info['pid']).remove()
+
+      return
+    
     def hide_particle(self, **kwargs):
       system=kwargs.pop('system')
       pid=kwargs.pop('pid')
-      system.by_id(pid).type=self.non_interacting_type
-      system.by_id(pid).q=0
+      system.part.by_id(pid).type=self.non_interacting_type
+      system.part.by_id(pid).q=0
       return
+
+    def delete_hidden_particles(self, **kwargs):
+      system=kwargs.pop('system')
+      for particle_info in kwargs.pop('p_properties_old_state'):
+        system.part.by_id(particle_info['pid']).remove()
+      return
+
+                
+    def create_particle(self, **kwargs):
+      system=kwargs.pop('system')
+      ptype=kwargs.pop('ptype')
+      if len(self.m_empty_p_ids_smaller_than_max_seen_particle == 0):
+        pid=system.part.highest_particle_id+1
+      else:
+        pid=min(self.m_empty_p_ids_smaller_than_max_seen_particle)
+      
+      # we use mass=1 for all particles, think about adapting this
+
+      espresso_system.part.add(id=[pid], 
+                              pos=[self.np.random.random((1, 3))[0] *self.np.copy(espresso_system.box_l)], 
+                              type=[ptype], 
+                              q=[self.default_charges[ptype]],
+                              v=[self.np.random.normal(size=(1, 3))[0] *self.np.sqrt(self.kT)])
+
+      return pid
+
+    def check_exclusion_range(self, **kwargs):
+      
+      system=kwargs.pop('system')
+      inserted_particle=system.part.by_id(kwargs.pop('inserted_pid'))
+      if self.exclusion_radius_per_type:
+        if self.exclusion_radius_per_type[inserted_particle.type] == 0:
+          return
+
+      # NOTE: Missing the feature of searching short range neighbours
+  
+      for particle in system.part.all():
+        
+        if particle.id == inserted_pid:
+          continue
+
+        if (self.exclusion_radius_per_type[inserted_particle.type] == 0)  or  (self.exclusion_radius_per_type[particle.type] == 0):
+          excluded_distance = self.exclusion_range
+        else:
+          excluded_distance = self.exclusion_radius_per_type[inserted_particle.type] +  self.exclusion_radius_per_type[particle.type]
+
+        d_min=system.distance(particle, inserted_particle)
+        if d_min < excluded_distance:
+          self.particle_inside_exclusion_range_touched=True
+          return
+
+      return
+
+
 """
 
-
-int ReactionAlgorithm::create_particle(int desired_type) {
-  int p_id;
-  if (!m_empty_p_ids_smaller_than_max_seen_particle.empty()) {
-    auto p_id_iter = std::min_element(
-        std::begin(m_empty_p_ids_smaller_than_max_seen_particle),
-        std::end(m_empty_p_ids_smaller_than_max_seen_particle));
-    p_id = *p_id_iter;
-    m_empty_p_ids_smaller_than_max_seen_particle.erase(p_id_iter);
-  } else {
-    p_id = get_maximal_particle_id() + 1;
-  }
-
-  // we use mass=1 for all particles, think about adapting this
-  auto const new_pos = get_random_position_in_box();
-  mpi_make_new_particle(p_id, new_pos);
-  move_particle(p_id, new_pos, std::sqrt(kT));
-  set_particle_type(p_id, desired_type);
-#ifdef ELECTROSTATICS
-  set_particle_q(p_id, charges_of_types[desired_type]);
-#endif
-  return p_id;
-}
-
-void ReactionAlgorithm::move_particle(int p_id, Utils::Vector3d const &new_pos,
-                                      double velocity_prefactor) {
-  mpi_set_particle_pos(p_id, new_pos);
-  // create random velocity vector according to Maxwell-Boltzmann distribution
-  Utils::Vector3d vel;
-  vel[0] = velocity_prefactor * m_normal_distribution(m_generator);
-  vel[1] = velocity_prefactor * m_normal_distribution(m_generator);
-  vel[2] = velocity_prefactor * m_normal_distribution(m_generator);
-  set_particle_v(p_id, vel);
-}
-
-/**
- * Check if the inserted particle is too close to neighboring particles.
- */
-void ReactionAlgorithm::check_exclusion_range(int inserted_particle_id) {
-
-  auto const &inserted_particle = get_particle_data(inserted_particle_id);
-
-  /* Check the exclusion radius of the inserted particle */
-  if (exclusion_radius_per_type.count(inserted_particle.type()) != 0) {
-    if (exclusion_radius_per_type[inserted_particle.type()] == 0.) {
-      return;
-    }
-  }
-
-  std::vector<int> particle_ids;
-  if (neighbor_search_order_n) {
-    particle_ids = get_particle_ids();
-    /* remove the inserted particle id */
-    particle_ids.erase(std::remove(particle_ids.begin(), particle_ids.end(),
-                                   inserted_particle_id),
-                       particle_ids.end());
-  } else {
-    particle_ids = mpi_get_short_range_neighbors(inserted_particle.id(),
-                                                 m_max_exclusion_range);
-  }
-
-  /* Check if the inserted particle within the exclusion radius of any other
-   * particle */
-  for (auto const &particle_id : particle_ids) {
-    auto const &p = get_particle_data(particle_id);
-    double excluded_distance;
-    if (exclusion_radius_per_type.count(inserted_particle.type()) == 0 ||
-        exclusion_radius_per_type.count(p.type()) == 0) {
-      excluded_distance = exclusion_range;
-    } else if (exclusion_radius_per_type[p.type()] == 0.) {
-      continue;
-    } else {
-      excluded_distance = exclusion_radius_per_type[inserted_particle.type()] +
-                          exclusion_radius_per_type[p.type()];
-    }
-
-    auto const d_min =
-        box_geo.get_mi_vector(p.pos(), inserted_particle.pos()).norm();
-
-    if (d_min < excluded_distance) {
-      particle_inside_exclusion_range_touched = true;
-      break;
-    }
-  }
-}
 
 """
 
@@ -265,6 +256,7 @@ class SingleReaction:
         self.Gamma=kwargs.pop('Gamma')
         self.accepted_moves=0
         self.trial_moves=0
+        self.accumulator_potential_energy_difference_exponential=[]
         return
 
 class ConstantpHEnsemble(ReactionMethods):
