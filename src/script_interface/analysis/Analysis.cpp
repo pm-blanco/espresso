@@ -131,6 +131,10 @@ Variant Analysis::do_call_method(std::string const &name,
     return {};
   }
 #endif
+  if (name == "potential_energy") {
+    auto const obs = calculate_energy();
+    return obs->accumulate(-obs->kinetic[0]);
+  }
   if (name == "particle_neighbor_pids") {
     auto &system = get_system();
     system.on_observable_calc();
@@ -144,6 +148,17 @@ Variant Analysis::do_call_method(std::string const &name,
                     });
     });
     return make_unordered_map_of_variants(dict);
+  }
+  if (name == "get_pids_of_type") {
+    auto const type = get_value<int>(parameters, "ptype");
+    std::vector<int> pids;
+    for (auto const &p : ::cell_structure.local_particles()) {
+      if (p.type() == type) {
+        pids.push_back(p.id());
+      }
+    }
+    Utils::Mpi::gather_buffer(pids, context()->get_comm());
+    return pids;
   }
 #ifdef DPD
   if (name == "dpd_stress") {
