@@ -21,6 +21,7 @@
 #include "ObservableStat.hpp"
 
 #include "core/BoxGeometry.hpp"
+#include "core/Observable_stat.hpp"
 #include "core/analysis/statistics.hpp"
 #include "core/analysis/statistics_chain.hpp"
 #include "core/cell_system/CellStructure.hpp"
@@ -132,7 +133,7 @@ Variant Analysis::do_call_method(std::string const &name,
   }
 #endif
   if (name == "potential_energy") {
-    auto const obs = calculate_energy();
+    auto const obs = get_system().calculate_energy();
     return obs->accumulate(-obs->kinetic[0]);
   }
   if (name == "particle_neighbor_pids") {
@@ -152,7 +153,7 @@ Variant Analysis::do_call_method(std::string const &name,
   if (name == "get_pids_of_type") {
     auto const type = get_value<int>(parameters, "ptype");
     std::vector<int> pids;
-    for (auto const &p : ::cell_structure.local_particles()) {
+    for (auto const &p : get_system().cell_structure->local_particles()) {
       if (p.type() == type) {
         pids.push_back(p.id());
       }

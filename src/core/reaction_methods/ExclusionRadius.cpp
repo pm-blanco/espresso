@@ -20,8 +20,6 @@
 #include "reaction_methods/ExclusionRadius.hpp"
 
 #include "cells.hpp"
-#include "event.hpp"
-#include "grid.hpp"
 #include "particle_node.hpp"
 #include "system/System.hpp"
 
@@ -39,7 +37,8 @@
 
 static auto get_real_particle(boost::mpi::communicator const &comm, int p_id) {
   assert(p_id >= 0);
-  auto ptr = ::cell_structure.get_local_particle(p_id);
+  auto &system = System::get_system();
+  auto ptr = system.cell_structure->get_local_particle(p_id);
   if (ptr != nullptr and ptr->is_ghost()) {
     ptr = nullptr;
   }
@@ -99,7 +98,7 @@ bool ExclusionRadius::check_exclusion_range(int p_id, int p_type) {
                   all_ids.end());
     particle_ids = all_ids;
   } else {
-    on_observable_calc();
+    system.on_observable_calc();
     auto const local_ids =
         get_short_range_neighbors(system, p_id, m_max_exclusion_range);
     assert(p1_ptr == nullptr or !!local_ids);
@@ -114,7 +113,7 @@ bool ExclusionRadius::check_exclusion_range(int p_id, int p_type) {
 
     /* Check if the inserted particle within any exclusion radius */
     for (auto const p2_id : particle_ids) {
-      if (auto const p2_ptr = ::cell_structure.get_local_particle(p2_id)) {
+      if (auto const p2_ptr = system.cell_structure->get_local_particle(p2_id)) {
         auto const &p2 = *p2_ptr;
         double excluded_distance;
         if (exclusion_radius_per_type.count(p_type) == 0 or
@@ -127,7 +126,7 @@ bool ExclusionRadius::check_exclusion_range(int p_id, int p_type) {
                               exclusion_radius_per_type[p2.type()];
         }
 
-        auto const d_min = ::box_geo.get_mi_vector(p2.pos(), p1.pos()).norm();
+        auto const d_min = system.box_geo->get_mi_vector(p2.pos(), p1.pos()).norm();
 
         if (d_min < excluded_distance) {
           within_exclusion_range = true;
