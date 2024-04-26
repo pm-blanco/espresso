@@ -60,7 +60,7 @@ parser = argparse.ArgumentParser(
     epilog=__doc__.lstrip().split("\n", 1)[0])
 parser.add_argument("--mode", choices=["core", "python"], default="python",
                     help="use C++ (core) or Python (python) implementation")
-parser.add_argument("--method", choices=["cph", "re"], default="cph",
+parser.add_argument("--method", choices=["cph", "re","widom"], default="cph",
                     help="use constant pH (cph) or reaction ensemble (re)")
 args = parser.parse_args()
 
@@ -126,10 +126,18 @@ class ReactionAlgorithm:
             if 'exclusion_radius' in kwargs:
                 raise KeyError(
                     'the keyword `exclusion_radius` is obsolete. Currently, the equivalent keyword is `exclusion_range`')
-            # PMB: this needs to be adapted
-            # super().__init__(exclusion=ExclusionRadius(**kwargs), **kwargs)
             if not 'sip' in kwargs:
                 espressomd.utils.check_valid_keys(self.valid_keys(), kwargs.keys())
+        self.inicialize_particle_changes()
+        
+
+    def inicialize_particle_changes(self):
+        self.particle_changes={"created":[],
+                                "changed":[],
+                                "hidden":[],
+                                "moved":[],
+                                "old_particle_numbers":[],
+                                "reaction_id":-1}
 
     def valid_keys(self):
         return {"kT", "exclusion_range", "seed",
@@ -204,10 +212,10 @@ class ReactionAlgorithm:
                 return E_pot_old
 
             old_particle_numbers = self.save_old_particle_numbers(reaction)
-            p_properties_old_state = self.make_reaction_attempt(reaction)
+            self.make_reaction_attempt(reaction)
 
             if self.particle_inside_exclusion_range_touched:  # reject trial move
-                self.restore_system(p_properties_old_state)
+                self.restore_system()
                 self.particle_inside_exclusion_range_touched = False
                 return E_pot_old
 
@@ -218,11 +226,12 @@ class ReactionAlgorithm:
             reaction.accumulator_potential_energy_difference_exponential.append(
                 math.exp(-E_pot_diff / self.kT))
             if self.rng.uniform() < bf:  # accept trial move
-                self.delete_hidden_particles(p_properties_old_state)
+                self.delete_hidden_particles()
                 reaction.accepted_moves += 1
+                self.inicialize_particle_changes()
                 return E_pot_new
             else:  # reject trial move
-                self.restore_system(p_properties_old_state)
+                self.restore_system()
                 return E_pot_old
         except BaseException as err:
             tb = sys.exc_info()[2]
@@ -240,10 +249,7 @@ class ReactionAlgorithm:
                                       len(reaction.product_types))
         maximum_number_of_types = max(len(reaction.reactant_types),
                                       len(reaction.product_types))
-        p_properties_old_state = {"changed_particles": [],
-                                  "created_particles": [],
-                                  "hidden_particles": []}
-
+        
         for index in range(minimum_number_of_types):
             r_type = reaction.reactant_types[index]
             p_type = reaction.product_types[index]
@@ -257,7 +263,7 @@ class ReactionAlgorithm:
                 p = self.system.part.by_id(random_pid)
                 p.type = p_type
                 p.q = p_charge
-                p_properties_old_state["changed_particles"].append(
+                self.particle_changes["changed"].append(
                     {"pid": random_pid, "type": r_type, "charge": r_charge})
 
             # measure stoichiometric excess
@@ -269,12 +275,12 @@ class ReactionAlgorithm:
                 for _ in range(delta_n):
                     pid = self.create_particle(p_type)
                     self.check_exclusion_range(pid)
-                    p_properties_old_state["created_particles"].append(
+                    self.particle_changes["created"].append(
                         {"pid": pid, "type": p_type, "charge": p_charge})
             elif delta_n < 0:
                 # hide reactant particles
                 for random_pid in self.get_random_pids(r_type, -delta_n):
-                    p_properties_old_state["hidden_particles"].append(
+                    self.particle_changes["hidden"].append(
                         {"pid": random_pid, "type": r_type, "charge": r_charge})
                     self.check_exclusion_range(random_pid)
                     self.hide_particle(random_pid)
@@ -287,7 +293,7 @@ class ReactionAlgorithm:
                 size = reaction.reactant_coefficients[index]
                 # hide superfluous reactant particles
                 for random_pid in self.get_random_pids(r_type, size):
-                    p_properties_old_state["hidden_particles"].append(
+                    self.particle_changes["hidden"].append(
                         {"pid": random_pid, "type": r_type, "charge": r_charge})
                     self.check_exclusion_range(random_pid)
                     self.hide_particle(random_pid)
@@ -298,10 +304,8 @@ class ReactionAlgorithm:
                 for _ in range(reaction.product_coefficients[index]):
                     pid = self.create_particle(p_type)
                     self.check_exclusion_range(pid)
-                    p_properties_old_state["created_particles"].append(
+                    self.particle_changes["created"].append(
                         {"pid": pid, "type": p_type, "charge": p_charge})
-
-        return p_properties_old_state
 
     def calculate_acceptance_probability(
             self, reaction, E_pot_diff, old_particle_numbers):
@@ -332,23 +336,24 @@ class ReactionAlgorithm:
                 type=r_type)
         return old_particle_numbers
 
-    def delete_created_particles(self, p_properties_old_state):
-        for particle_info in p_properties_old_state["created_particles"]:
+    def delete_created_particles(self):
+        for particle_info in self.particle_changes["created"]:
             self.system.part.by_id(particle_info["pid"]).remove()
 
-    def delete_hidden_particles(self, p_properties_old_state):
-        for particle_info in p_properties_old_state["hidden_particles"]:
+    def delete_hidden_particles(self):
+        for particle_info in self.particle_changes["hidden"]:
             self.system.part.by_id(particle_info["pid"]).remove()
 
-    def restore_system(self, p_properties_old_state):
+    def restore_system(self):
         # restore properties of changed and hidden particles
-        for particle_info in p_properties_old_state["changed_particles"] + \
-                p_properties_old_state["hidden_particles"]:
+        for particle_info in self.particle_changes["changed"] + \
+                self.particle_changes["hidden"]:
             p = self.system.part.by_id(particle_info["pid"])
             p.type = particle_info["type"]
             p.q = particle_info["charge"]
         # destroy created particles
-        self.delete_created_particles(p_properties_old_state)
+        self.delete_created_particles()
+        self.inicialize_particle_changes()
 
     def hide_particle(self, pid):
         p = self.system.part.by_id(pid)
@@ -514,6 +519,205 @@ class ConstantpHEnsemble(ReactionAlgorithm):
         factorial_expr *= factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0)
 
         return factorial_expr
+
+class WidomInsertion(ReactionAlgorithm):
+    """
+    This class implements the Widom insertion method in the canonical ensemble
+    for homogeneous systems, where the excess chemical potential is not
+    depending on the location.
+
+    """
+
+    _so_name = "ReactionMethods::WidomInsertion"
+
+    def required_keys(self):
+        return {"kT", "seed"}
+
+    def valid_keys(self):
+        return {"kT", "seed"}
+
+    def add_reaction(self, **kwargs):
+        kwargs['gamma'] = 1.
+        super().add_reaction(**kwargs)
+
+    def calculate_particle_insertion_potential_energy(self, **kwargs):
+        """
+        Measures the potential energy when particles are inserted in the
+        system following the reaction provided in ``reaction_id``. Please
+        define the insertion moves by calling the method
+        :meth:`~ReactionAlgorithm.add_reaction` (with only product types
+        specified).
+
+        Note that although this function does not provide directly
+        the chemical potential, it can be used to calculate it.
+        For an example of such an application please check
+        :file:`/samples/widom_insertion.py`.
+
+        Parameters
+        ----------
+        reaction_id : :obj:`int`
+            Reaction identifier. Will be multiplied by 2 internally to
+            skip reverse reactions, i.e. deletion reactions!
+
+        Returns
+        -------
+        :obj:`float`
+            The particle insertion potential energy.
+
+        """
+        reaction_id = kwargs.pop("reaction_id")
+        reaction = self.reactions[reaction_id]
+        if not self.all_reactant_particles_exist(reaction):
+            raise RuntimeError("Trying to remove some non-existing particles "
+                               "from the system via the inverse Widom scheme.")
+        self.setup_bookkeeping_of_empty_pids()
+        E_pot_old = self.system.analysis.potential_energy()
+        self.make_reaction_attempt(reaction)
+        E_pot_new = self.system.analysis.potential_energy()
+        self.restore_system()
+        return E_pot_new - E_pot_old
+
+    def calculate_excess_chemical_potential(self, **kwargs):
+        """
+        Given a set of samples of the particle insertion potential energy,
+        calculates the excess chemical potential and its statistical error.
+
+        Parameters
+        ----------
+        particle_insertion_potential_energy_samples : array_like of :obj:`float`
+            Samples of the particle insertion potential energy.
+        N_blocks : :obj:`int`, optional
+            Number of bins for binning analysis.
+
+        Returns
+        -------
+        mean : :obj:`float`
+            Mean excess chemical potential.
+        error : :obj:`float`
+            Standard error of the mean.
+
+        """
+
+        def do_block_analysis(samples, N_blocks):
+            """
+            Performs a binning analysis of samples.
+            Divides the samples in ``N_blocks`` equispaced blocks
+            and returns the mean and its uncertainty
+            """
+            size_block = int(len(samples) / N_blocks)
+            block_list = []
+            for block in range(N_blocks):
+                block_list.append(
+                    np.mean(samples[block * size_block:(block + 1) * size_block]))
+
+            sample_mean = np.mean(block_list)
+            sample_std = np.std(block_list, ddof=1)
+            sample_uncertainty = sample_std / np.sqrt(N_blocks)
+
+            return sample_mean, sample_uncertainty
+
+        kT = self.kT
+
+        gamma_samples = np.exp(-1.0 * np.array(
+            kwargs["particle_insertion_potential_energy_samples"]) / kT)
+
+        gamma_mean, gamma_std = do_block_analysis(
+            samples=gamma_samples, N_blocks=kwargs.get("N_blocks", 16))
+
+        mu_ex_mean = -kT * np.log(gamma_mean)
+
+        # full propagation of error
+        mu_ex_Delta = 0.5 * kT * abs(-np.log(gamma_mean + gamma_std) -
+                                     (-np.log(gamma_mean - gamma_std)))
+
+        return mu_ex_mean, mu_ex_Delta
+
+if args.method == "widom":
+    # System parameters
+    cs_bulk = 0.1
+    N0 = 70
+    box_l = (N0 / cs_bulk)**(1.0 / 3.0)
+    seed=23
+    # Integration parameters
+    system = espressomd.System(box_l=[box_l, box_l, box_l])
+    np.random.seed(seed=42)
+    system.time_step = 0.01
+    system.cell_system.skin = 0.4
+    temperature = 1.0
+
+    for i in range(N0):
+        system.part.add(pos=np.random.random(3) * system.box_l, type=1, q=-1)
+    for i in range(N0, 2 * N0):
+        system.part.add(pos=np.random.random(3) * system.box_l, type=2, q=1)
+
+    wca_eps = 1.0
+    wca_sig = 1.0
+    types = [0, 1, 2]
+    for type_1 in types:
+        for type_2 in types:
+            system.non_bonded_inter[type_1, type_2].wca.set_params(
+                epsilon=wca_eps, sigma=wca_sig)
+
+    p3m = espressomd.electrostatics.P3M(prefactor=2.0, accuracy=1e-3)
+    system.electrostatics.solver = p3m
+    p3m_params = p3m.get_params()
+
+    # Warmup
+    #############################################################
+    # warmup integration (steepest descent)
+    warm_steps = 20
+    warm_n_times = 20
+    min_dist = 0.9 * wca_sig
+
+    # minimize energy using min_dist as the convergence criterion
+    system.integrator.set_steepest_descent(f_max=0, gamma=1e-3,
+                                        max_displacement=0.01)
+    i = 0
+    while system.analysis.min_dist() < min_dist and i < warm_n_times:
+        system.integrator.run(warm_steps)
+        i += 1
+
+    system.integrator.set_vv()
+
+    # activate thermostat
+    system.thermostat.set_langevin(kT=temperature, gamma=1.0, seed=42)
+
+    if args.mode == "core":
+        widom = espressomd.reaction_methods.WidomInsertion(
+        kT=temperature, seed=seed)
+    elif args.mode == "python":
+        widom = WidomInsertion(kT=temperature, seed=seed, system=system)
+
+    # add insertion reaction
+    insertion_reaction_id = 0
+    widom.add_reaction(reactant_types=[],
+                    reactant_coefficients=[], product_types=[1, 2],
+                    product_coefficients=[1, 1], default_charges={1: -1, 2: +1})
+    system.setup_type_map(type_list=[0, 1, 2])
+
+
+    # Set the hidden particle type to the lowest possible number to speed
+    # up the simulation
+    widom.set_non_interacting_type(type=max(types) + 1)
+
+    particle_insertion_potential_energy_samples = []
+
+    n_iterations = 50
+    n_samples_per_iteration = 100
+
+    for i in range(n_iterations):
+        for _ in range(n_samples_per_iteration):
+            particle_insertion_potential_energy_samples.append(
+                widom.calculate_particle_insertion_potential_energy(reaction_id=insertion_reaction_id))
+        system.integrator.run(steps=500)
+
+    mu_ex_mean, mu_ex_Delta = widom.calculate_excess_chemical_potential(
+        particle_insertion_potential_energy_samples=particle_insertion_potential_energy_samples)
+
+    print(
+        f"excess chemical potential for an ion pair {mu_ex_mean:.4g} +/- {mu_ex_Delta:.4g}")    
+    exit()
+
 
 
 # System parameters

@@ -341,7 +341,6 @@ void ReactionAlgorithm::check_exclusion_range(int p_id, int p_type) {
  * avoid the id range becoming excessively huge.
  */
 
- // PMB: this method is not in the current Python code
 void ReactionAlgorithm::delete_particle(int p_id) {
   if (p_id < 0) {
     throw std::domain_error("Invalid particle id: " + std::to_string(p_id));
