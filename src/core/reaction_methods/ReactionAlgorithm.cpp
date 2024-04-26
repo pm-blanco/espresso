@@ -400,7 +400,6 @@ void ReactionAlgorithm::set_slab_constraint(double slab_start_z,
 }
 
 
-// PMB: this is missing in the Python implementation
 /**
  * Writes a random position inside the central box into the provided array.
  */
@@ -463,7 +462,6 @@ int ReactionAlgorithm::create_particle(int p_type) {
   return p_id;
 }
 
-// PMB: this is not in the Python core
 void ReactionAlgorithm::displacement_mc_move(int type, int n_particles) {
   auto &bookkeeping = make_new_system_state();
   // draw particle ids at random without replacement
@@ -499,7 +497,6 @@ void ReactionAlgorithm::displacement_mc_move(int type, int n_particles) {
     }
   }
 }
-// PMB: this is not in the Python core
 
 bool ReactionAlgorithm::make_displacement_mc_move_attempt(int type,
                                                           int n_particles) {

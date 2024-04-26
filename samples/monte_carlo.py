@@ -64,13 +64,11 @@ parser.add_argument("--method", choices=["cph", "re","widom"], default="cph",
                     help="use constant pH (cph) or reaction ensemble (re)")
 args = parser.parse_args()
 
-
 if "line_profiler" not in dir():
     def profile(func):
         def wrapper(*args, **kwargs):
             return func(*args, **kwargs)
         return wrapper
-
 
 def factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0):
     value = 1.
@@ -80,9 +78,71 @@ def factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0):
         value *= math.factorial(N_i0) // math.factorial(N_i0 + nu_i)
     return value
 
+class MCMethods:
+    _so_name = "MCMethods"
+    def __init__(self, **kwargs):
+        self.kT = kwargs["kT"]
+        self.rng = np.random.default_rng(seed=kwargs["seed"])
+        self.system = kwargs["system"]
+        self.particle_inside_exclusion_range_touched = False
+        self.exclusion = espressomd.reaction_methods.ExclusionRadius(**kwargs)
+        if 'exclusion_radius' in kwargs:
+                raise KeyError(
+                    'the keyword `exclusion_radius` is obsolete. Currently, the equivalent keyword is `exclusion_range`')
+        if not 'sip' in kwargs:
+            espressomd.utils.check_valid_keys(self.valid_keys(), kwargs.keys())
+    
+    def required_keys(self):
+        return {"kT", "seed"}
+
+    def valid_keys(self):
+        return {"kT", "exclusion_range", "seed",  "exclusion_radius_per_type"}
+
+    def calculate_acceptance_probability(
+            self, reaction, E_pot_diff, old_particle_numbers):
+        raise NotImplementedError("Derived classes must implement this method")
+
+    def check_exclusion_range(self, pid):
+        self.particle_inside_exclusion_range_touched |= self.exclusion.check_exclusion_range(
+            pid=pid)
+
+    def get_random_position_in_box(constraint_type="none", params_boundaries=None):
+        """
+        Returns a random position in the simulation box within the input boundaries
+
+        Note:
+            - method='slab' currently only supports a slab in the z-direction.
+            - method='cylinder' currently only supports a cylinder aligned in the z-direction.
+        """
+        supported_constraint_types=["none","cylinder","slab"]
+        if constraint_type in supported_constraint_types:
+            raise ValueError(f"Constrint type {constraint_type} is not currently supported, supported types are {supported_constraint_types}")
+        box_l = system.box_l
+        position = []
+        if constraint_type == "none":
+            for side in box_l:
+                position.append(side*self.rng.uniform())
+        elif constraint_type == "slab":
+            for side in box_l[:2]:
+                position.append(side*self.rng.uniform())
+            coord_z=params_boundaries["slab_start_z"]+self.rng.uniform()*(params_boundaries["slab_end_z"]-params_boundaries["slab_start_z"])
+            position.append(coord_z)
+        elif constraint_type == "cylinder":
+            radius=params_boundaries["radius"]*np.sqrt(self.rng.uniform())
+            phi=2*np.pi*self.rng.uniform()
+            position.append(box_l[0]+radius*np.cos(phi))
+            position.append(box_l[1]+radius*np.sin(phi))
+            position.append(box_l[2]*self.rng.uniform())
+        return position
+
+    def get_random_pids(self, ptype, size):
+        pids = self.system.analysis.call_method(
+            "get_pids_of_type", ptype=ptype)
+        indices = self.rng.choice(len(pids), size=size, replace=False)
+        return [pids[i] for i in indices]
 
 class SingleReaction:
-    _so_name = "ReactionMethods::SingleReaction"
+    _so_name = "MCMethods::SingleReaction"
     def __init__(self, **kwargs):
         self.reactant_types = kwargs["reactant_types"]
         self.reactant_coefficients = kwargs["reactant_coefficients"]
@@ -106,8 +166,8 @@ class SingleReaction:
             product_coefficients=self.reactant_coefficients)
 
 
-class ReactionAlgorithm:
-    _so_name = "ReactionMethods::ReactionAlgorithm"
+class ReactionAlgorithm(MCMethods):
+    _so_name = "MCMethods::ReactionAlgorithm"
     def __init__(self, **kwargs):
         self.system = kwargs["system"]
         self.kT = kwargs["kT"]
@@ -130,14 +190,10 @@ class ReactionAlgorithm:
                 espressomd.utils.check_valid_keys(self.valid_keys(), kwargs.keys())
         self.inicialize_particle_changes()
         
-
     def inicialize_particle_changes(self):
         self.particle_changes={"created":[],
                                 "changed":[],
-                                "hidden":[],
-                                "moved":[],
-                                "old_particle_numbers":[],
-                                "reaction_id":-1}
+                                "hidden":[]}
 
     def valid_keys(self):
         return {"kT", "exclusion_range", "seed",
@@ -307,13 +363,7 @@ class ReactionAlgorithm:
                     self.particle_changes["created"].append(
                         {"pid": pid, "type": p_type, "charge": p_charge})
 
-    def calculate_acceptance_probability(
-            self, reaction, E_pot_diff, old_particle_numbers):
-        raise NotImplementedError("Derived classes must implement this method")
 
-    def check_exclusion_range(self, pid):
-        self.particle_inside_exclusion_range_touched |= self.exclusion.check_exclusion_range(
-            pid=pid)
 
     def all_reactant_particles_exist(self, reaction):
         for r_type in reaction.reactant_types:
@@ -322,12 +372,6 @@ class ReactionAlgorithm:
             if self.system.number_of_particles(type=r_type) < r_coef:
                 return False
         return True
-
-    def get_random_pids(self, ptype, size):
-        pids = self.system.analysis.call_method(
-            "get_pids_of_type", ptype=ptype)
-        indices = self.rng.choice(len(pids), size=size, replace=False)
-        return [pids[i] for i in indices]
 
     def save_old_particle_numbers(self, reaction):
         old_particle_numbers = {}
@@ -440,7 +484,7 @@ class ReactionEnsemble(ReactionAlgorithm):
     """
     This class implements the Reaction Ensemble.
     """
-    _so_name = "ReactionMethods::ReactionEnsemble"
+    _so_name = "MCMethods::ReactionEnsemble"
     def calculate_acceptance_probability(
             self, reaction, E_pot_diff, old_particle_numbers):
         """
@@ -480,7 +524,7 @@ class ConstantpHEnsemble(ReactionAlgorithm):
         Constant pH value.
 
     """
-    _so_name = "ReactionMethods::ConstantpHEnsemble"
+    _so_name = "MCMethods::ConstantpHEnsemble"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -528,7 +572,7 @@ class WidomInsertion(ReactionAlgorithm):
 
     """
 
-    _so_name = "ReactionMethods::WidomInsertion"
+    _so_name = "MCMethods::WidomInsertion"
 
     def required_keys(self):
         return {"kT", "seed"}
@@ -631,6 +675,34 @@ class WidomInsertion(ReactionAlgorithm):
                                      (-np.log(gamma_mean - gamma_std)))
 
         return mu_ex_mean, mu_ex_Delta
+
+class CanonicalEnsemble():
+    _so_name = "MCMethods::CanonicalEnsemble"
+    
+    def move_particle_in_simulation_box(self,ptype,steps):
+        """
+        NOTE: Logic for the boundaries not implemented yet
+        """
+        accepted_moves=0
+        for _ in range(steps):
+            p_id = self.get_random_pids(ptype=ptype,size=1)
+            old_position = self.system.part.by_id().pos
+            E_pot_old = self.system.analysis.potential_energy()
+            new_position = self.get_random_position_in_box()
+            self.system.part.by_id.pos=new_position
+            if check_exclusion_range:
+                self.system.part.by_id().pos=old_position
+            E_pot_new = self.system.analysis.potential_energy()
+            bf = self.calculate_acceptance_probability(E_pot_new-E_pot_old)
+            if self.rng.uniform() < bf:  # accept trial move
+                accepted_moves+=1
+            else:
+                self.system.part.by_id().pos=old_position
+        return
+
+    def calculate_acceptance_probability(self,potential_energy_diff):
+        return np.exp(-potential_energy_diff/self.kT)
+
 
 if args.method == "widom":
     # System parameters
