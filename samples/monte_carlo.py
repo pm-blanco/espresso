@@ -43,11 +43,14 @@ import math
 import time
 import tqdm
 import os
+import sys
 
 import espressomd
 import espressomd.polymer
 import espressomd.electrostatics
 import espressomd.reaction_methods
+import espressomd.utils
+import espressomd.code_features
 
 required_features = ["P3M", "WCA"]
 espressomd.assert_features(required_features)
@@ -79,7 +82,7 @@ def factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0):
 
 
 class SingleReaction:
-
+    _so_name = "ReactionMethods::SingleReaction"
     def __init__(self, **kwargs):
         self.reactant_types = kwargs["reactant_types"]
         self.reactant_coefficients = kwargs["reactant_coefficients"]
@@ -104,7 +107,7 @@ class SingleReaction:
 
 
 class ReactionAlgorithm:
-
+    _so_name = "ReactionMethods::ReactionAlgorithm"
     def __init__(self, **kwargs):
         self.system = kwargs["system"]
         self.kT = kwargs["kT"]
@@ -115,6 +118,25 @@ class ReactionAlgorithm:
         self.m_empty_p_ids_smaller_than_max_seen_particle = []
         self.rng = np.random.default_rng(seed=kwargs["seed"])
         self.exclusion = espressomd.reaction_methods.ExclusionRadius(**kwargs)
+        self._m_reaction_constraint = None
+
+        if self._so_name == ReactionAlgorithm._so_name:
+            raise RuntimeError(
+                    f"Base class '{self.__class__.__name__}' cannot be instantiated")
+            if 'exclusion_radius' in kwargs:
+                raise KeyError(
+                    'the keyword `exclusion_radius` is obsolete. Currently, the equivalent keyword is `exclusion_range`')
+            # PMB: this needs to be adapted
+            # super().__init__(exclusion=ExclusionRadius(**kwargs), **kwargs)
+            if not 'sip' in kwargs:
+                espressomd.utils.check_valid_keys(self.valid_keys(), kwargs.keys())
+
+    def valid_keys(self):
+        return {"kT", "exclusion_range", "seed",
+                "exclusion_radius_per_type", "search_algorithm"}
+
+    def required_keys(self):
+        return {"kT", "exclusion_range", "seed"}
 
     def set_non_interacting_type(self, type):
         self.non_interacting_type = type
@@ -123,22 +145,46 @@ class ReactionAlgorithm:
         """
         Set up a reaction in the forward and backward directions.
         """
-        self.default_charges.update(kwargs["default_charges"])
-        forward_reaction = SingleReaction(
-            reactant_types=kwargs["reactant_types"],
-            reactant_coefficients=kwargs["reactant_coefficients"],
-            product_types=kwargs["product_types"],
-            product_coefficients=kwargs["product_coefficients"],
-            gamma=kwargs["gamma"])
+        default_charges = kwargs.pop("default_charges")
+        neutrality_check = kwargs.pop("check_for_electroneutrality", True)
+        if not isinstance(default_charges, dict):
+            raise TypeError("Argument 'default_charges' needs to be a dict")
+        self.default_charges.update()
+        forward_reaction = SingleReaction(**kwargs)
         backward_reaction = forward_reaction.make_backward_reaction()
+        if neutrality_check:
+            self._check_charge_neutrality(
+                type2charge=default_charges,
+                reaction=forward_reaction)
+        self.default_charges=default_charges
         self.reactions.append(forward_reaction)
         self.reactions.append(backward_reaction)
+        self.check_reaction_method()
+
+    def delete_reaction(self, **kwargs):
+        """
+        Delete a reaction from the set of used reactions
+        (the forward and backward reaction).
+        The ``reaction_id`` which is assigned to a reaction
+        depends on the order in which :meth:`add_reaction` was called.
+        The 0th reaction has ``reaction_id=0``, the next added
+        reaction needs to be addressed with ``reaction_id=1``, etc.
+        After the deletion of a reaction subsequent reactions
+        take the ``reaction_id`` of the deleted reaction.
+
+        Parameters
+        ----------
+        reaction_id : :obj:`int`
+            Reaction id
+        """
+        del self.reactions[kwargs["reaction_id"]]
 
     @profile
     def reaction(self, steps):
         """
         Perform reaction steps. Chemical reactions are selected at random.
         """
+        self.setup_bookkeeping_of_empty_pids()
         E_pot = self.system.analysis.potential_energy()
         random = self.rng.choice(len(self.reactions), size=steps, replace=True)
         for i in random:
@@ -151,32 +197,39 @@ class ReactionAlgorithm:
         `A + B + ... --> C + D + ...` and return the new potential
         energy if the trial move is accepted.
         """
-        reaction.trial_moves += 1
-        self.particle_inside_exclusion_range_touched = False
-        if not self.all_reactant_particles_exist(reaction):
-            return E_pot_old
-
-        old_particle_numbers = self.save_old_particle_numbers(reaction)
-        p_properties_old_state = self.make_reaction_attempt(reaction)
-
-        if self.particle_inside_exclusion_range_touched:  # reject trial move
-            self.restore_system(p_properties_old_state)
+        try:
+            reaction.trial_moves += 1
             self.particle_inside_exclusion_range_touched = False
-            return E_pot_old
+            if not self.all_reactant_particles_exist(reaction):
+                return E_pot_old
 
-        E_pot_new = self.system.analysis.potential_energy()
-        E_pot_diff = E_pot_new - E_pot_old
-        bf = self.calculate_acceptance_probability(
-            reaction, E_pot_diff, old_particle_numbers)
-        reaction.accumulator_potential_energy_difference_exponential.append(
-            math.exp(-E_pot_diff / self.kT))
-        if self.rng.uniform() < bf:  # accept trial move
-            self.delete_hidden_particles(p_properties_old_state)
-            reaction.accepted_moves += 1
-            return E_pot_new
-        else:  # reject trial move
-            self.restore_system(p_properties_old_state)
-            return E_pot_old
+            old_particle_numbers = self.save_old_particle_numbers(reaction)
+            p_properties_old_state = self.make_reaction_attempt(reaction)
+
+            if self.particle_inside_exclusion_range_touched:  # reject trial move
+                self.restore_system(p_properties_old_state)
+                self.particle_inside_exclusion_range_touched = False
+                return E_pot_old
+
+            E_pot_new = self.system.analysis.potential_energy()
+            E_pot_diff = E_pot_new - E_pot_old
+            bf = self.calculate_acceptance_probability(
+                reaction, E_pot_diff, old_particle_numbers)
+            reaction.accumulator_potential_energy_difference_exponential.append(
+                math.exp(-E_pot_diff / self.kT))
+            if self.rng.uniform() < bf:  # accept trial move
+                self.delete_hidden_particles(p_properties_old_state)
+                reaction.accepted_moves += 1
+                return E_pot_new
+            else:  # reject trial move
+                self.restore_system(p_properties_old_state)
+                return E_pot_old
+        except BaseException as err:
+            tb = sys.exc_info()[2]
+            raise RuntimeError(
+                "An exception was raised by a chemical reaction; the particle "
+                "state tracking is no longer guaranteed to be correct! -- "
+                f"{err}").with_traceback(tb)
 
     @profile
     def make_reaction_attempt(self, reaction):
@@ -307,14 +360,82 @@ class ReactionAlgorithm:
             pid = self.system.part.highest_particle_id + 1
         else:
             pid = min(self.m_empty_p_ids_smaller_than_max_seen_particle)
+            self.m_empty_p_ids_smaller_than_max_seen_particle.remove(pid)
         self.system.part.add(id=pid, type=ptype, q=self.default_charges[ptype],
                              pos=self.rng.random((3,)) * self.system.box_l,
                              v=self.rng.normal(size=3) * math.sqrt(self.kT))
         return pid
 
+    def setup_bookkeeping_of_empty_pids(self):
+        particle_ids = self.system.part.all().id
+        available_pids = self.find_missing_pids(pids_list=particle_ids)
+        self.m_empty_p_ids_smaller_than_max_seen_particle = available_pids
+
+
+    def find_missing_pids(self,pids_list):
+        """
+        Finds the missing particles ids in `pids_list`.
+        NOTE:  `pids_list` must be a sorted list [0,1,3,5,7..]
+        """
+        return [i for x, y in zip(pids_list, pids_list[1:]) for i in range(x + 1, y) if y - x > 1]
+    
+    def check_reaction_method(self):
+        if len(self.reactions) == 0:
+            raise RuntimeError("Reaction system not initialized")
+
+        # charges of all reactive types need to be known
+        if espressomd.code_features.has_features("ELECTROSTATICS"):
+            for reaction in self.reactions:
+                for p_type in reaction.reactant_types:
+                    if p_type not in self.default_charges:
+                        raise RuntimeError(
+                            f"Forgot to assign charge to type {p_type}")
+
+    def _check_charge_neutrality(self, type2charge, reaction):
+        charges = np.array(list(type2charge.values()))
+        if np.count_nonzero(charges) == 0:
+            # all particles have zero charge
+            # no need to check electroneutrality
+            return
+        # calculate net change of electrical charge for the reaction
+        net_charge_change = 0.0
+        for coef, ptype in zip(
+                reaction.reactant_coefficients, reaction.reactant_types):
+            net_charge_change -= coef * type2charge[ptype]
+        for coef, ptype in zip(
+                reaction.product_coefficients, reaction.product_types):
+            net_charge_change += coef * type2charge[ptype]
+        min_abs_nonzero_charge = np.min(
+            np.abs(charges[np.nonzero(charges)[0]]))
+        if abs(net_charge_change) / min_abs_nonzero_charge > 1e-10:
+            raise ValueError("Reaction system is not charge neutral")
+
+    def _check_reaction_index(self, reaction_index):
+        if reaction_index < 0 or reaction_index >= len(self.reactions):
+            raise IndexError(f"No reaction with id {reaction_index}")
+
+    def get_status(self):
+        """
+        Returns the status of the reaction ensemble in a dictionary containing
+        the used reactions, the used kT and the used exclusion radius.
+
+        """
+
+        self.check_reaction_method()
+        property_keys = {"reactant_coefficients", "reactant_types",
+                         "product_coefficients", "product_types", "gamma"}
+        reactions_list = [{key: getattr(reaction, key) for key in property_keys}
+                          for reaction in self.reactions]
+
+        return {"reactions": reactions_list, "kT": self.kT,
+                "exclusion_range": self.exclusion_range,
+                "exclusion_radius_per_type": self.exclusion_radius_per_type}
 
 class ReactionEnsemble(ReactionAlgorithm):
-
+    """
+    This class implements the Reaction Ensemble.
+    """
+    _so_name = "ReactionMethods::ReactionEnsemble"
     def calculate_acceptance_probability(
             self, reaction, E_pot_diff, old_particle_numbers):
         """
@@ -341,18 +462,38 @@ class ReactionEnsemble(ReactionAlgorithm):
 
 
 class ConstantpHEnsemble(ReactionAlgorithm):
+    """
+    This class implements the constant pH Ensemble.
+
+    When adding an acid-base reaction, the acid and base particle types
+    are always assumed to be at index 0 of the lists passed to arguments
+    ``reactant_types`` and ``product_types``.
+
+    Attributes
+    ----------
+    constant_pH : :obj:`float`
+        Constant pH value.
+
+    """
+    _so_name = "ReactionMethods::ConstantpHEnsemble"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.constant_pH = kwargs["constant_pH"]
+
+    def valid_keys(self):
+        return {"kT", "exclusion_range", "seed",
+                "constant_pH", "exclusion_radius_per_type", "search_algorithm"}
+
+    def required_keys(self):
+        return {"kT", "exclusion_range", "seed", "constant_pH"}
 
     def add_reaction(self, **kwargs):
         kwargs["reactant_coefficients"] = [1]
         kwargs["product_coefficients"] = [1, 1]
         super().add_reaction(**kwargs)
 
-    def calculate_acceptance_probability(
-            self, reaction, E_pot_diff, old_particle_numbers):
+    def calculate_acceptance_probability(self, reaction, E_pot_diff, old_particle_numbers):
         """
         Calculate the acceptance probability of a Monte Carlo move.
         """

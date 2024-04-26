@@ -82,6 +82,7 @@ void ReactionAlgorithm::add_reaction(
  * except for particle deletion (the cell structure is still reinitialized
  * after each deletion).
  */
+ // PMB: this method is not in the current Python code
 void ReactionAlgorithm::restore_old_system_state() {
   auto &system = System::get_system();
   auto const &old_state = get_old_system_state();
@@ -126,6 +127,10 @@ void ReactionAlgorithm::restore_old_system_state() {
  * Automatically sets the volume which is used by the reaction ensemble to the
  * volume of a cuboid box.
  */
+// PMB: This function is not in the Python version
+// PMB: this function is actually not necessary for Python 
+// PMB: simply V = system.volume()
+
 void ReactionAlgorithm::update_volume() {
   auto const &box_geo = *System::get_system().box_geo;
   volume = box_geo.volume();
@@ -235,6 +240,9 @@ void ReactionAlgorithm::make_reaction_attempt(SingleReaction const &reaction,
   }
 }
 
+// PMB: this function is not in the Python code
+// PMB: but it can be simply replaced by N_type = system.number_of_particles(type=r_type)
+
 std::unordered_map<int, int>
 ReactionAlgorithm::get_particle_numbers(SingleReaction const &reaction) const {
   std::unordered_map<int, int> particle_numbers;
@@ -332,6 +340,8 @@ void ReactionAlgorithm::check_exclusion_range(int p_id, int p_type) {
  * delete unbonded particles since bonds are coupled to ids. This is used to
  * avoid the id range becoming excessively huge.
  */
+
+ // PMB: this method is not in the current Python code
 void ReactionAlgorithm::delete_particle(int p_id) {
   if (p_id < 0) {
     throw std::domain_error("Invalid particle id: " + std::to_string(p_id));
@@ -359,6 +369,7 @@ void ReactionAlgorithm::delete_particle(int p_id) {
   }
 }
 
+// PMB: this is missing in the Python implementation
 void ReactionAlgorithm::set_cyl_constraint(double center_x, double center_y,
                                            double radius) {
   auto const &box_geo = *System::get_system().box_geo;
@@ -374,6 +385,7 @@ void ReactionAlgorithm::set_cyl_constraint(double center_x, double center_y,
   m_reaction_constraint = ReactionConstraint::CYL_Z;
 }
 
+// PMB: this is missing in the Python implementation
 void ReactionAlgorithm::set_slab_constraint(double slab_start_z,
                                             double slab_end_z) {
   auto const &box_geo = *System::get_system().box_geo;
@@ -388,6 +400,8 @@ void ReactionAlgorithm::set_slab_constraint(double slab_start_z,
   m_reaction_constraint = ReactionConstraint::SLAB_Z;
 }
 
+
+// PMB: this is missing in the Python implementation
 /**
  * Writes a random position inside the central box into the provided array.
  */
@@ -450,6 +464,7 @@ int ReactionAlgorithm::create_particle(int p_type) {
   return p_id;
 }
 
+// PMB: this is not in the Python core
 void ReactionAlgorithm::displacement_mc_move(int type, int n_particles) {
   auto &bookkeeping = make_new_system_state();
   // draw particle ids at random without replacement
@@ -485,6 +500,7 @@ void ReactionAlgorithm::displacement_mc_move(int type, int n_particles) {
     }
   }
 }
+// PMB: this is not in the Python core
 
 bool ReactionAlgorithm::make_displacement_mc_move_attempt(int type,
                                                           int n_particles) {
@@ -541,7 +557,6 @@ bool ReactionAlgorithm::make_displacement_mc_move_attempt(int type,
   restore_old_system_state();
   return false;
 }
-
 /**
  * Cleans the list of empty pids and searches for empty pid in the system
  */
@@ -568,6 +583,7 @@ double ReactionAlgorithm::calculate_potential_energy() const {
   return pot;
 }
 
+// PMB: this is not in the Python version
 Particle *ReactionAlgorithm::get_real_particle(int p_id) const {
   assert(p_id >= 0);
   auto const &system = System::get_system();
@@ -580,6 +596,7 @@ Particle *ReactionAlgorithm::get_real_particle(int p_id) const {
   return ptr;
 }
 
+// PMB: this is not in the Python version
 Particle *ReactionAlgorithm::get_local_particle(int p_id) const {
   assert(p_id >= 0);
   auto const &system = System::get_system();
