@@ -70,13 +70,7 @@ if "line_profiler" not in dir():
             return func(*args, **kwargs)
         return wrapper
 
-def factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0):
-    value = 1.
-    if nu_i > 0:
-        value /= math.factorial(N_i0 + nu_i) // math.factorial(N_i0)
-    elif nu_i < 0:
-        value *= math.factorial(N_i0) // math.factorial(N_i0 + nu_i)
-    return value
+
 
 class MCMethods:
     _so_name = "MCMethods"
@@ -91,6 +85,7 @@ class MCMethods:
                     'the keyword `exclusion_radius` is obsolete. Currently, the equivalent keyword is `exclusion_range`')
         if not 'sip' in kwargs:
             espressomd.utils.check_valid_keys(self.valid_keys(), kwargs.keys())
+        self.constraint_type="none"
     
     def required_keys(self):
         return {"kT", "seed"}
@@ -106,7 +101,7 @@ class MCMethods:
         self.particle_inside_exclusion_range_touched |= self.exclusion.check_exclusion_range(
             pid=pid)
 
-    def get_random_position_in_box(constraint_type="none", params_boundaries=None):
+    def get_random_position_in_box(self):
         """
         Returns a random position in the simulation box within the input boundaries
 
@@ -115,23 +110,23 @@ class MCMethods:
             - method='cylinder' currently only supports a cylinder aligned in the z-direction.
         """
         supported_constraint_types=["none","cylinder","slab"]
-        if constraint_type in supported_constraint_types:
-            raise ValueError(f"Constrint type {constraint_type} is not currently supported, supported types are {supported_constraint_types}")
+        if self.constraint_type in supported_constraint_types:
+            raise ValueError(f"Constraint type {self.constraint_type="none"} is not currently supported, supported types are {supported_constraint_types}")
         box_l = system.box_l
         position = []
-        if constraint_type == "none":
+        if self.constraint_type == "none":
             for side in box_l:
                 position.append(side*self.rng.uniform())
-        elif constraint_type == "slab":
+        elif self.constraint_type == "slab":
             for side in box_l[:2]:
                 position.append(side*self.rng.uniform())
-            coord_z=params_boundaries["slab_start_z"]+self.rng.uniform()*(params_boundaries["slab_end_z"]-params_boundaries["slab_start_z"])
+            coord_z=self.params_boundaries["slab_start_z"]+self.rng.uniform()*(self.params_boundaries["slab_end_z"]-self.params_boundaries["slab_start_z"])
             position.append(coord_z)
-        elif constraint_type == "cylinder":
-            radius=params_boundaries["radius"]*np.sqrt(self.rng.uniform())
+        elif self.constraint_type == "cylinder":
+            radius=self.params_boundaries["radius"]*np.sqrt(self.rng.uniform())
             phi=2*np.pi*self.rng.uniform()
-            position.append(box_l[0]+radius*np.cos(phi))
-            position.append(box_l[1]+radius*np.sin(phi))
+            position.append(box_l[0]+self.params_boundaries["center_x"]*np.cos(phi))
+            position.append(box_l[1]+self.params_boundaries["center_y"]*np.sin(phi))
             position.append(box_l[2]*self.rng.uniform())
         return position
 
@@ -140,6 +135,46 @@ class MCMethods:
             "get_pids_of_type", ptype=ptype)
         indices = self.rng.choice(len(pids), size=size, replace=False)
         return [pids[i] for i in indices]
+
+    def set_cyl_constraint(self,center_x, center_y,  radius):
+        """
+        Constrains the MC sampling within a volume given by a cylender.
+
+        NOTE:
+            This function assumes that the cylender is along the z-axis
+
+        """
+        if center_x < 0 or center_x > self.system.box_l[0]:
+            raise ValueError(f"center_x is outside the box")
+        if center_y < 0 or center_y > self.system.box_l[1]:
+            raise ValueError(f"center_y is outside the box")
+        if radius < 0:
+            raise ValueError(f"radius is invalid")
+
+        self.constraint_type="cylinder"
+        self.params_boundaries={"radius": radius,
+                                "center_x": center_x,
+                                "center_y": center_y}
+
+    def set_slab_constraint(self, slab_start_z,slab_end_z):
+        """
+        Constrains the MC sampling within a volume given by a cylender.
+
+        NOTE:
+            This function assumes that the cylender is along the z-axis
+
+        """
+        if slab_start_z < 0 or slab_start_z > self.system.box_l[2]:
+            raise ValueError("slab_start_z is outside the box")
+        if slab_end_z < 0 or slab_end_z > self.system.box_l[2]:
+            raise ValueError("slab_end_z is outside the box")
+        if slab_end_z < slab_start_z:
+            raise ValueError("slab_end_z must be >= slab_start_z")
+
+        self.constraint_type="slab"
+        self.params_boundaries={"slab_start_z": slab_start_z,
+                                "slab_end_z": slab_end_z}
+    
 
 class SingleReaction:
     _so_name = "MCMethods::SingleReaction"
@@ -178,7 +213,7 @@ class ReactionAlgorithm(MCMethods):
         self.m_empty_p_ids_smaller_than_max_seen_particle = []
         self.rng = np.random.default_rng(seed=kwargs["seed"])
         self.exclusion = espressomd.reaction_methods.ExclusionRadius(**kwargs)
-        self._m_reaction_constraint = None
+        self.constraint_type="none"
 
         if self._so_name == ReactionAlgorithm._so_name:
             raise RuntimeError(
@@ -295,6 +330,16 @@ class ReactionAlgorithm(MCMethods):
                 "An exception was raised by a chemical reaction; the particle "
                 "state tracking is no longer guaranteed to be correct! -- "
                 f"{err}").with_traceback(tb)
+
+    @class_method
+    def _factorial_Ni0_by_factorial_Ni0_plus_nu_i(cls,nu_i, N_i0):
+        value = 1.
+        if nu_i > 0:
+            value /= math.factorial(N_i0 + nu_i) // math.factorial(N_i0)
+        elif nu_i < 0:
+            value *= math.factorial(N_i0) // math.factorial(N_i0 + nu_i)
+        return value
+
 
     @profile
     def make_reaction_attempt(self, reaction):
@@ -499,13 +544,13 @@ class ReactionEnsemble(ReactionAlgorithm):
         for i in range(len(reaction.reactant_types)):
             nu_i = -reaction.reactant_coefficients[i]
             N_i0 = old_particle_numbers[reaction.reactant_types[i]]
-            expr *= factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0)
+            expr *= self._factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0)
 
         # factorial contribution of products
         for i in range(len(reaction.product_types)):
             nu_i = reaction.product_coefficients[i]
             N_i0 = old_particle_numbers[reaction.product_types[i]]
-            expr *= factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0)
+            expr *= self._factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0)
 
         return expr
 
@@ -555,12 +600,12 @@ class ConstantpHEnsemble(ReactionAlgorithm):
         # factorial contribution of reactants
         nu_i = -reaction.reactant_coefficients[0]
         N_i0 = old_particle_numbers[reaction.reactant_types[0]]
-        factorial_expr *= factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0)
+        factorial_expr *= self._factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0)
 
         # factorial contribution of products
         nu_i = reaction.product_coefficients[0]
         N_i0 = old_particle_numbers[reaction.product_types[0]]
-        factorial_expr *= factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0)
+        factorial_expr *= self._factorial_Ni0_by_factorial_Ni0_plus_nu_i(nu_i, N_i0)
 
         return factorial_expr
 

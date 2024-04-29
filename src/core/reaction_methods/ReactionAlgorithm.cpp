@@ -82,7 +82,7 @@ void ReactionAlgorithm::add_reaction(
  * except for particle deletion (the cell structure is still reinitialized
  * after each deletion).
  */
- // PMB: this method is not in the current Python code
+
 void ReactionAlgorithm::restore_old_system_state() {
   auto &system = System::get_system();
   auto const &old_state = get_old_system_state();
@@ -127,9 +127,6 @@ void ReactionAlgorithm::restore_old_system_state() {
  * Automatically sets the volume which is used by the reaction ensemble to the
  * volume of a cuboid box.
  */
-// PMB: This function is not in the Python version
-// PMB: this function is actually not necessary for Python 
-// PMB: simply V = system.volume()
 
 void ReactionAlgorithm::update_volume() {
   auto const &box_geo = *System::get_system().box_geo;
@@ -239,9 +236,6 @@ void ReactionAlgorithm::make_reaction_attempt(SingleReaction const &reaction,
     System::get_system().on_particle_change();
   }
 }
-
-// PMB: this function is not in the Python code
-// PMB: but it can be simply replaced by N_type = system.number_of_particles(type=r_type)
 
 std::unordered_map<int, int>
 ReactionAlgorithm::get_particle_numbers(SingleReaction const &reaction) const {
@@ -368,7 +362,6 @@ void ReactionAlgorithm::delete_particle(int p_id) {
   }
 }
 
-// PMB: this is missing in the Python implementation
 void ReactionAlgorithm::set_cyl_constraint(double center_x, double center_y,
                                            double radius) {
   auto const &box_geo = *System::get_system().box_geo;
@@ -384,7 +377,6 @@ void ReactionAlgorithm::set_cyl_constraint(double center_x, double center_y,
   m_reaction_constraint = ReactionConstraint::CYL_Z;
 }
 
-// PMB: this is missing in the Python implementation
 void ReactionAlgorithm::set_slab_constraint(double slab_start_z,
                                             double slab_end_z) {
   auto const &box_geo = *System::get_system().box_geo;
@@ -579,7 +571,6 @@ double ReactionAlgorithm::calculate_potential_energy() const {
   return pot;
 }
 
-// PMB: this is not in the Python version
 Particle *ReactionAlgorithm::get_real_particle(int p_id) const {
   assert(p_id >= 0);
   auto const &system = System::get_system();
@@ -592,7 +583,6 @@ Particle *ReactionAlgorithm::get_real_particle(int p_id) const {
   return ptr;
 }
 
-// PMB: this is not in the Python version
 Particle *ReactionAlgorithm::get_local_particle(int p_id) const {
   assert(p_id >= 0);
   auto const &system = System::get_system();
