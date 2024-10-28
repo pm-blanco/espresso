@@ -50,6 +50,9 @@ physical systems.
 * **Raspberry electrophoresis**  
   Extended objects in a Lattice-Boltzmann fluid, raspberry particles.  
   [Guide](raspberry_electrophoresis/raspberry_electrophoresis.ipynb)
+* **Machine-learned interatomic potential**  
+  Atomistic simulations using the MACE-MP-0 model.  
+  [Guide](mlip/mlip.ipynb)
 
 ### Advanced tutorials
 
