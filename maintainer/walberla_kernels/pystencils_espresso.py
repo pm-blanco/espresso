@@ -239,7 +239,8 @@ def generate_pack_info_pdfs_field_assignments(fields, streaming_pattern):
     return lbm_update_rule.all_assignments
 
 
-def generate_pack_info_vector_field_specifications(config, stencil, layout):
+def generate_pack_info_field_specifications(
+        config, stencil, layout, vec_len=3):
     import collections
     import itertools
     field = ps.Field.create_generic(
@@ -248,7 +249,7 @@ def generate_pack_info_vector_field_specifications(config, stencil, layout):
         data_type_np[config.data_type.default_factory().c_name],
         index_dimensions=1,
         layout=layout,
-        index_shape=(3,)
+        index_shape=(vec_len,)
     )
     q = len(stencil)
     coord = itertools.product(*[(-1, 0, 1)] * 3)
@@ -257,7 +258,7 @@ def generate_pack_info_vector_field_specifications(config, stencil, layout):
     else:
         dirs = tuple((i, j, k) for i, j, k in coord)
     spec = collections.defaultdict(set)
-    spec[dirs] = {field[0, 0, 0](i) for i in range(3)}
+    spec[dirs] = {field[0, 0, 0](i) for i in range(vec_len)}
     return spec
 
 

@@ -54,6 +54,10 @@ if(ESPRESSO_BUILD_WITH_CUDA AND WALBERLA_BUILD_WITH_CUDA)
             StreamSweepSinglePrecisionCUDA.cu
             InitialPDFsSetterDoublePrecisionCUDA.cu
             InitialPDFsSetterSinglePrecisionCUDA.cu
+            PackInfoPdfSinglePrecisionCUDA.cu
+            PackInfoPdfDoublePrecisionCUDA.cu
+            PackInfoVecSinglePrecisionCUDA.cu
+            PackInfoVecDoublePrecisionCUDA.cu
             Dynamic_UBB_double_precisionCUDA.cu
             Dynamic_UBB_single_precisionCUDA.cu)
 endif()

@@ -31,7 +31,7 @@ parser = argparse.ArgumentParser(description="Benchmark LB simulations. "
 parser.add_argument("--particles_per_core", metavar="N", action="store",
                     type=int, default=125, required=False,
                     help="Number of particles per core")
-parser.add_argument("--box_l", action="store",
+parser.add_argument("--box_l", action="store", nargs="+",
                     type=int, default=argparse.SUPPRESS, required=False,
                     help="Box length (cubic box)")
 parser.add_argument("--lb_sites_per_particle", metavar="N_LB", action="store",
@@ -45,6 +45,8 @@ parser.add_argument("--single_precision", action="store_true", required=False,
                     help="Using single-precision floating point accuracy")
 parser.add_argument("--gpu", action=argparse.BooleanOptionalAction,
                     default=False, required=False, help="Use GPU implementation")
+parser.add_argument("--multi-gpu", action=argparse.BooleanOptionalAction,
+                    default=False, required=False, help="Use multi-GPU implementation")
 parser.add_argument("--output", metavar="FILEPATH", action="store",
                     type=str, required=False, default="benchmarks.csv",
                     help="Output file (default: benchmarks.csv)")
@@ -83,9 +85,9 @@ lj_cut = lj_sig * 2**(1. / 6.)  # cutoff distance
 n_proc = system.cell_system.get_state()["n_nodes"]
 n_part = n_proc * args.particles_per_core
 if n_part == 0:
-    box_l = args.box_l
+    box_l = 3 * args.box_l if len(args.box_l) == 1 else args.box_l
     agrid = 1.
-    lb_grid = args.box_l
+    lb_grid = box_l
     measurement_steps = 80
 else:
     # volume of N spheres with radius r: N * (4/3*pi*r^3)
@@ -96,13 +98,16 @@ else:
     agrid = box_l / lb_grid
     measurement_steps = max(50, int(120**3 / lb_grid**3))
     measurement_steps = 40
+    lb_grid = 3 * [lb_grid]
+    box_l = 3 * [box_l]
 
-print(f"LB shape: [{lb_grid}, {lb_grid}, {lb_grid}]")
+print(f"box length: {box_l}")
+print(f"LB shape: {lb_grid}")
 print(f"LB agrid: {agrid:.3f}")
 
 # System
 #############################################################
-system.box_l = 3 * (box_l,)
+system.box_l = box_l
 
 # Integration parameters
 #############################################################
@@ -135,8 +140,10 @@ if n_part:
 # LB fluid setup
 #############################################################
 lb_class = espressomd.lb.LBFluidWalberla
-if args.gpu:
+if args.gpu or args.multi_gpu:
     lb_class = espressomd.lb.LBFluidWalberlaGPU
+if args.multi_gpu:
+    system.cuda_init_handle.call_method("set_device_id_per_rank")
 lbf = lb_class(agrid=agrid, tau=system.time_step, kinematic_viscosity=1.,
                density=1., single_precision=args.single_precision)
 system.lb = lbf

@@ -39,7 +39,7 @@ namespace lbm {
 #else
 #pragma push
 #pragma diag_suppress 177 // unused variable
-#endif
+#endif                    // defined(__NVCC_DIAG_PRAGMA_SUPPORT__)
 #elif defined(__clang__)
 #if defined(__CUDA__)
 #if defined(__CUDA_ARCH__)
@@ -58,8 +58,8 @@ namespace lbm {
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wconversion"
 #pragma clang diagnostic ignored "-Wsign-compare"
-#endif
-#endif
+#endif // defined(__CUDA_ARCH__)
+#endif // defined(__CUDA__)
 #elif defined(__GNUC__) or defined(__GNUG__)
 #define RESTRICT __restrict__
 #pragma GCC diagnostic push
@@ -128,7 +128,13 @@ static FUNC_PREFIX __launch_bounds__(256) void dynamic_ubb_double_precisioncuda_
 
 // NOLINTEND(readability-non-const-parameter*)
 
-#if defined(__clang__)
+#if defined(__NVCC__)
+#if defined(__NVCC_DIAG_PRAGMA_SUPPORT__)
+#pragma nv_diagnostic pop
+#else
+#pragma pop
+#endif // defined(__NVCC_DIAG_PRAGMA_SUPPORT__)
+#elif defined(__clang__)
 #if defined(__CUDA__)
 #if defined(__CUDA_ARCH__)
 // clang compiling CUDA code in device mode
@@ -136,16 +142,10 @@ static FUNC_PREFIX __launch_bounds__(256) void dynamic_ubb_double_precisioncuda_
 #else
 // clang compiling CUDA code in host mode
 #pragma clang diagnostic pop
-#endif
-#endif
+#endif // defined(__CUDA_ARCH__)
+#endif // defined(__CUDA__)
 #elif defined(__GNUC__) or defined(__GNUG__)
 #pragma GCC diagnostic pop
-#elif defined(__CUDACC__)
-#if defined(__NVCC_DIAG_PRAGMA_SUPPORT__)
-#pragma nv_diagnostic pop
-#else
-#pragma pop
-#endif
 #endif
 
 void Dynamic_UBB_double_precisionCUDA::run_impl(IBlock *block, IndexVectors::Type type, gpuStream_t stream) {

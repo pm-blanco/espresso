@@ -119,11 +119,10 @@ protected:
     using VectorField = field::GhostLayerField<FT, uint_t{3u}>;
     template <class Field>
     using PackInfo = field::communication::PackInfo<Field>;
-    template <class Field>
-    using PackInfoStreaming =
-        std::conditional_t<std::is_same_v<Field, PdfField>,
-                           typename detail::KernelTrait<FT, AT>::PackInfoPdf,
-                           typename detail::KernelTrait<FT, AT>::PackInfoVec>;
+    using PackInfoStreamingPdf =
+        typename detail::KernelTrait<FT, AT>::PackInfoPdf;
+    using PackInfoStreamingVec =
+        typename detail::KernelTrait<FT, AT>::PackInfoVec;
     template <class Stencil>
     using RegularCommScheme =
         blockforest::communication::UniformBufferedScheme<Stencil>;
@@ -134,14 +133,30 @@ protected:
 
 #if defined(__CUDACC__)
   template <typename FT> struct FieldTrait<FT, lbmpy::Arch::GPU> {
+  private:
+    static auto constexpr AT = lbmpy::Arch::GPU;
+    template <class Field>
+    using MemcpyPackInfo = gpu::communication::MemcpyPackInfo<Field>;
+
+  public:
+    template <typename Stencil>
+    class UniformGPUScheme
+        : public gpu::communication::UniformGPUScheme<Stencil> {
+    public:
+      explicit UniformGPUScheme(auto const &bf)
+          : gpu::communication::UniformGPUScheme<Stencil>(
+                bf, /* sendDirectlyFromGPU */ false,
+                /* useLocalCommunication */ false) {}
+    };
     using PdfField = gpu::GPUField<FT>;
     using VectorField = gpu::GPUField<FT>;
-    template <class Field>
-    using PackInfo = gpu::communication::MemcpyPackInfo<Field>;
-    template <class Field>
-    using PackInfoStreaming = gpu::communication::MemcpyPackInfo<Field>;
+    template <class Field> using PackInfo = MemcpyPackInfo<Field>;
+    using PackInfoStreamingPdf =
+        typename detail::KernelTrait<FT, AT>::PackInfoPdf;
+    using PackInfoStreamingVec =
+        typename detail::KernelTrait<FT, AT>::PackInfoVec;
     template <class Stencil>
-    using RegularCommScheme = gpu::communication::UniformGPUScheme<Stencil>;
+    using RegularCommScheme = UniformGPUScheme<Stencil>;
     template <class Stencil>
     using BoundaryCommScheme =
         blockforest::communication::UniformBufferedScheme<Stencil>;
@@ -315,10 +330,6 @@ protected:
   template <class Field>
   using PackInfo =
       typename FieldTrait<FloatType, Architecture>::template PackInfo<Field>;
-  template <class Field>
-  using PackInfoStreaming =
-      typename FieldTrait<FloatType,
-                          Architecture>::template PackInfoStreaming<Field>;
 
   // communicators
   std::shared_ptr<BoundaryFullCommunicator> m_boundary_communicator;
@@ -427,20 +438,22 @@ protected:
   }
 
   void setup_streaming_communicator() {
-    auto const setup = [this]<typename PdfPackInfo>() {
+    auto const setup = [this]<typename PackInfoPdf, typename PackInfoVec>() {
       auto const &blocks = m_lattice->get_blocks();
       m_pdf_streaming_communicator =
           std::make_shared<PDFStreamingCommunicator>(blocks);
       m_pdf_streaming_communicator->addPackInfo(
-          std::make_shared<PdfPackInfo>(m_pdf_field_id));
+          std::make_shared<PackInfoPdf>(m_pdf_field_id));
       m_pdf_streaming_communicator->addPackInfo(
-          std::make_shared<PackInfoStreaming<VectorField>>(
-              m_last_applied_force_field_id));
+          std::make_shared<PackInfoVec>(m_last_applied_force_field_id));
     };
+    using FieldTrait = FieldTrait<FloatType, Architecture>;
+    using PackInfoPdf = typename FieldTrait::PackInfoStreamingPdf;
+    using PackInfoVec = typename FieldTrait::PackInfoStreamingVec;
     if (m_has_boundaries or (m_collision_model and has_lees_edwards_bc())) {
-      setup.template operator()<PackInfo<PdfField>>();
+      setup.template operator()<PackInfo<PdfField>, PackInfoVec>();
     } else {
-      setup.template operator()<PackInfoStreaming<PdfField>>();
+      setup.template operator()<PackInfoPdf, PackInfoVec>();
     }
   }
 
