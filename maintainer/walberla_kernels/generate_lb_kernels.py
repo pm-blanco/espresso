@@ -221,6 +221,7 @@ with code_generation_context.CodeGeneration() as ctx:
 
     def patch_packinfo_header(content, target_suffix):
         if target_suffix in ["", "AVX"]:
+            # fix MPI buffer memory alignment
             token = "\n       //TODO: optimize by generating kernel for this case\n"
             assert token in content
             content = content.replace(token, "\n")
@@ -232,6 +233,7 @@ with code_generation_context.CodeGeneration() as ctx:
             assert token in content
             content = content.replace(token, f"{token[:-1]} + sizeof({ft}))")
         elif target_suffix in ["CUDA"]:
+            # replace preprocessor macros and pragmas
             token = "#define FUNC_PREFIX __global__"
             assert token in content
             content = content.replace(token, "")
@@ -240,16 +242,18 @@ with code_generation_context.CodeGeneration() as ctx:
 
     def patch_packinfo_kernel(content, target_suffix):
         if target_suffix in ["", "AVX"]:
-            # fix MPI buffer
+            # fix MPI buffer memory alignment
             m = re.search("(float|double) *\* *buffer = reinterpret_cast<(?:float|double) *\*>\(byte_buffer\);\n", content)  # nopep8
             assert m is not None
             content = content.replace(m.group(0), f"byte_buffer += sizeof({m.group(1)}) - (reinterpret_cast<std::size_t>(byte_buffer) - (reinterpret_cast<std::size_t>(byte_buffer) / sizeof({m.group(1)})) * sizeof({m.group(1)}));\n  {m.group(0)}")  # nopep8
         if target_suffix in ["CUDA"]:
+            # replace preprocessor macros and pragmas
             token = "#define FUNC_PREFIX __global__"
             assert token in content
             push, _ = custom_additional_extensions.generate_device_preprocessor(
                 "packinfo", defines=("RESTRICT",))
             content = content.replace(token, f"{token}\n{push}")
+            # add missing includes
             token = '#include "PackInfo'
             assert token in content
             content = content.replace(token, f'#include "core/DataTypes.h"\n#include "core/cell/CellInterval.h"\n#include "domain_decomposition/IBlock.h"\n#include "stencil/Directions.h"\n\n{token}')  # nopep8
@@ -276,10 +280,12 @@ with code_generation_context.CodeGeneration() as ctx:
 
     # pylint: disable=unused-argument
     def patch_boundary_header(content, target_suffix):
+        # replace real_t by actual floating-point type
         return content.replace("real_t", config.data_type.default_factory().c_name)  # nopep8
 
     def patch_boundary_kernel(content, target_suffix):
         if target_suffix in ["CUDA"]:
+            # replace preprocessor macros and pragmas
             push, pop = custom_additional_extensions.generate_device_preprocessor(
                 "ubb_boundary", defines=("RESTRICT",))
             content = re.sub(r"#ifdef __GNUC__[\s\S]+?#endif(?=\n\n|\n//)", "", content)  # nopep8
