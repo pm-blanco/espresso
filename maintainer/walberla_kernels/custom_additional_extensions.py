@@ -349,3 +349,48 @@ def generate_kernel_selector(
         "templates/ReactionKernelSelector.tmpl.h").render(**context)
 
     generation_context.write_file(f"{class_name}_all.h", header)
+
+
+def generate_device_preprocessor(kernel, defines=()):
+    """
+    Generate device preprocessor directives.
+    """
+    pragmas = {
+        "packinfo": {
+            "nvcc": ["diag_suppress 177 // unused variable"],
+            "clang_host": ["-Wunused-variable"],
+            "clang_dev": ["-Wunused-variable"],
+            "gcc": ["-Wunused-variable"],
+        },
+        "ubb_boundary": {
+            "nvcc": ["diag_suppress 177 // unused variable"],
+            "clang_host": ["-Wstrict-aliasing", "-Wunused-variable", "-Wconversion", "-Wsign-compare"],  # nopep8
+            "clang_dev": ["-Wstrict-aliasing", "-Wunused-variable", "-Wconversion", "-Wsign-compare"],  # nopep8
+            "gcc": ["-Wstrict-aliasing", "-Wunused-variable", "-Wconversion"],
+        },
+    }
+
+    defines_table = {
+        "nvcc": {"RESTRICT": "__restrict__", "FUNC_PREFIX": "__global__"},
+        "msvc": {"RESTRICT": "__restrict", "FUNC_PREFIX": ""},
+        "clang_host": {"RESTRICT": "__restrict__", "FUNC_PREFIX": ""},
+        "clang_dev": {"RESTRICT": "__restrict__", "FUNC_PREFIX": "__global__"},
+        "gcc": {"RESTRICT": "__restrict__", "FUNC_PREFIX": ""},
+        "other": {"RESTRICT": "", "FUNC_PREFIX": ""},
+    }
+
+    context = {
+        "pragmas": pragmas[kernel],
+        "defines_table": defines_table,
+        "defines": defines,
+    }
+
+    custom_env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(pathlib.Path(__file__).parent),
+        undefined=jinja2.StrictUndefined
+    )
+
+    content = custom_env.get_template(
+        "templates/preprocessor.tmpl.cuh").render(**context)
+
+    return content.split("\n/* section */\n")[1:]

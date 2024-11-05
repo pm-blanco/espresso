@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2023 The ESPResSo project
+# Copyright (C) 2020-2024 The ESPResSo project
 #
 # This file is part of ESPResSo.
 #
@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import re
 import argparse
 import packaging.specifiers
 
@@ -40,6 +41,7 @@ import lees_edwards
 import relaxation_rates
 import walberla_lbm_generation
 import code_generation_context
+import custom_additional_extensions
 
 parser = argparse.ArgumentParser(description="Generate the waLBerla kernels.")
 parser.add_argument("--single-precision", action="store_true", required=False,
@@ -63,6 +65,24 @@ def paramlist(parameters, keys):
     for key in keys:
         if key in parameters:
             yield parameters[key]
+
+
+def get_ext_header(target_suffix):
+    return {"CUDA": "h"}.get(target_suffix, "h")
+
+
+def get_ext_source(target_suffix):
+    return {"CUDA": "cu"}.get(target_suffix, "cpp")
+
+
+def patch_file(class_name, extension, target_suffix, patch):
+    with open(f"{class_name}.{extension}", "r+") as f:
+        old_content = f.read()
+        new_content = patch(old_content, target_suffix)
+        if new_content != old_content:
+            f.seek(0)
+            f.truncate()
+            f.write(new_content)
 
 
 with code_generation_context.CodeGeneration() as ctx:
@@ -196,26 +216,61 @@ with code_generation_context.CodeGeneration() as ctx:
     # generate PackInfo
     assignments = pystencils_espresso.generate_pack_info_pdfs_field_assignments(
         fields, streaming_pattern="pull")
-    spec = pystencils_espresso.generate_pack_info_vector_field_specifications(
+    spec = pystencils_espresso.generate_pack_info_field_specifications(
         config, stencil, force_field.layout)
-    for params, target_suffix in paramlist(parameters, ["CPU"]):
+
+    def patch_packinfo_header(content, target_suffix):
+        if target_suffix in ["", "AVX"]:
+            # fix MPI buffer memory alignment
+            token = "\n       //TODO: optimize by generating kernel for this case\n"
+            assert token in content
+            content = content.replace(token, "\n")
+            ft = "float" if "SinglePrecision" in content else "double"
+            token = " pack(dir, outBuffer.forward(dataSize)"
+            assert token in content
+            content = content.replace(token, f"{token[:-1]} + sizeof({ft}))")
+            token = " unpack(dir, buffer.skip(dataSize)"
+            assert token in content
+            content = content.replace(token, f"{token[:-1]} + sizeof({ft}))")
+        elif target_suffix in ["CUDA"]:
+            # replace preprocessor macros and pragmas
+            token = "#define FUNC_PREFIX __global__"
+            assert token in content
+            content = content.replace(token, "")
+            content = re.sub(r"#ifdef __GNUC__[\s\S]+?#endif\n\n", "", content)
+        return content
+
+    def patch_packinfo_kernel(content, target_suffix):
+        if target_suffix in ["", "AVX"]:
+            # fix MPI buffer memory alignment
+            m = re.search("(float|double) *\* *buffer = reinterpret_cast<(?:float|double) *\*>\(byte_buffer\);\n", content)  # nopep8
+            assert m is not None
+            content = content.replace(m.group(0), f"byte_buffer += sizeof({m.group(1)}) - (reinterpret_cast<std::size_t>(byte_buffer) - (reinterpret_cast<std::size_t>(byte_buffer) / sizeof({m.group(1)})) * sizeof({m.group(1)}));\n  {m.group(0)}")  # nopep8
+        if target_suffix in ["CUDA"]:
+            # replace preprocessor macros and pragmas
+            token = "#define FUNC_PREFIX __global__"
+            assert token in content
+            push, _ = custom_additional_extensions.generate_device_preprocessor(
+                "packinfo", defines=("RESTRICT",))
+            content = content.replace(token, f"{token}\n{push}")
+            # add missing includes
+            token = '#include "PackInfo'
+            assert token in content
+            content = content.replace(token, f'#include "core/DataTypes.h"\n#include "core/cell/CellInterval.h"\n#include "domain_decomposition/IBlock.h"\n#include "stencil/Directions.h"\n\n{token}')  # nopep8
+        return content
+
+    for params, target_suffix in paramlist(parameters, ["CPU", "GPU"]):
         pystencils_walberla.generate_pack_info_from_kernel(
             ctx, f"PackInfoPdf{precision_prefix}{target_suffix}", assignments,
             kind="pull", **params)
         pystencils_walberla.generate_pack_info(
             ctx, f"PackInfoVec{precision_prefix}{target_suffix}", spec, **params)
-        if target_suffix == "CUDA":
-            continue
-        token = "\n       //TODO: optimize by generating kernel for this case\n"
-        for field_suffix in ["Pdf", "Vec"]:
-            class_name = f"PackInfo{field_suffix}{precision_prefix}{target_suffix}"  # nopep8
-            with open(f"{class_name}.h", "r+") as f:
-                content = f.read()
-                assert token in content
-                content = content.replace(token, "\n")
-                f.seek(0)
-                f.truncate()
-                f.write(content)
+        for suffix in ["Pdf", "Vec"]:
+            class_name = f"PackInfo{suffix}{precision_prefix}{target_suffix}"
+            patch_file(class_name, get_ext_header(target_suffix),
+                       target_suffix, patch_packinfo_header)
+            patch_file(class_name, get_ext_source(target_suffix),
+                       target_suffix, patch_packinfo_kernel)
 
     # boundary conditions
     ubb_dynamic = lbmpy_espresso.UBB(
@@ -223,17 +278,30 @@ with code_generation_context.CodeGeneration() as ctx:
     ubb_data_handler = lbmpy_espresso.BounceBackSlipVelocityUBB(
         method.stencil, ubb_dynamic)
 
-    for _, target_suffix in paramlist(parameters, ("GPU", "CPU")):
-        lbmpy_walberla.generate_boundary(
-            ctx, f"Dynamic_UBB_{precision_suffix}{target_suffix}", ubb_dynamic,
-            method, additional_data_handler=ubb_data_handler,
-            streaming_pattern=streaming_pattern, target=target)
+    # pylint: disable=unused-argument
+    def patch_boundary_header(content, target_suffix):
+        # replace real_t by actual floating-point type
+        return content.replace("real_t", config.data_type.default_factory().c_name)  # nopep8
 
-        with open(f"Dynamic_UBB_{precision_suffix}{target_suffix}.h", "r+") as f:
-            content = f.read()
-            f.seek(0)
-            f.truncate(0)
-            # patch for floating point accuracy
-            content = content.replace("real_t",
-                                      config.data_type.default_factory().c_name)
-            f.write(content)
+    def patch_boundary_kernel(content, target_suffix):
+        if target_suffix in ["CUDA"]:
+            # replace preprocessor macros and pragmas
+            push, pop = custom_additional_extensions.generate_device_preprocessor(
+                "ubb_boundary", defines=("RESTRICT",))
+            content = re.sub(r"#ifdef __GNUC__[\s\S]+?#endif(?=\n\n|\n//)", "", content)  # nopep8
+            content = re.sub(r"#ifdef __CUDACC__[\s\S]+?#endif(?=\n\n|\n//)", push, content, 1)  # nopep8
+            content = re.sub(r"#ifdef __CUDACC__[\s\S]+?#endif(?=\n\n|\n//)", pop, content, 1)  # nopep8
+            assert push in content
+            assert pop in content
+        return content
+
+    for _, target_suffix in paramlist(parameters, ("CPU", "GPU")):
+        class_name = f"Dynamic_UBB_{precision_suffix}{target_suffix}"
+        lbmpy_walberla.generate_boundary(
+            ctx, class_name, ubb_dynamic, method,
+            additional_data_handler=ubb_data_handler,
+            streaming_pattern=streaming_pattern, target=target)
+        patch_file(class_name, get_ext_header(target_suffix),
+                   target_suffix, patch_boundary_header)
+        patch_file(class_name, get_ext_source(target_suffix),
+                   target_suffix, patch_boundary_kernel)

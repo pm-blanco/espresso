@@ -24,8 +24,6 @@
 #include "core/cell/CellInterval.h"
 #include "stencil/Directions.h"
 
-#include <cstddef>
-
 #if (defined WALBERLA_CXX_COMPILER_IS_GNU) || (defined WALBERLA_CXX_COMPILER_IS_CLANG)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"

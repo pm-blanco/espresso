@@ -24,9 +24,11 @@ function(ESPRESSO_ADD_TEST)
   espresso_unit_test(
     SRC ${TEST_SRC} NAME ${TEST_NAME} NUM_PROC ${TEST_NUM_PROC} DEPENDS
     ${TEST_DEPENDS} espresso::walberla espresso::utils)
+  if(WALBERLA_BUILD_WITH_CUDA)
+    target_link_libraries(${TEST_NAME} PRIVATE espresso::walberla_cuda)
+  endif()
   if(${TEST_SRC} MATCHES ".*\.cu$")
-    target_link_libraries(${TEST_NAME} PRIVATE espresso::walberla::cuda_flags
-                                               espresso::walberla_cuda)
+    target_link_libraries(${TEST_NAME} PRIVATE espresso::walberla::cuda_flags)
   else()
     target_link_libraries(${TEST_NAME} PRIVATE espresso::walberla::cpp_flags)
   endif()
