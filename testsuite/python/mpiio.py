@@ -64,13 +64,14 @@ def get_random_mock_particles():
                          v=np.random.rand(3),
                          bonds=[])
         # Up to 20 bonds; otherwise this test will take ages
-        for _ in range(random.randint(0, 20)):
+        while len(p.bonds) < 20:
             btype = random.randint(0, nbonds - 1)
             # Don't create loops, i.e. exclude "i" itself
             p1 = randint_different_from(0, npart, i)
             p2 = randint_different_from(0, npart, i)
-            # Don't add the same bond twice
-            if (btype, p1, p2) not in p.bonds:
+
+            # Don't add the same bond twice and don't use the same particle twice
+            if p1 != p2 and (btype, p1, p2) not in p.bonds:
                 p.bonds.append((btype, p1, p2))
         parts.append(p)
     return parts
