@@ -617,6 +617,9 @@ class ParticleHandle(ScriptInterfaceHelper):
         if self.id in bond[1:]:
             raise Exception(
                 f"Bond partners {bond[1:]} include the particle {self.id} itself")
+        if len(set(bond[1:])) is not len(bond[1:]):
+            raise Exception(
+                f"Cannot add duplicate bond partners {bond[1:]} to particle {self.id}")
         self.call_method("add_bond",
                          bond_id=bond[0]._bond_id,
                          part_id=bond[1:])

@@ -440,6 +440,7 @@ class ParticleProperties(ut.TestCase):
 
         p1 = self.system.part.by_id(self.pid)
         p2 = self.system.part.add(pos=p1.pos)
+        p3 = self.system.part.add(pos=p1.pos)
         inactive_bond = espressomd.interactions.FeneBond(k=1, d_r_max=2)
         p2.add_bond([self.f1, p1])
         with self.assertRaisesRegex(RuntimeError, "already exists on particle"):
@@ -459,6 +460,22 @@ class ParticleProperties(ut.TestCase):
             p2.delete_bond([self.f1, p1])
         with self.assertRaisesRegex(ValueError, "Bond partners have to be of type integer or ParticleHandle"):
             p2.delete_bond((self.f1, 'p1'))
+
+        active_pair_bond = espressomd.interactions.FeneBond(k=1, d_r_max=2)
+        self.system.bonded_inter.add(active_pair_bond)
+        with self.assertRaisesRegex(Exception, r"Bond partners \(17,\) include the particle 17 itself"):
+            p1.add_bond((active_pair_bond, p1))
+
+        active_angle_bond = espressomd.interactions.AngleCosine(bend=1, phi0=1)
+        self.system.bonded_inter.add(active_angle_bond)
+        with self.assertRaisesRegex(Exception, r"Cannot add duplicate bond partners \(17, 17\) to particle 18"):
+            p2.add_bond((active_angle_bond, p1, p1))
+
+        active_dihedral_bond = espressomd.interactions.Dihedral(
+            bend=1, mult=1, phase=1)
+        self.system.bonded_inter.add(active_dihedral_bond)
+        with self.assertRaisesRegex(Exception, r"Cannot add duplicate bond partners \(17, 17, 19\) to particle 18"):
+            p2.add_bond((active_dihedral_bond, p1, p1, p3))
 
     def test_zz_remove_all(self):
         for p in self.system.part.all():
