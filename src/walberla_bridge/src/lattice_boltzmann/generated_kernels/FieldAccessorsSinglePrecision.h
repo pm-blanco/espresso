@@ -1244,6 +1244,57 @@ inline auto get(GhostLayerField<float, uint_t{19u}> const *pdf_field,
   }
   return out;
 }
+
+inline auto reduce(GhostLayerField<float, uint_t{19u}> const *pdf_field) {
+  Matrix3<float> pressureTensor(float{0});
+  WALBERLA_FOR_ALL_CELLS_XYZ(pdf_field, {
+    const float &xyz0 = pdf_field->get(x, y, z, uint_t{0u});
+    const float f_0 = pdf_field->getF(&xyz0, uint_t{0u});
+    const float f_1 = pdf_field->getF(&xyz0, uint_t{1u});
+    const float f_2 = pdf_field->getF(&xyz0, uint_t{2u});
+    const float f_3 = pdf_field->getF(&xyz0, uint_t{3u});
+    const float f_4 = pdf_field->getF(&xyz0, uint_t{4u});
+    const float f_5 = pdf_field->getF(&xyz0, uint_t{5u});
+    const float f_6 = pdf_field->getF(&xyz0, uint_t{6u});
+    const float f_7 = pdf_field->getF(&xyz0, uint_t{7u});
+    const float f_8 = pdf_field->getF(&xyz0, uint_t{8u});
+    const float f_9 = pdf_field->getF(&xyz0, uint_t{9u});
+    const float f_10 = pdf_field->getF(&xyz0, uint_t{10u});
+    const float f_11 = pdf_field->getF(&xyz0, uint_t{11u});
+    const float f_12 = pdf_field->getF(&xyz0, uint_t{12u});
+    const float f_13 = pdf_field->getF(&xyz0, uint_t{13u});
+    const float f_14 = pdf_field->getF(&xyz0, uint_t{14u});
+    const float f_15 = pdf_field->getF(&xyz0, uint_t{15u});
+    const float f_16 = pdf_field->getF(&xyz0, uint_t{16u});
+    const float f_17 = pdf_field->getF(&xyz0, uint_t{17u});
+    const float f_18 = pdf_field->getF(&xyz0, uint_t{18u});
+    const float p_0 =
+        f_10 + f_13 + f_14 + f_17 + f_18 + f_3 + f_4 + f_7 + f_8 + f_9;
+    const float p_1 = -f_10 - f_7 + f_8 + f_9;
+    const float p_2 = -f_13 + f_14 + f_17 - f_18;
+    const float p_3 = -f_10 - f_7 + f_8 + f_9;
+    const float p_4 =
+        f_1 + f_10 + f_11 + f_12 + f_15 + f_16 + f_2 + f_7 + f_8 + f_9;
+    const float p_5 = f_11 - f_12 - f_15 + f_16;
+    const float p_6 = -f_13 + f_14 + f_17 - f_18;
+    const float p_7 = f_11 - f_12 - f_15 + f_16;
+    const float p_8 =
+        f_11 + f_12 + f_13 + f_14 + f_15 + f_16 + f_17 + f_18 + f_5 + f_6;
+
+    pressureTensor[0u] += p_0;
+    pressureTensor[1u] += p_1;
+    pressureTensor[2u] += p_2;
+
+    pressureTensor[3u] += p_3;
+    pressureTensor[4u] += p_4;
+    pressureTensor[5u] += p_5;
+
+    pressureTensor[6u] += p_6;
+    pressureTensor[7u] += p_7;
+    pressureTensor[8u] += p_8;
+  });
+  return pressureTensor;
+}
 } // namespace PressureTensor
 
 } // namespace accessor

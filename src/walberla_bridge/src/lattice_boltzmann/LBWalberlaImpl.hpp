@@ -1508,9 +1508,7 @@ public:
     Matrix3<FloatType> tensor(FloatType{0});
     for (auto block = blocks->begin(); block != blocks->end(); ++block) {
       auto pdf_field = block->template getData<PdfField>(m_pdf_field_id);
-      WALBERLA_FOR_ALL_CELLS_XYZ(pdf_field, {
-        tensor += lbm::accessor::PressureTensor::get(pdf_field, Cell{x, y, z});
-      });
+      tensor += lbm::accessor::PressureTensor::reduce(pdf_field);
     }
     auto const grid_size = get_lattice().get_grid_dimensions();
     auto const number_of_nodes = Utils::product(grid_size);

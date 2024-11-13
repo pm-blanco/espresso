@@ -43,19 +43,22 @@ class TestLBPressureTensor:
     system.time_step = params["tau"]
     system.cell_system.skin = 0
 
-    def tearDown(self):
-        self.system.lb = None
-        self.system.thermostat.turn_off()
+    @classmethod
+    def tearDownClass(cls):
+        cls.system.lb = None
+        cls.system.thermostat.turn_off()
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         # Setup
-        self.lbf = self.lb_class(**self.params, **self.lb_params)
-        self.system.lb = self.lbf
-        self.system.thermostat.set_lb(LB_fluid=self.lbf, seed=42)
+        cls.lbf = cls.lb_class(**cls.params, **cls.lb_params)
+        cls.system.lb = cls.lbf
 
         # Warmup
-        self.system.integrator.run(500)
+        cls.system.integrator.run(500)
+        cls.sample_pressure(cls)
 
+    def sample_pressure(self):
         # Sampling
         self.p_global = np.zeros((self.steps, 3, 3))
         self.p_node0 = np.zeros((self.steps, 3, 3))
@@ -188,10 +191,10 @@ class TestLBPressureTensorGPU(TestLBPressureTensor, ut.TestCase):
                 numeric_integral = np.trapz(acf[:len(ts)], dx=2 * self.params["tau"])
 
                 # fit tail
-                def f(x, a, b): return a * np.exp(-b * x)
+                def fit(x, a, b): return a * np.exp(-b * x)
 
-                (a, b), _ = scipy.optimize.curve_fit(f, acf[:len(ts)], ts)
-                tail = f(ts[-1], a, b) / b
+                (a, b), _ = scipy.optimize.curve_fit(fit, acf[:len(ts)], ts)
+                tail = fit(ts[-1], a, b) / b
 
                 integral = numeric_integral + tail
 

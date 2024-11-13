@@ -213,6 +213,8 @@ namespace PressureTensor {
     std::vector< {{dtype}} >
     get( gpu::GPUField< {{dtype}} > const * pdf_field,
          CellInterval const & ci );
+    Matrix{{D}}< {{dtype}} >
+    reduce( gpu::GPUField< {{dtype}} > const * pdf_field );
 } // namespace PressureTensor
 
 } // namespace accessor
