@@ -269,7 +269,6 @@ class CheckpointTest(ut.TestCase):
             np.copy(ek_species[:, :, :].is_boundary), False)
 
     @utx.skipIfMissingFeatures(["WALBERLA"])
-    @ut.skipIf('LB.GPU' in modes, 'VTK not implemented for LB GPU')
     @ut.skipIf(not has_lb_mode, "Skipping test due to missing LB mode.")
     def test_lb_vtk(self):
         lbf = system.lb

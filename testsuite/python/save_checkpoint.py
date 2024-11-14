@@ -405,21 +405,20 @@ if lbf_class:
     vtk_suffix = config.test_name
     vtk_root = pathlib.Path("vtk_out")
     # create LB VTK callbacks
-    if 'LB.GPU' not in modes:  # TODO WALBERLA
-        lb_vtk_auto_id = f"auto_lb_{vtk_suffix}"
-        lb_vtk_manual_id = f"manual_lb_{vtk_suffix}"
-        config.recursive_unlink(vtk_root / lb_vtk_auto_id)
-        config.recursive_unlink(vtk_root / lb_vtk_manual_id)
-        lb_vtk_auto = espressomd.lb.VTKOutput(
-            identifier=lb_vtk_auto_id, delta_N=1,
-            observables=('density', 'velocity_vector'), base_folder=str(vtk_root))
-        lbf.add_vtk_writer(vtk=lb_vtk_auto)
-        lb_vtk_auto.disable()
-        lb_vtk_manual = espressomd.lb.VTKOutput(
-            identifier=lb_vtk_manual_id, delta_N=0,
-            observables=('density',), base_folder=str(vtk_root))
-        lbf.add_vtk_writer(vtk=lb_vtk_manual)
-        lb_vtk_manual.write()
+    lb_vtk_auto_id = f"auto_lb_{vtk_suffix}"
+    lb_vtk_manual_id = f"manual_lb_{vtk_suffix}"
+    config.recursive_unlink(vtk_root / lb_vtk_auto_id)
+    config.recursive_unlink(vtk_root / lb_vtk_manual_id)
+    lb_vtk_auto = espressomd.lb.VTKOutput(
+        identifier=lb_vtk_auto_id, delta_N=1,
+        observables=('density', 'velocity_vector'), base_folder=str(vtk_root))
+    lbf.add_vtk_writer(vtk=lb_vtk_auto)
+    lb_vtk_auto.disable()
+    lb_vtk_manual = espressomd.lb.VTKOutput(
+        identifier=lb_vtk_manual_id, delta_N=0,
+        observables=('density',), base_folder=str(vtk_root))
+    lbf.add_vtk_writer(vtk=lb_vtk_manual)
+    lb_vtk_manual.write()
     # create EK VTK callbacks
     ek_vtk_auto_id = f"auto_ek_{vtk_suffix}"
     ek_vtk_manual_id = f"manual_ek_{vtk_suffix}"

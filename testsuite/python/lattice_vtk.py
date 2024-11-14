@@ -36,7 +36,7 @@ with contextlib.suppress(ImportError):
 
 
 class TestVTK:
-    system = espressomd.System(box_l=[6, 7, 5])
+    system = espressomd.System(box_l=[6, 7, 3])
     system.time_step = 0.1
     system.cell_system.skin = 0.4
 
@@ -135,7 +135,7 @@ class TestLBVTK(TestVTK):
         actor.add_boundary_from_shape(
             espressomd.shapes.Wall(normal=[-1, 0, 0], dist=-(self.system.box_l[0] - dist)))
 
-        n_steps = 10
+        n_steps = 4 if self.lb_class is espressomd.lb.LBFluidWalberlaGPU else 10
         shape = tuple(actor.shape)
         shape = (shape[0] - 4, *shape[1:])
         vtk_reader = espressomd.io.vtk.VTKReader()
@@ -329,42 +329,62 @@ class TestEKVTK(TestVTK):
         self.assertEqual(len(actor.vtk_writers), 0)
 
 
-@utx.skipIfMissingFeatures("WALBERLA")
-class LBWalberlaWrite(TestLBVTK, ut.TestCase):
+@utx.skipIfMissingFeatures(["WALBERLA"])
+class LBWalberlaVTKDoublePrecisionCPU(TestLBVTK, ut.TestCase):
     vtk_class = espressomd.lb.VTKOutput
     lattice_class = espressomd.lb.LatticeWalberla
     lb_class = espressomd.lb.LBFluidWalberla
     lb_params = {"single_precision": False}
-    vtk_id = "lb_double_precision"
+    vtk_id = "lb_double_precision_cpu"
 
 
-@utx.skipIfMissingFeatures("WALBERLA")
-class LBWalberlaWriteSinglePrecision(TestLBVTK, ut.TestCase):
+@utx.skipIfMissingGPU()
+@utx.skipIfMissingFeatures(["WALBERLA", "CUDA"])
+class LBWalberlaVTKDoublePrecisionGPU(TestLBVTK, ut.TestCase):
+    vtk_class = espressomd.lb.VTKOutput
+    lattice_class = espressomd.lb.LatticeWalberla
+    lb_class = espressomd.lb.LBFluidWalberlaGPU
+    lb_params = {"single_precision": False}
+    vtk_id = "lb_double_precision_gpu"
+
+
+@utx.skipIfMissingFeatures(["WALBERLA"])
+class LBWalberlaVTKSinglePrecisionCPU(TestLBVTK, ut.TestCase):
     vtk_class = espressomd.lb.VTKOutput
     lattice_class = espressomd.lb.LatticeWalberla
     lb_class = espressomd.lb.LBFluidWalberla
     lb_params = {"single_precision": True}
-    vtk_id = "lb_single_precision"
+    vtk_id = "lb_single_precision_cpu"
 
 
-@utx.skipIfMissingFeatures("WALBERLA")
-class EKWalberlaWrite(TestEKVTK, ut.TestCase):
+@utx.skipIfMissingGPU()
+@utx.skipIfMissingFeatures(["WALBERLA", "CUDA"])
+class LBWalberlaVTKSinglePrecisionGPU(TestLBVTK, ut.TestCase):
+    vtk_class = espressomd.lb.VTKOutput
+    lattice_class = espressomd.lb.LatticeWalberla
+    lb_class = espressomd.lb.LBFluidWalberlaGPU
+    lb_params = {"single_precision": True}
+    vtk_id = "lb_single_precision_gpu"
+
+
+@utx.skipIfMissingFeatures(["WALBERLA"])
+class EKWalberlaVTKDoublePrecisionCPU(TestEKVTK, ut.TestCase):
     vtk_class = espressomd.electrokinetics.VTKOutput
     lattice_class = espressomd.electrokinetics.LatticeWalberla
     ek_class = espressomd.electrokinetics.EKSpecies
     ek_solver = espressomd.electrokinetics.EKNone
     ek_params = {"single_precision": False}
-    vtk_id = "ek_double_precision"
+    vtk_id = "ek_double_precision_cpu"
 
 
-@utx.skipIfMissingFeatures("WALBERLA")
-class EKWalberlaWriteSinglePrecision(TestEKVTK, ut.TestCase):
+@utx.skipIfMissingFeatures(["WALBERLA"])
+class EKWalberlaVTKSinglePrecisionCPU(TestEKVTK, ut.TestCase):
     vtk_class = espressomd.electrokinetics.VTKOutput
     lattice_class = espressomd.electrokinetics.LatticeWalberla
     ek_class = espressomd.electrokinetics.EKSpecies
     ek_solver = espressomd.electrokinetics.EKNone
     ek_params = {"single_precision": True}
-    vtk_id = "ek_single_precision"
+    vtk_id = "ek_single_precision_cpu"
 
 
 if __name__ == "__main__":
