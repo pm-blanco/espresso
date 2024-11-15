@@ -128,26 +128,33 @@ class LBInterpolation:
         self.assertIsNone(self.lbf[0, 0, 0].boundary)
 
     def test_interpolated_force(self):
+        def sample(kernel):
+            for i, j, k in itertools.product(range(3), range(3), range(3)):
+                system.lb[:, :, :].velocity = lb_vel
+                p.pos = (
+                    (i + 0.5) * AGRID,
+                    (j + 0.5) * AGRID,
+                    (k + 0.5) * AGRID)
+                p.v = [0., 0., 0.]
+                system.integrator.run(1)
+                np.testing.assert_allclose(np.copy(p.f), kernel(i, j, k))
         system = self.system
-        system.thermostat.set_lb(LB_fluid=system.lb, seed=42, gamma=1.)
         system.integrator.run(1)
         lb_vel = np.zeros([12, 12, 12, 3], dtype=float)
-        for i in range(12):
-            for j in range(12):
-                for k in range(12):
-                    lb_vel[i, j, k] = 1e-3 * np.array([i + 1, j + 1, k + 1])
+        for i, j, k in itertools.product(range(12), range(12), range(12)):
+            lb_vel[i, j, k] = 1e-3 * np.array([i + 1, j + 1, k + 1])
         p = system.part.add(pos=3 * [1.5])
-        for i in range(3):
-            for j in range(3):
-                for k in range(3):
-                    system.lb[:, :, :].velocity = lb_vel
-                    p.pos = (
-                        (i + 0.5) * AGRID,
-                        (j + 0.5) * AGRID,
-                        (k + 0.5) * AGRID)
-                    p.v = [0., 0., 0.]
-                    system.integrator.run(1)
-                    np.testing.assert_allclose(np.copy(p.f), lb_vel[i, j, k])
+        # enable particle coupling
+        system.thermostat.set_lb(LB_fluid=system.lb, seed=42, gamma=1.)
+        sample(kernel=lambda i, j, k: lb_vel[i, j, k])
+        # disable particle coupling
+        system.thermostat.set_lb(LB_fluid=system.lb, seed=42, gamma=0.)
+        sample(kernel=lambda i, j, k: [0., 0., 0.])
+        if espressomd.has_features("THERMOSTAT_PER_PARTICLE"):
+            # disable particle coupling globally & enable per-particle coupling
+            system.thermostat.set_lb(LB_fluid=system.lb, seed=42, gamma=0.)
+            p.gamma = 1.5
+            sample(kernel=lambda i, j, k: 1.5 * lb_vel[i, j, k])
 
 
 @utx.skipIfMissingFeatures(["WALBERLA"])

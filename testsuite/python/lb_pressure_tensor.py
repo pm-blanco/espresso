@@ -46,7 +46,6 @@ class TestLBPressureTensor:
     @classmethod
     def tearDownClass(cls):
         cls.system.lb = None
-        cls.system.thermostat.turn_off()
 
     @classmethod
     def setUpClass(cls):

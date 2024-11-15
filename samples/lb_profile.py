@@ -45,7 +45,6 @@ lb_fluid = espressomd.lb.LBFluidWalberla(
     agrid=1.0, density=1.0, kinematic_viscosity=1.0, tau=0.01,
     ext_force_density=[0, 0, 0.15], kT=0.0)
 system.lb = lb_fluid
-system.thermostat.set_lb(LB_fluid=lb_fluid, seed=23)
 ctp = espressomd.math.CylindricalTransformationParameters(
     center=[5.0, 5.0, 0.0],
     axis=[0, 0, 1],

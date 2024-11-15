@@ -208,6 +208,8 @@ class LBThermostatCommon(thermostats_common.ThermostatsCommon):
         with self.assertRaisesRegex(RuntimeError, r"set_lb\(\) got an unexpected keyword argument 'act_on_virtual'"):
             self.system.thermostat.set_lb(
                 LB_fluid=self.lbf, act_on_virtual=False)
+        with self.assertRaisesRegex(RuntimeError, "Parameter 'gamma' is missing"):
+            self.system.thermostat.set_lb(LB_fluid=self.lbf)
         self.system.part.add(pos=[0., 0., 0.], gamma=[1., 2., 3.], id=2)
         with self.assertRaisesRegex(Exception, r"ERROR: anisotropic particle \(id 2\) coupled to LB"):
             self.system.integrator.run(1)

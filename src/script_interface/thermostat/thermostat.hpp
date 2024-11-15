@@ -33,6 +33,7 @@
 #include <cassert>
 #include <limits>
 #include <memory>
+#include <span>
 #include <stdexcept>
 #include <string>
 
@@ -92,7 +93,7 @@ protected:
   }
 
   virtual bool invalid_rng_state(VariantMap const &params) const {
-    return (not params.count("seed") or is_none(params.at("seed"))) and
+    return (not params.contains("seed") or is_none(params.at("seed"))) and
            is_seed_required();
   }
 
@@ -101,20 +102,32 @@ private:
   get_member_handle(::Thermostat::Thermostat &thermostat) = 0;
 
   void set_new_parameters(VariantMap const &params) {
-    if (params.count("__check_rng_state") and invalid_rng_state(params)) {
-      context()->parallel_try_catch([]() {
+    context()->parallel_try_catch([&]() {
+      if (params.contains("__check_rng_state") and invalid_rng_state(params)) {
         throw std::invalid_argument("Parameter 'seed' is needed on first "
                                     "activation of the thermostat");
-      });
-    }
+      }
+      check_required_parameters(params);
+    });
     for (auto const &key : get_parameter_insertion_order()) {
-      if (params.count(key)) {
+      if (params.contains(key)) {
         auto const &v = params.at(key);
         if (key == "is_active") {
           is_active = get_value<bool>(v);
         } else {
           do_set_parameter(key.c_str(), v);
         }
+      }
+    }
+  }
+
+  virtual std::span<std::string_view const> get_required_parameters() const = 0;
+
+  void check_required_parameters(VariantMap const &params) const {
+    for (auto const &required : get_required_parameters()) {
+      auto name = std::string(required);
+      if (not params.contains(name)) {
+        throw std::runtime_error("Parameter '" + name + "' is missing");
       }
     }
   }
@@ -169,7 +182,7 @@ protected:
     auto params = parameters;
     if (not is_seed_required()) {
       for (auto key : {std::string("seed"), std::string("philox_counter")}) {
-        if (params.count(key) == 0ul) {
+        if (not params.contains(key)) {
           params[key] = get_parameter(key);
         }
       }
@@ -216,7 +229,7 @@ public:
   }
 
   virtual std::optional<double> extract_kT(VariantMap const &params) const {
-    if (params.count("kT")) {
+    if (params.contains("kT")) {
       auto const value = get_value<double>(params, "kT");
       sanity_checks_positive(value, "kT");
       return value;
@@ -301,6 +314,11 @@ class Langevin : public Interface<::LangevinThermostat> {
     return thermostat.langevin;
   }
 
+  std::span<std::string_view const> get_required_parameters() const override {
+    static constexpr std::array names{std::string_view("gamma")};
+    return names;
+  }
+
 public:
   Langevin() {
     add_parameters({
@@ -319,7 +337,7 @@ protected:
         Interface<::LangevinThermostat>::extend_parameters(parameters);
 #ifdef ROTATION
     // If gamma_rotation is not set explicitly, use the translational one.
-    if (params.count("gamma_rotation") == 0ul and params.count("gamma")) {
+    if (not params.contains("gamma_rotation") and params.contains("gamma")) {
       params["gamma_rotation"] = params.at("gamma");
     }
 #endif // ROTATION
@@ -331,6 +349,11 @@ class Brownian : public Interface<::BrownianThermostat> {
   std::shared_ptr<CoreThermostat> &
   get_member_handle(::Thermostat::Thermostat &thermostat) override {
     return thermostat.brownian;
+  }
+
+  std::span<std::string_view const> get_required_parameters() const override {
+    static constexpr std::array names{std::string_view("gamma")};
+    return names;
   }
 
 public:
@@ -351,7 +374,7 @@ protected:
         Interface<::BrownianThermostat>::extend_parameters(parameters);
 #ifdef ROTATION
     // If gamma_rotation is not set explicitly, use the translational one.
-    if (params.count("gamma_rotation") == 0ul and params.count("gamma")) {
+    if (not params.contains("gamma_rotation") and params.contains("gamma")) {
       params["gamma_rotation"] = params.at("gamma");
     }
 #endif // ROTATION
@@ -364,6 +387,12 @@ class IsotropicNpt : public Interface<::IsotropicNptThermostat> {
   std::shared_ptr<CoreThermostat> &
   get_member_handle(::Thermostat::Thermostat &thermostat) override {
     return thermostat.npt_iso;
+  }
+
+  std::span<std::string_view const> get_required_parameters() const override {
+    static constexpr std::array names{std::string_view("gamma0"),
+                                      std::string_view("gammav")};
+    return names;
   }
 
 public:
@@ -418,9 +447,14 @@ public:
 
 protected:
   bool invalid_rng_state(VariantMap const &params) const override {
-    return (not params.count("seed") or is_none(params.at("seed"))) and
-           params.count("__global_kT") and is_seed_required() and
+    return (not params.contains("seed") or is_none(params.at("seed"))) and
+           params.contains("__global_kT") and is_seed_required() and
            get_value<double>(params, "__global_kT") != 0.;
+  }
+
+  std::span<std::string_view const> get_required_parameters() const override {
+    static constexpr std::array names{std::string_view("gamma")};
+    return names;
   }
 };
 #endif // WALBERLA
@@ -430,6 +464,10 @@ class DPDThermostat : public Interface<::DPDThermostat> {
   std::shared_ptr<CoreThermostat> &
   get_member_handle(::Thermostat::Thermostat &thermostat) override {
     return thermostat.dpd;
+  }
+
+  std::span<std::string_view const> get_required_parameters() const override {
+    return {};
   }
 
 public:
@@ -444,6 +482,10 @@ class Stokesian : public Interface<::StokesianThermostat> {
     return thermostat.stokesian;
   }
 
+  std::span<std::string_view const> get_required_parameters() const override {
+    return {};
+  }
+
 public:
   ::ThermostatFlags get_thermo_flag() const final { return THERMO_SD; }
 };
@@ -453,6 +495,10 @@ class ThermalizedBond : public Interface<::ThermalizedBondThermostat> {
   std::shared_ptr<CoreThermostat> &
   get_member_handle(::Thermostat::Thermostat &thermostat) override {
     return thermostat.thermalized_bond;
+  }
+
+  std::span<std::string_view const> get_required_parameters() const override {
+    return {};
   }
 
 public:
