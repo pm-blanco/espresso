@@ -756,19 +756,6 @@ double get(
   return rho;
 }
 
-void set(
-    gpu::GPUField<double> *pdf_field,
-    const double rho,
-    Cell const &cell) {
-  CellInterval ci(cell, cell);
-  thrust::device_vector<double> dev_data(1u, rho);
-  auto const dev_data_ptr = thrust::raw_pointer_cast(dev_data.data());
-  auto kernel = gpu::make_kernel(kernel_set);
-  kernel.addFieldIndexingParam(gpu::FieldIndexing<double>::interval(*pdf_field, ci));
-  kernel.addParam(const_cast<const double *>(dev_data_ptr));
-  kernel();
-}
-
 std::vector<double> get(
     gpu::GPUField<double> const *pdf_field,
     CellInterval const &ci) {
@@ -781,6 +768,19 @@ std::vector<double> get(
   std::vector<double> out(dev_data.size());
   thrust::copy(dev_data.begin(), dev_data.end(), out.begin());
   return out;
+}
+
+void set(
+    gpu::GPUField<double> *pdf_field,
+    const double rho,
+    Cell const &cell) {
+  CellInterval ci(cell, cell);
+  thrust::device_vector<double> dev_data(1u, rho);
+  auto const dev_data_ptr = thrust::raw_pointer_cast(dev_data.data());
+  auto kernel = gpu::make_kernel(kernel_set);
+  kernel.addFieldIndexingParam(gpu::FieldIndexing<double>::interval(*pdf_field, ci));
+  kernel.addParam(const_cast<const double *>(dev_data_ptr));
+  kernel();
 }
 
 void set(
@@ -1048,7 +1048,7 @@ void set(gpu::GPUField<double> const *pdf_field,
 
 namespace MomentumDensity {
 // LCOV_EXCL_START
-__global__ void kernel_sum(
+__global__ void kernel_get(
     gpu::FieldAccessor<double> pdf,
     gpu::FieldAccessor<double> force,
     double *RESTRICT out) {
@@ -1086,9 +1086,9 @@ __global__ void kernel_sum(
     const double md_0 = force.get(0) * 0.50000000000000000 + momdensity_0;
     const double md_1 = force.get(1) * 0.50000000000000000 + momdensity_1;
     const double md_2 = force.get(2) * 0.50000000000000000 + momdensity_2;
-    out[0u] += md_0;
-    out[1u] += md_1;
-    out[2u] += md_2;
+    out[0u] = md_0;
+    out[1u] = md_1;
+    out[2u] = md_2;
   }
 }
 // LCOV_EXCL_STOP
@@ -1096,19 +1096,22 @@ __global__ void kernel_sum(
 Vector3<double> reduce(
     gpu::GPUField<double> const *pdf_field,
     gpu::GPUField<double> const *force_field) {
-  thrust::device_vector<double> dev_data(3u, double{0});
+  auto const ci = pdf_field->xyzSize();
+  thrust::device_vector<double> dev_data(3u * ci.numCells());
   auto const dev_data_ptr = thrust::raw_pointer_cast(dev_data.data());
-  WALBERLA_FOR_ALL_CELLS_XYZ(pdf_field, {
-    Cell cell(x, y, z);
-    CellInterval ci(cell, cell);
-    auto kernel = gpu::make_kernel(kernel_sum);
-    kernel.addFieldIndexingParam(gpu::FieldIndexing<double>::interval(*pdf_field, ci));
-    kernel.addFieldIndexingParam(gpu::FieldIndexing<double>::interval(*force_field, ci));
-    kernel.addParam(dev_data_ptr);
-    kernel();
-  });
+  auto kernel = gpu::make_kernel(kernel_get);
+  kernel.addFieldIndexingParam(gpu::FieldIndexing<double>::interval(*pdf_field, ci));
+  kernel.addFieldIndexingParam(gpu::FieldIndexing<double>::interval(*force_field, ci));
+  kernel.addParam(dev_data_ptr);
+  kernel();
+  std::vector<double> out(dev_data.size());
+  thrust::copy(dev_data.begin(), dev_data.end(), out.data());
   Vector3<double> mom(double{0});
-  thrust::copy(dev_data.begin(), dev_data.begin() + 3u, mom.data());
+  for (auto i = uint_t{0u}; i < 3u * ci.numCells(); i += 3u) {
+    mom[0u] += out[i + 0u];
+    mom[1u] += out[i + 1u];
+    mom[2u] += out[i + 2u];
+  }
   return mom;
 }
 } // namespace MomentumDensity
@@ -1190,6 +1193,34 @@ std::vector<double> get(
   std::vector<double> out(dev_data.size());
   thrust::copy(dev_data.begin(), dev_data.end(), out.data());
   return out;
+}
+
+Matrix3<double> reduce(
+    gpu::GPUField<double> const *pdf_field) {
+  auto const ci = pdf_field->xyzSize();
+  thrust::device_vector<double> dev_data(9u * ci.numCells());
+  auto const dev_data_ptr = thrust::raw_pointer_cast(dev_data.data());
+  auto kernel = gpu::make_kernel(kernel_get);
+  kernel.addFieldIndexingParam(gpu::FieldIndexing<double>::interval(*pdf_field, ci));
+  kernel.addParam(dev_data_ptr);
+  kernel();
+  std::vector<double> out(dev_data.size());
+  thrust::copy(dev_data.begin(), dev_data.end(), out.data());
+  Matrix3<double> pressureTensor(double{0});
+  for (auto i = uint_t{0u}; i < 9u * ci.numCells(); i += 9u) {
+    pressureTensor[0u] += out[i + 0u];
+    pressureTensor[1u] += out[i + 1u];
+    pressureTensor[2u] += out[i + 2u];
+
+    pressureTensor[3u] += out[i + 3u];
+    pressureTensor[4u] += out[i + 4u];
+    pressureTensor[5u] += out[i + 5u];
+
+    pressureTensor[6u] += out[i + 6u];
+    pressureTensor[7u] += out[i + 7u];
+    pressureTensor[8u] += out[i + 8u];
+  }
+  return pressureTensor;
 }
 } // namespace PressureTensor
 

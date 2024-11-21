@@ -899,7 +899,7 @@ namespace Force {
 namespace MomentumDensity
 {
 // LCOV_EXCL_START
-    __global__ void kernel_sum(
+    __global__ void kernel_get(
         gpu::FieldAccessor< {{dtype}} > pdf,
         gpu::FieldAccessor< {{dtype}} > force,
         {{dtype}} * RESTRICT out )
@@ -914,7 +914,7 @@ namespace MomentumDensity
             {% endfor -%}
             {{momentum_density_getter | substitute_force_getter_cu | indent(8) }}
             {% for i in range(D) -%}
-                out[{{i}}u] += md_{{i}};
+                out[{{i}}u] = md_{{i}};
             {% endfor %}
         }
     }
@@ -924,19 +924,22 @@ namespace MomentumDensity
         gpu::GPUField< {{dtype}} > const * pdf_field,
         gpu::GPUField< {{dtype}} > const * force_field )
     {
-        thrust::device_vector< {{dtype}} > dev_data({{D}}u, {{dtype}} {0});
+        auto const ci = pdf_field->xyzSize();
+        thrust::device_vector< {{dtype}} > dev_data({{D}}u * ci.numCells());
         auto const dev_data_ptr = thrust::raw_pointer_cast(dev_data.data());
-        WALBERLA_FOR_ALL_CELLS_XYZ(pdf_field, {
-            Cell cell(x, y, z);
-            CellInterval ci ( cell, cell );
-            auto kernel = gpu::make_kernel( kernel_sum );
-            kernel.addFieldIndexingParam( gpu::FieldIndexing< {{dtype}} >::interval( *pdf_field, ci ) );
-            kernel.addFieldIndexingParam( gpu::FieldIndexing< {{dtype}} >::interval( *force_field, ci ) );
-            kernel.addParam( dev_data_ptr );
-            kernel();
-        });
+        auto kernel = gpu::make_kernel( kernel_get );
+        kernel.addFieldIndexingParam( gpu::FieldIndexing< {{dtype}} >::interval( *pdf_field, ci) );
+        kernel.addFieldIndexingParam( gpu::FieldIndexing< {{dtype}} >::interval( *force_field, ci ) );
+        kernel.addParam( dev_data_ptr );
+        kernel();
+        std::vector< {{dtype}} > out(dev_data.size());
+        thrust::copy(dev_data.begin(), dev_data.end(), out.data());
         Vector{{D}}< {{dtype}} > mom({{dtype}} {0});
-        thrust::copy(dev_data.begin(), dev_data.begin() + {{D}}u, mom.data());
+        for (auto i = uint_t{ 0u }; i < {{D}}u * ci.numCells(); i += {{D}}u) {
+            {% for j in range(D) -%}
+                mom[{{j}}u] += out[i + {{j}}u];
+            {% endfor -%}
+        }
         return mom;
     }
 } // namespace MomentumDensity
@@ -977,7 +980,7 @@ namespace PressureTensor
         Matrix{{D}}< {{dtype}} > out;
         thrust::copy(dev_data.begin(), dev_data.end(), out.data());
         return out;
-   }
+    }
 
     std::vector< {{dtype}} > get(
         gpu::GPUField< {{dtype}} > const * pdf_field,
@@ -992,7 +995,30 @@ namespace PressureTensor
         std::vector< {{dtype}} > out(dev_data.size());
         thrust::copy(dev_data.begin(), dev_data.end(), out.data());
         return out;
-   }
+    }
+
+    Matrix{{D}}< {{dtype}} > reduce(
+        gpu::GPUField< {{dtype}} > const * pdf_field)
+    {
+        auto const ci = pdf_field->xyzSize();
+        thrust::device_vector< {{dtype}} > dev_data({{D**2}}u * ci.numCells());
+        auto const dev_data_ptr = thrust::raw_pointer_cast(dev_data.data());
+        auto kernel = gpu::make_kernel( kernel_get );
+        kernel.addFieldIndexingParam( gpu::FieldIndexing< {{dtype}} >::interval( *pdf_field, ci ) );
+        kernel.addParam( dev_data_ptr );
+        kernel();
+        std::vector< {{dtype}} > out(dev_data.size());
+        thrust::copy(dev_data.begin(), dev_data.end(), out.data());
+        Matrix{{D}}< {{dtype}} > pressureTensor({{dtype}} {0});
+        for (auto i = uint_t{ 0u }; i < {{D**2}}u * ci.numCells(); i += {{D**2}}u) {
+            {% for i in range(D) -%}
+                {% for j in range(D) -%}
+                    pressureTensor[{{i*D+j}}u] += out[i + {{i*D+j}}u];
+                {% endfor %}
+            {% endfor %}
+        }
+        return pressureTensor;
+    }
 } // namespace PressureTensor
 
 

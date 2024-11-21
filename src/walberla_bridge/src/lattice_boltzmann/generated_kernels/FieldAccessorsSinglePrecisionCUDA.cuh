@@ -159,6 +159,7 @@ namespace PressureTensor {
 Matrix3<float> get(gpu::GPUField<float> const *pdf_field, Cell const &cell);
 std::vector<float> get(gpu::GPUField<float> const *pdf_field,
                        CellInterval const &ci);
+Matrix3<float> reduce(gpu::GPUField<float> const *pdf_field);
 } // namespace PressureTensor
 
 } // namespace accessor

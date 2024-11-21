@@ -291,18 +291,23 @@ void ParticleCoupling::kernel(std::vector<Particle *> const &particles) {
 #endif
     Utils::Vector3d force_on_particle = {};
     if (coupling_mode == particle_force) {
-      auto &v_fluid = *it_interpolated_velocities;
-      if (m_box_geo.type() == BoxType::LEES_EDWARDS) {
-        // Account for the case where the interpolated velocity has been read
-        // from a ghost of the particle across the LE boundary (or vice verssa)
-        // Then the particle velocity is shifted by +,- the LE shear velocity
-        auto const vel_correction = lees_edwards_vel_shift(
-            *it_positions_velocity_coupling, p.pos(), m_box_geo);
-        v_fluid += vel_correction;
+#ifndef THERMOSTAT_PER_PARTICLE
+      if (m_thermostat.gamma > 0.)
+#endif
+      {
+        auto &v_fluid = *it_interpolated_velocities;
+        if (m_box_geo.type() == BoxType::LEES_EDWARDS) {
+          // Account for the case where the interpolated velocity has been read
+          // from a ghost of the particle across the LE boundary (or vice versa)
+          // Then the particle velocity is shifted by +,- the LE shear velocity
+          auto const vel_correction = lees_edwards_vel_shift(
+              *it_positions_velocity_coupling, p.pos(), m_box_geo);
+          v_fluid += vel_correction;
+        }
+        auto const drag_force = lb_drag_force(p, m_thermostat.gamma, v_fluid);
+        auto const random_force = get_noise_term(p);
+        force_on_particle = drag_force + random_force;
       }
-      auto const drag_force = lb_drag_force(p, m_thermostat.gamma, v_fluid);
-      auto const random_force = get_noise_term(p);
-      force_on_particle = drag_force + random_force;
       ++it_interpolated_velocities;
       ++it_positions_velocity_coupling;
     }

@@ -97,6 +97,9 @@ inline bool are_kT_equal(double old_kT, double new_kT) {
   }
   auto const large_kT = (old_kT > new_kT) ? old_kT : new_kT;
   auto const small_kT = (old_kT > new_kT) ? new_kT : old_kT;
+  if (small_kT == 0.) {
+    return false;
+  }
   return (large_kT / small_kT - 1. < relative_tolerance);
 }
 } // namespace Thermostat

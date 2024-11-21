@@ -54,7 +54,6 @@ class LBTest:
     system.cell_system.skin = 1.0
     if espressomd.gpu_available():
         system.cuda_init_handle.call_method("set_device_id_per_rank")
-    interpolation = False
     n_nodes = system.cell_system.get_state()["n_nodes"]
 
     def setUp(self):
@@ -75,7 +74,6 @@ class LBTest:
         # activated actor
         lbf = self.lb_class(kT=1.0, seed=42, **self.params, **self.lb_params)
         self.system.lb = lbf
-        self.system.thermostat.set_lb(LB_fluid=lbf, seed=1)
         self.assertTrue(lbf.is_active)
         self.check_properties(lbf)
         self.system.lb = None
@@ -83,7 +81,6 @@ class LBTest:
         # deactivated actor
         lbf = self.lb_class(kT=1.0, seed=42, **self.params, **self.lb_params)
         self.system.lb = lbf
-        self.system.thermostat.set_lb(LB_fluid=lbf, seed=1)
         self.system.lb = None
         self.assertFalse(lbf.is_active)
         self.check_properties(lbf)
@@ -383,7 +380,7 @@ class LBTest:
         lbf = self.lb_class(kT=1., seed=1, ext_force_density=[0, 0, 0],
                             **self.params, **self.lb_params)
         system.lb = lbf
-        system.thermostat.set_lb(LB_fluid=lbf, seed=1)
+        system.thermostat.set_lb(LB_fluid=lbf, seed=1, gamma=1.)
         system.integrator.run(10)
         pressure_tensor = np.copy(
             np.mean(lbf[:, :, :].pressure_tensor, axis=(0, 1, 2)))
