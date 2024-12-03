@@ -20,7 +20,7 @@
 #define OBSERVABLES_CONTACTTIMES_HPP
 
 #include "BoxGeometry.hpp"
-#include "PidObservable.hpp"
+#include "PidProfileObservable.hpp"
 #include "system/System.hpp"
 
 #include <cassert>
@@ -28,33 +28,52 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
+#include <iostream>
+#include "cell_system/CellStructure.hpp"
 
 namespace Observables {
 
 /** Calculates the contact times between the ids
  */
-class ContactTimes : public PidObservable {
+class ContactTimes : public PidProfileObservable {
 public:
-  using PidObservable::PidObservable;
-  explicit ContactTimes(std::vector<int> ids)
-      : PidObservable(std::move(ids)) {
-    if (this->ids().size() < 2)
-      throw std::runtime_error("At least 2 particles are required");
-  }
-  
-  int a=1;
+  using PidProfileObservable::PidProfileObservable;
+  float contact_threshold;
+  explicit ContactTimes(std::vector<int> const &ids, int n_x_bins, int n_y_bins,
+                       int n_z_bins, double min_x, double max_x, double min_y,
+                       double max_y, double min_z, double max_z)
+: PidProfileObservable(ids, n_x_bins, n_y_bins, n_z_bins, min_x, max_x, min_y,
+                       max_y, min_z, max_z) {
+  std::cout << "ContactTimes constructor called\n";  // Debugging line
+    if (this->ids().size() < 2) {throw std::runtime_error("At least 2 particles are required");}
+      
+    if (contact_threshold > 1) {std::cout<< contact_threshold <<"\n";}
+   } 
+
   std::vector<double>
   evaluate(boost::mpi::communicator const &comm,
            ParticleReferenceRange const &local_particles,
            const ParticleObservables::traits<Particle> &traits) const override {
     auto const positions_sorted = detail::get_all_particle_positions(
         comm, local_particles, ids(), traits, false);
-
+  
     if (comm.rank() != 0) {
       return {};
     }
-
     auto const &box_geo = *System::get_system().box_geo;
+    std::vector<std::pair<Particle *, Particle *>> verlet_list = System::get_system().cell_structure->m_verlet_list;
+    double time = System::get_system().get_sim_time();
+    std::cout << time  << "\n";
+    for (auto &particle_pair : verlet_list) {
+      auto pos1 = particle_pair.first  -> pos();
+      auto pos2 = particle_pair.second -> pos();
+      auto const dist =  box_geo.get_mi_vector(pos1, pos2).norm();
+      std::cout << this -> max_z << "\n";
+      if (dist < contact_threshold) {
+      std::cout << particle_pair.first -> id()  << " " << particle_pair.second -> id()  <<  " "  << dist << " " << contact_threshold << "\n";
+      }
+    }
+    
     std::vector<double> res(n_values());
 
     for (std::size_t i = 0, end = n_values(); i < end; i++) {

@@ -133,11 +133,11 @@ void initialize(Utils::Factory<ObjectHandle> *om) {
   REGISTER_PID_OBS(ComPosition);
   REGISTER_PID_OBS(ComVelocity);
   REGISTER_PID_OBS(ParticleDistances);
-  REGISTER_PID_OBS(ContactTimes);
   REGISTER_PID_OBS(TotalForce);
   REGISTER_PID_OBS(BondAngles);
   REGISTER_PID_OBS(BondDihedrals);
   REGISTER_PID_OBS(CosPersistenceAngles);
+  REGISTER_PID_PROFILE_OBS(ContactTimes);
   REGISTER_PID_PROFILE_OBS(DensityProfile);
   REGISTER_PID_PROFILE_OBS(ForceDensityProfile);
   REGISTER_PID_PROFILE_OBS(FluxDensityProfile);
