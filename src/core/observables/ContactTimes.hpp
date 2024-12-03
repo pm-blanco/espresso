@@ -39,11 +39,12 @@ class ContactTimes : public PidProfileObservable {
 public:
   using PidProfileObservable::PidProfileObservable;
   float contact_threshold;
+  double max_z;
   explicit ContactTimes(std::vector<int> const &ids, int n_x_bins, int n_y_bins,
                        int n_z_bins, double min_x, double max_x, double min_y,
-                       double max_y, double min_z, double max_z)
-: PidProfileObservable(ids, n_x_bins, n_y_bins, n_z_bins, min_x, max_x, min_y,
-                       max_y, min_z, max_z) {
+                       double max_y, double min_z, double max_z): 
+PidProfileObservable(ids, n_x_bins, n_y_bins, n_z_bins, min_x, max_x, min_y,
+                       max_y, min_z, max_z), max_z(max_z) {
   std::cout << "ContactTimes constructor called\n";  // Debugging line
     if (this->ids().size() < 2) {throw std::runtime_error("At least 2 particles are required");}
       
@@ -68,8 +69,8 @@ public:
       auto pos1 = particle_pair.first  -> pos();
       auto pos2 = particle_pair.second -> pos();
       auto const dist =  box_geo.get_mi_vector(pos1, pos2).norm();
-      std::cout << this -> max_z << "\n";
-      if (dist < contact_threshold) {
+      std::cout << max_z << "\n";
+      if (dist < max_z) {
       std::cout << particle_pair.first -> id()  << " " << particle_pair.second -> id()  <<  " "  << dist << " " << contact_threshold << "\n";
       }
     }
