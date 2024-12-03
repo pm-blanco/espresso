@@ -639,6 +639,28 @@ class ParticleDistances(Observable):
     """
     _so_name = "Observables::ParticleDistances"
 
+@script_interface_register
+class ContactTimes(Observable):
+
+    """Calculates the distances between particles with given ids along a
+    polymer chain.
+
+    Parameters
+    ----------
+    ids : array_like of :obj:`int`
+        The ids of (existing) particles to take into account.
+
+    Methods
+    -------
+    calculate()
+        Run the observable.
+
+        Returns
+        -------
+        (N - 1,) :obj:`ndarray` of :obj:`float`
+
+    """
+    _so_name = "Observables::ContactTimes"
 
 @script_interface_register
 class TotalForce(Observable):

@@ -48,6 +48,7 @@
 #include "core/observables/ParticleDipoleFields.hpp"
 #include "core/observables/ParticleDirectors.hpp"
 #include "core/observables/ParticleDistances.hpp"
+#include "core/observables/ContactTimes.hpp"
 #include "core/observables/ParticleForces.hpp"
 #include "core/observables/ParticlePositions.hpp"
 #include "core/observables/ParticleVelocities.hpp"
@@ -132,6 +133,7 @@ void initialize(Utils::Factory<ObjectHandle> *om) {
   REGISTER_PID_OBS(ComPosition);
   REGISTER_PID_OBS(ComVelocity);
   REGISTER_PID_OBS(ParticleDistances);
+  REGISTER_PID_OBS(ContactTimes);
   REGISTER_PID_OBS(TotalForce);
   REGISTER_PID_OBS(BondAngles);
   REGISTER_PID_OBS(BondDihedrals);
