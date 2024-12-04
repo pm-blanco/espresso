@@ -20,7 +20,7 @@
 #define OBSERVABLES_CONTACTTIMES_HPP
 
 #include "BoxGeometry.hpp"
-#include "PidProfileObservable.hpp"
+#include "PidTimeObservable.hpp"
 #include "system/System.hpp"
 
 #include <cassert>
@@ -35,20 +35,15 @@ namespace Observables {
 
 /** Calculates the contact times between the ids
  */
-class ContactTimes : public PidProfileObservable {
+class ContactTimes : public PidTimeObservable {
 public:
-  using PidProfileObservable::PidProfileObservable;
-  float contact_threshold;
-  double max_z;
-  explicit ContactTimes(std::vector<int> const &ids, int n_x_bins, int n_y_bins,
-                       int n_z_bins, double min_x, double max_x, double min_y,
-                       double max_y, double min_z, double max_z): 
-PidProfileObservable(ids, n_x_bins, n_y_bins, n_z_bins, min_x, max_x, min_y,
-                       max_y, min_z, max_z), max_z(max_z) {
+  using PidTimeObservable::PidTimeObservable;
+  explicit ContactTimes(std::vector<int> const &ids, double max_z): 
+PidTimeObservable(ids,  max_z){
   std::cout << "ContactTimes constructor called\n";  // Debugging line
     if (this->ids().size() < 2) {throw std::runtime_error("At least 2 particles are required");}
       
-    if (contact_threshold > 1) {std::cout<< contact_threshold <<"\n";}
+    if (max_z > 1) {std::cout<< max_z <<"\n";}
    } 
 
   std::vector<double>
@@ -71,7 +66,7 @@ PidProfileObservable(ids, n_x_bins, n_y_bins, n_z_bins, min_x, max_x, min_y,
       auto const dist =  box_geo.get_mi_vector(pos1, pos2).norm();
       std::cout << max_z << "\n";
       if (dist < max_z) {
-      std::cout << particle_pair.first -> id()  << " " << particle_pair.second -> id()  <<  " "  << dist << " " << contact_threshold << "\n";
+      std::cout << particle_pair.first -> id()  << " " << particle_pair.second -> id()  <<  " "  << dist << " " << max_z << "\n";
       }
     }
     

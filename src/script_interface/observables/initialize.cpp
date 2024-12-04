@@ -25,6 +25,8 @@
 #include "PidObservable.hpp"
 #include "PidProfileObservable.hpp"
 #include "ProfileObservable.hpp"
+#include "PidTimeObservable.hpp"
+#include "TimeObservable.hpp"
 #include "RDF.hpp"
 #include "config/config.hpp"
 
@@ -106,6 +108,14 @@ namespace Observables {
       "Observables::" #name "");
 /**@}*/
 
+/** Register a @ref ScriptInterface::Observables::PidTimeObservable
+ *  "PidTimeObservable"
+ */
+#define REGISTER_PID_TIME_OBS(name)                                         \
+  om->register_new<PidTimeObservable<::Observables::name>>(                 \
+      "Observables::" #name "");
+
+
 void initialize(Utils::Factory<ObjectHandle> *om) {
   // Manual registration:
   //  om->register_new<ScriptInterface::Observables::ParticleVelocities>::
@@ -137,13 +147,17 @@ void initialize(Utils::Factory<ObjectHandle> *om) {
   REGISTER_PID_OBS(BondAngles);
   REGISTER_PID_OBS(BondDihedrals);
   REGISTER_PID_OBS(CosPersistenceAngles);
-  REGISTER_PID_PROFILE_OBS(ContactTimes);
   REGISTER_PID_PROFILE_OBS(DensityProfile);
   REGISTER_PID_PROFILE_OBS(ForceDensityProfile);
   REGISTER_PID_PROFILE_OBS(FluxDensityProfile);
   REGISTER_CYLPID_PROFILE_OBS(CylindricalDensityProfile);
   REGISTER_CYLPID_PROFILE_OBS(CylindricalVelocityProfile);
   REGISTER_CYLPID_PROFILE_OBS(CylindricalFluxDensityProfile);
+  // Custom function
+  REGISTER_PID_TIME_OBS(ContactTimes);
+
+
+
 #ifdef DPD
   REGISTER(DPDStress)
 #endif

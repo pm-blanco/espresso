@@ -81,6 +81,11 @@ class CylindricalProfileObservable(ProfileObservable):
         kwargs['transform_params'] = transform_params
         super().__init__(**kwargs)
 
+class TimeObservable(Observable):
+    """
+    Base class for observables that track time
+    """
+    
 
 @script_interface_register
 class ComPosition(Observable):

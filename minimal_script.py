@@ -16,15 +16,7 @@ system.part.add(pos  = [5,5,5])
 system.part.add(pos  = [6,6,6])
 
 obs = espressomd.observables.ContactTimes(ids=[0,1],
-                                          max_z=2,
-                                          min_z=0,
-                                          n_x_bins=1, 
-                                          n_y_bins=1,
-                                          n_z_bins=1, 
-                                          min_x=0, 
-                                          max_x=1, 
-                                          min_y=0,
-                                          max_y=1)
+                                          max_z=2)
 accumulator = espressomd.accumulators.TimeSeries(obs=obs, 
                                                 delta_N=1)
 system.thermostat.set_langevin(kT=1, 
