@@ -43,7 +43,7 @@ PidTimeObservable(ids,  max_z){
   std::cout << "ContactTimes constructor called\n";  // Debugging line
     if (this->ids().size() < 2) {throw std::runtime_error("At least 2 particles are required");}
       
-    if (max_z > 1) {std::cout<< max_z <<"\n";}
+    if (contact_threshold > 1) {std::cout<< contact_threshold <<"\n";}
    } 
 
   std::vector<double>
@@ -64,9 +64,9 @@ PidTimeObservable(ids,  max_z){
       auto pos1 = particle_pair.first  -> pos();
       auto pos2 = particle_pair.second -> pos();
       auto const dist =  box_geo.get_mi_vector(pos1, pos2).norm();
-      std::cout << max_z << "\n";
-      if (dist < max_z) {
-      std::cout << particle_pair.first -> id()  << " " << particle_pair.second -> id()  <<  " "  << dist << " " << max_z << "\n";
+      std::cout << contact_threshold << "\n";
+      if (dist < contact_threshold) {
+      std::cout << particle_pair.first -> id()  << " " << particle_pair.second -> id()  <<  " "  << dist << " " << contact_threshold << "\n";
       }
     }
     

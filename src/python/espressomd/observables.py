@@ -645,10 +645,9 @@ class ParticleDistances(Observable):
     _so_name = "Observables::ParticleDistances"
 
 @script_interface_register
-class ContactTimes(ProfileObservable):
+class ContactTimes(TimeObservable):
 
-    """Calculates the distances between particles with given ids along a
-    polymer chain.
+    """Calculates the contact time between the particles in ids.
 
     Parameters
     ----------

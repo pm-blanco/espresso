@@ -48,11 +48,11 @@ public:
   TimeObservable() {
     this->add_parameters(
         {
-         {"max_z",
+         {"contact_threshold",
           [this](const Variant &v) {
-            time_observable()->max_z= get_value<double>(v);
+            time_observable()->contact_threshold= get_value<double>(v);
           },
-          [this]() { return time_observable()->max_z; }}});
+          [this]() { return time_observable()->contact_threshold; }}});
   }
 
   void construct(VariantMap const &params) override {}

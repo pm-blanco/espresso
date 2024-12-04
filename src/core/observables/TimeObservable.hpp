@@ -35,9 +35,9 @@ namespace Observables {
 /** Cartesian profile observable */
 class TimeObservable : virtual public Observable {
 public:
-  double max_z;
-  TimeObservable(double max_z)
-      : max_z(max_z) {}
+  double contact_threshold;
+  TimeObservable(double contact_threshold)
+      : contact_threshold(contact_threshold) {}
   
   };
 

@@ -52,15 +52,15 @@ public:
     this->add_parameters(
         {{"ids", AutoParameter::read_only,
           [this]() { return pid_time_observable()->ids(); }},
-         {"max_z", AutoParameter::read_only,
-          [this]() { return pid_time_observable()->max_z; }}});
+         {"contact_threshold", AutoParameter::read_only,
+          [this]() { return pid_time_observable()->contact_threshold; }}});
   }
 
   void do_construct(VariantMap const &params) override {
     ObjectHandle::context()->parallel_try_catch([&]() {
       m_observable =
           make_shared_from_args<CoreObs, std::vector<int>, double>(
-              params, "ids", "max_z");
+              params, "ids", "contact_threshold");
     });
   }
 
