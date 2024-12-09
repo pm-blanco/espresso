@@ -49,6 +49,8 @@ static auto constexpr P3M_TUNE_CAO_TOO_LARGE = 1.;
 static auto constexpr P3M_TUNE_ELC_GAP_SIZE = 2.;
 /** could not achieve target accuracy */
 static auto constexpr P3M_TUNE_ACCURACY_TOO_LARGE = 3.;
+/** conflict with FFT domain decomposition */
+static auto constexpr P3M_TUNE_FFT_MESH_SIZE = 4.;
 /**@}*/
 
 /** @brief Precision threshold for a non-zero real-space cutoff. */
@@ -110,7 +112,7 @@ void TuningAlgorithm::commit(Utils::Vector3i const &mesh, int cao,
  * @param[in,out] tuned_accuracy  @copybrief P3MParameters::accuracy
  *
  * @returns The integration time in case of success, otherwise
- *          -@ref P3M_TUNE_ACCURACY_TOO_LARGE,
+ *          -@ref P3M_TUNE_ACCURACY_TOO_LARGE, -@ref P3M_TUNE_FFT_MESH_SIZE,
  *          -@ref P3M_TUNE_CAO_TOO_LARGE, or -@ref P3M_TUNE_ELC_GAP_SIZE
  */
 double TuningAlgorithm::get_mc_time(Utils::Vector3i const &mesh, int cao,
@@ -171,17 +173,25 @@ double TuningAlgorithm::get_mc_time(Utils::Vector3i const &mesh, int cao,
    * we know that the desired minimal accuracy is obtained */
   tuned_r_cut_iL = r_cut_iL = r_cut_iL_max;
 
+  auto const report_veto = [&](auto const &veto) {
+    if (veto) {
+      m_logger->log_skip(*veto, mesh[0], cao, r_cut_iL, tuned_alpha_L,
+                         tuned_accuracy, rs_err, ks_err);
+    }
+    return static_cast<bool>(veto);
+  };
+
   /* if we are running P3M+ELC, check that r_cut is compatible */
   auto const r_cut = r_cut_iL * box_geo.length()[0];
-  auto const veto = layer_correction_veto_r_cut(r_cut);
-  if (veto) {
-    m_logger->log_skip(*veto, mesh[0], cao, r_cut_iL, tuned_alpha_L,
-                       tuned_accuracy, rs_err, ks_err);
+  if (report_veto(layer_correction_veto_r_cut(r_cut))) {
     return -P3M_TUNE_ELC_GAP_SIZE;
   }
 
   commit(mesh, cao, r_cut_iL, tuned_alpha_L);
   on_solver_change();
+  if (report_veto(fft_decomposition_veto(mesh))) {
+    return -P3M_TUNE_FFT_MESH_SIZE;
+  }
   auto const int_time = benchmark_integration_step(m_system, m_timings);
 
   std::tie(tuned_accuracy, rs_err, ks_err, tuned_alpha_L) =

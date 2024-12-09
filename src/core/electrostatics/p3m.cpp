@@ -66,6 +66,7 @@
 #include <utils/integral_parameter.hpp>
 #include <utils/math/int_pow.hpp>
 #include <utils/math/sqr.hpp>
+#include <utils/serialization/array.hpp>
 
 #include <boost/mpi/collectives/all_reduce.hpp>
 #include <boost/mpi/collectives/broadcast.hpp>
@@ -630,6 +631,38 @@ public:
       return actor->veto_r_cut(r_cut);
     }
     return {};
+  }
+
+  std::optional<std::string> fft_decomposition_veto(
+      Utils::Vector3i const &mesh_size_r_space) const override {
+#ifdef CUDA
+    if constexpr (Architecture == Arch::GPU) {
+      return std::nullopt;
+    }
+#endif
+    using Array3i = Utils::Array<int, 3u>;
+    auto const [KX, KY, KZ] = p3m.fft->get_permutations();
+    auto valid_decomposition = false;
+    Array3i mesh_size_k_space = {};
+    boost::mpi::reduce(
+        ::comm_cart, Array3i(p3m.mesh.stop), mesh_size_k_space,
+        [](Array3i const &lhs, Array3i const &rhs) {
+          return Array3i{{std::max(lhs[0u], rhs[0u]),
+                          std::max(lhs[1u], rhs[1u]),
+                          std::max(lhs[2u], rhs[2u])}};
+        },
+        0);
+    if (::this_node == 0) {
+      valid_decomposition = (mesh_size_r_space[0u] == mesh_size_k_space[KX] and
+                             mesh_size_r_space[1u] == mesh_size_k_space[KY] and
+                             mesh_size_r_space[2u] == mesh_size_k_space[KZ]);
+    }
+    boost::mpi::broadcast(::comm_cart, valid_decomposition, 0);
+    std::optional<std::string> retval{"conflict with FFT domain decomposition"};
+    if (valid_decomposition) {
+      retval = std::nullopt;
+    }
+    return retval;
   }
 
   std::tuple<double, double, double, double>
