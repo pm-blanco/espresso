@@ -154,6 +154,7 @@ if espressomd.has_features('P3M') and ('P3M' in modes or 'ELC' in modes):
         r_cut=1.0,
         check_complex_residuals=False,
         timings=15,
+        tune_limits=[8, 12],
         tune=False)
     if 'ELC' in modes:
         elc = espressomd.electrostatics.ELC(
@@ -350,6 +351,7 @@ if espressomd.has_features('DP3M') and 'DP3M' in modes:
         accuracy=0.01,
         single_precision=True,
         timings=15,
+        tune_limits=[11, 15],
         tune=False)
     system.magnetostatics.solver = dp3m
 

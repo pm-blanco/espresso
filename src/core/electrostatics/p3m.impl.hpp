@@ -36,6 +36,7 @@
 #include <utils/Vector.hpp>
 
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -69,6 +70,7 @@ private:
   /** @brief Coulomb P3M meshes and FFT algorithm. */
   std::unique_ptr<p3m_data_struct_coulomb<FloatType>> p3m_impl;
   int tune_timings;
+  std::pair<std::optional<int>, std::optional<int>> tune_limits;
   bool tune_verbose;
   bool check_complex_residuals;
   bool m_is_tuned;
@@ -77,10 +79,10 @@ public:
   CoulombP3MImpl(
       std::unique_ptr<p3m_data_struct_coulomb<FloatType>> &&p3m_handle,
       double prefactor, int tune_timings, bool tune_verbose,
-      bool check_complex_residuals)
+      decltype(tune_limits) tune_limits, bool check_complex_residuals)
       : CoulombP3M(p3m_handle->params), p3m{*p3m_handle},
         p3m_impl{std::move(p3m_handle)}, tune_timings{tune_timings},
-        tune_verbose{tune_verbose},
+        tune_limits{std::move(tune_limits)}, tune_verbose{tune_verbose},
         check_complex_residuals{check_complex_residuals} {
 
     if (tune_timings <= 0) {

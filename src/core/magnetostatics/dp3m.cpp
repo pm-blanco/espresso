@@ -74,6 +74,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <tuple>
+#include <utility>
 #include <vector>
 
 #ifdef FFTW3_H
@@ -534,11 +535,14 @@ template <typename FloatType, Arch Architecture>
 class DipolarTuningAlgorithm : public TuningAlgorithm {
   p3m_data_struct_dipoles<FloatType> &dp3m;
   int m_mesh_max = -1, m_mesh_min = -1;
+  std::pair<std::optional<int>, std::optional<int>> m_tune_limits;
 
 public:
   DipolarTuningAlgorithm(System::System &system, decltype(dp3m) &input_dp3m,
-                         double prefactor, int timings)
-      : TuningAlgorithm(system, prefactor, timings), dp3m{input_dp3m} {}
+                         double prefactor, int timings,
+                         decltype(m_tune_limits) tune_limits)
+      : TuningAlgorithm(system, prefactor, timings), dp3m{input_dp3m},
+        m_tune_limits{std::move(tune_limits)} {}
 
   P3MParameters &get_params() override { return dp3m.params; }
 
@@ -603,6 +607,12 @@ public:
       m_mesh_min = static_cast<int>(std::round(std::pow(2., std::floor(expo))));
       /* avoid using more than 1 GB of FFT arrays */
       m_mesh_max = 128;
+      if (m_tune_limits.first) {
+        m_mesh_min = *m_tune_limits.first;
+      }
+      if (m_tune_limits.second) {
+        m_mesh_max = *m_tune_limits.second;
+      }
     } else {
       m_mesh_min = m_mesh_max = dp3m.params.mesh[0];
       m_logger->report_fixed_mesh(dp3m.params.mesh);
@@ -662,7 +672,7 @@ void DipolarP3MImpl<FloatType, Architecture>::tune() {
     }
     try {
       DipolarTuningAlgorithm<FloatType, Architecture> parameters(
-          system, dp3m, prefactor, tune_timings);
+          system, dp3m, prefactor, tune_timings, tune_limits);
       parameters.setup_logger(tune_verbose);
       // parameter ranges
       parameters.determine_mesh_limits();

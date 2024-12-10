@@ -36,6 +36,7 @@
 #include <utils/Vector.hpp>
 
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -72,16 +73,18 @@ private:
   /** @brief Coulomb P3M meshes and FFT algorithm. */
   std::unique_ptr<p3m_data_struct_dipoles<FloatType>> dp3m_impl;
   int tune_timings;
+  std::pair<std::optional<int>, std::optional<int>> tune_limits;
   bool tune_verbose;
   bool m_is_tuned;
 
 public:
   DipolarP3MImpl(
       std::unique_ptr<p3m_data_struct_dipoles<FloatType>> &&dp3m_handle,
-      double prefactor, int tune_timings, bool tune_verbose)
+      double prefactor, int tune_timings, bool tune_verbose,
+      decltype(tune_limits) tune_limits)
       : DipolarP3M(dp3m_handle->params), dp3m{*dp3m_handle},
         dp3m_impl{std::move(dp3m_handle)}, tune_timings{tune_timings},
-        tune_verbose{tune_verbose} {
+        tune_limits{std::move(tune_limits)}, tune_verbose{tune_verbose} {
 
     if (tune_timings <= 0) {
       throw std::domain_error("Parameter 'timings' must be > 0");

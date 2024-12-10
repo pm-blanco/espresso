@@ -209,6 +209,10 @@ class P3M(_P3MBase):
     tune : :obj:`bool`, optional
         Used to activate/deactivate the tuning method on activation.
         Defaults to ``True``.
+    tune_limits : (2,) array_like of :obj:`int`, optional
+        Lower and upper limits (inclusive) for the mesh size during tuning,
+        along the largest box dimension. Use ``None`` to not impose a limit.
+        Defaults to ``[None, None]``.
     timings : :obj:`int`
         Number of force calculations during tuning.
     verbose : :obj:`bool`, optional
@@ -266,6 +270,10 @@ class P3MGPU(_P3MBase):
         Defaults to ``True``.
     timings : :obj:`int`
         Number of force calculations during tuning.
+    tune_limits : (2,) array_like of :obj:`int`, optional
+        Lower and upper limits (inclusive) for the mesh size during tuning,
+        along the largest box dimension. Use ``None`` to not impose a limit.
+        Defaults to ``[None, None]``.
     verbose : :obj:`bool`, optional
         If ``False``, disable log output during tuning.
     check_neutrality : :obj:`bool`, optional

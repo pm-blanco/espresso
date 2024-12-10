@@ -598,14 +598,17 @@ class CoulombTuningAlgorithm : public TuningAlgorithm {
   double m_mesh_density_min = -1., m_mesh_density_max = -1.;
   // indicates if mesh should be tuned
   bool m_tune_mesh = false;
+  std::pair<std::optional<int>, std::optional<int>> m_tune_limits;
 
 protected:
   P3MParameters &get_params() override { return p3m.params; }
 
 public:
   CoulombTuningAlgorithm(System::System &system, auto &input_p3m,
-                         double prefactor, int timings)
-      : TuningAlgorithm(system, prefactor, timings), p3m{input_p3m} {}
+                         double prefactor, int timings,
+                         decltype(m_tune_limits) tune_limits)
+      : TuningAlgorithm(system, prefactor, timings), p3m{input_p3m},
+        m_tune_limits{std::move(tune_limits)} {}
 
   void on_solver_change() const override { m_system.on_coulomb_change(); }
 
@@ -722,6 +725,16 @@ public:
           max_npart_per_dim, std::cbrt(static_cast<double>(p3m.sum_qpart)));
       m_mesh_density_min = min_npart_per_dim / normalized_box_dim;
       m_mesh_density_max = max_npart_per_dim / normalized_box_dim;
+      if (m_tune_limits.first or m_tune_limits.second) {
+        auto const &box_l = box_geo.length();
+        auto const dim = std::max({box_l[0], box_l[1], box_l[2]});
+        if (m_tune_limits.first) {
+          m_mesh_density_min = static_cast<double>(*m_tune_limits.first) / dim;
+        }
+        if (m_tune_limits.second) {
+          m_mesh_density_max = static_cast<double>(*m_tune_limits.second) / dim;
+        }
+      }
       m_tune_mesh = true;
     } else {
       m_mesh_density_min = m_mesh_density_max = mesh_density;
@@ -805,7 +818,7 @@ void CoulombP3MImpl<FloatType, Architecture>::tune() {
     }
     try {
       CoulombTuningAlgorithm<FloatType, Architecture> parameters(
-          system, p3m, prefactor, tune_timings);
+          system, p3m, prefactor, tune_timings, tune_limits);
       parameters.setup_logger(tune_verbose);
       // parameter ranges
       parameters.determine_mesh_limits();
