@@ -127,7 +127,7 @@ void CoulombP3MImpl<FloatType, Architecture>::count_charged_particles() {
 template <typename FloatType, Arch Architecture>
 void CoulombP3MImpl<FloatType, Architecture>::calc_influence_function_force() {
   auto const [KX, KY, KZ] = p3m.fft->get_permutations();
-  p3m.g_force = grid_influence_function<FloatType, 1>(
+  p3m.g_force = grid_influence_function<FloatType, 1, P3M_BRILLOUIN>(
       p3m.params, p3m.mesh.start, p3m.mesh.stop, KX, KY, KZ,
       get_system().box_geo->length_inv());
 }
@@ -138,7 +138,7 @@ void CoulombP3MImpl<FloatType, Architecture>::calc_influence_function_force() {
 template <typename FloatType, Arch Architecture>
 void CoulombP3MImpl<FloatType, Architecture>::calc_influence_function_energy() {
   auto const [KX, KY, KZ] = p3m.fft->get_permutations();
-  p3m.g_energy = grid_influence_function<FloatType, 0>(
+  p3m.g_energy = grid_influence_function<FloatType, 0, P3M_BRILLOUIN>(
       p3m.params, p3m.mesh.start, p3m.mesh.stop, KX, KY, KZ,
       get_system().box_geo->length_inv());
 }

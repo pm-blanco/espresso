@@ -116,8 +116,9 @@ double
 DipolarP3MImpl<FloatType, Architecture>::calc_average_self_energy_k_space()
     const {
   auto const &box_geo = *get_system().box_geo;
-  auto const node_phi = grid_influence_function_self_energy(
-      dp3m.params, dp3m.mesh.start, dp3m.mesh.stop, dp3m.g_energy);
+  auto const node_phi =
+      grid_influence_function_self_energy<FloatType, P3M_BRILLOUIN>(
+          dp3m.params, dp3m.mesh.start, dp3m.mesh.stop, dp3m.g_energy);
 
   double phi = 0.;
   boost::mpi::reduce(comm_cart, node_phi, phi, std::plus<>(), 0);
@@ -519,14 +520,14 @@ double DipolarP3MImpl<FloatType, Architecture>::calc_surface_term(
 
 template <typename FloatType, Arch Architecture>
 void DipolarP3MImpl<FloatType, Architecture>::calc_influence_function_force() {
-  dp3m.g_force = grid_influence_function<FloatType, 3>(
+  dp3m.g_force = grid_influence_function<FloatType, 3, P3M_BRILLOUIN>(
       dp3m.params, dp3m.mesh.start, dp3m.mesh.stop,
       get_system().box_geo->length_inv());
 }
 
 template <typename FloatType, Arch Architecture>
 void DipolarP3MImpl<FloatType, Architecture>::calc_influence_function_energy() {
-  dp3m.g_energy = grid_influence_function<FloatType, 2>(
+  dp3m.g_energy = grid_influence_function<FloatType, 2, P3M_BRILLOUIN>(
       dp3m.params, dp3m.mesh.start, dp3m.mesh.stop,
       get_system().box_geo->length_inv());
 }

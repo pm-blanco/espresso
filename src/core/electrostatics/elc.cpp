@@ -368,10 +368,6 @@ ElectrostaticLayerCorrection::z_energy(ParticleRange const &particles) const {
   auto const &box_geo = *get_system().box_geo;
   auto const xy_area_inv = box_geo.length_inv()[0] * box_geo.length_inv()[1];
   auto const pref = prefactor * 2. * std::numbers::pi * xy_area_inv;
-  auto const delta = elc.delta_mid_top * elc.delta_mid_bot;
-  auto const fac_delta_mid_bot = elc.delta_mid_bot / (1. - delta);
-  auto const fac_delta_mid_top = elc.delta_mid_top / (1. - delta);
-  auto const fac_delta = delta / (1. - delta);
 
   /* for non-neutral systems, this shift gives the background contribution
    * (rsp. for this shift, the DM of the background is zero) */
@@ -397,6 +393,10 @@ ElectrostaticLayerCorrection::z_energy(ParticleRange const &particles) const {
       }
     } else {
       // metallic boundaries
+      auto const delta = elc.delta_mid_top * elc.delta_mid_bot;
+      auto const fac_delta_mid_bot = elc.delta_mid_bot / (1. - delta);
+      auto const fac_delta_mid_top = elc.delta_mid_top / (1. - delta);
+      auto const fac_delta = delta / (1. - delta);
       clear_vec(gblcblk, size);
       auto const h = elc.box_h;
       ImageSum const image_sum{delta, shift, lz};
