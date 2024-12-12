@@ -205,8 +205,9 @@ class Test(ut.TestCase):
             ('alpha', -2.0, "Parameter 'alpha' must be > 0"),
             ('accuracy', -2.0, "Parameter 'accuracy' must be > 0"),
             ('mesh', (-1, -1, -1), "Parameter 'mesh' must be > 0"),
-            ('tune_limits', (-1, 1), "P3M mesh tuning limits: mesh must be > 0"),
-            ('tune_limits', (1, 0), "P3M mesh tuning limits: mesh must be > 0"),
+            ('tune_limits', (-1,), "Parameter 'tune_limits' needs 2 values"),
+            ('tune_limits', (-1, 1), "Parameter 'tune_limits' must be > 0"),
+            ('tune_limits', (1, 0), "Parameter 'tune_limits' must be > 0"),
             ('mesh', (2, 2, 2), "Parameter 'cao' cannot be larger than 'mesh'"),
             ('mesh_off', (-2, 1, 1), "Parameter 'mesh_off' must be >= 0 and <= 1"),
         ]
