@@ -66,6 +66,7 @@
 #include <utils/integral_parameter.hpp>
 #include <utils/math/int_pow.hpp>
 #include <utils/math/sqr.hpp>
+#include <utils/serialization/array.hpp>
 
 #include <boost/mpi/collectives/all_reduce.hpp>
 #include <boost/mpi/collectives/broadcast.hpp>
@@ -126,7 +127,7 @@ void CoulombP3MImpl<FloatType, Architecture>::count_charged_particles() {
 template <typename FloatType, Arch Architecture>
 void CoulombP3MImpl<FloatType, Architecture>::calc_influence_function_force() {
   auto const [KX, KY, KZ] = p3m.fft->get_permutations();
-  p3m.g_force = grid_influence_function<FloatType, 1>(
+  p3m.g_force = grid_influence_function<FloatType, 1, P3M_BRILLOUIN>(
       p3m.params, p3m.mesh.start, p3m.mesh.stop, KX, KY, KZ,
       get_system().box_geo->length_inv());
 }
@@ -137,7 +138,7 @@ void CoulombP3MImpl<FloatType, Architecture>::calc_influence_function_force() {
 template <typename FloatType, Arch Architecture>
 void CoulombP3MImpl<FloatType, Architecture>::calc_influence_function_energy() {
   auto const [KX, KY, KZ] = p3m.fft->get_permutations();
-  p3m.g_energy = grid_influence_function<FloatType, 0>(
+  p3m.g_energy = grid_influence_function<FloatType, 0, P3M_BRILLOUIN>(
       p3m.params, p3m.mesh.start, p3m.mesh.stop, KX, KY, KZ,
       get_system().box_geo->length_inv());
 }
@@ -597,14 +598,17 @@ class CoulombTuningAlgorithm : public TuningAlgorithm {
   double m_mesh_density_min = -1., m_mesh_density_max = -1.;
   // indicates if mesh should be tuned
   bool m_tune_mesh = false;
+  std::pair<std::optional<int>, std::optional<int>> m_tune_limits;
 
 protected:
   P3MParameters &get_params() override { return p3m.params; }
 
 public:
   CoulombTuningAlgorithm(System::System &system, auto &input_p3m,
-                         double prefactor, int timings)
-      : TuningAlgorithm(system, prefactor, timings), p3m{input_p3m} {}
+                         double prefactor, int timings,
+                         decltype(m_tune_limits) tune_limits)
+      : TuningAlgorithm(system, prefactor, timings), p3m{input_p3m},
+        m_tune_limits{std::move(tune_limits)} {}
 
   void on_solver_change() const override { m_system.on_coulomb_change(); }
 
@@ -630,6 +634,38 @@ public:
       return actor->veto_r_cut(r_cut);
     }
     return {};
+  }
+
+  std::optional<std::string> fft_decomposition_veto(
+      Utils::Vector3i const &mesh_size_r_space) const override {
+#ifdef CUDA
+    if constexpr (Architecture == Arch::GPU) {
+      return std::nullopt;
+    }
+#endif
+    using Array3i = Utils::Array<int, 3u>;
+    auto const [KX, KY, KZ] = p3m.fft->get_permutations();
+    auto valid_decomposition = false;
+    Array3i mesh_size_k_space = {};
+    boost::mpi::reduce(
+        ::comm_cart, Array3i(p3m.mesh.stop), mesh_size_k_space,
+        [](Array3i const &lhs, Array3i const &rhs) {
+          return Array3i{{std::max(lhs[0u], rhs[0u]),
+                          std::max(lhs[1u], rhs[1u]),
+                          std::max(lhs[2u], rhs[2u])}};
+        },
+        0);
+    if (::this_node == 0) {
+      valid_decomposition = (mesh_size_r_space[0u] == mesh_size_k_space[KX] and
+                             mesh_size_r_space[1u] == mesh_size_k_space[KY] and
+                             mesh_size_r_space[2u] == mesh_size_k_space[KZ]);
+    }
+    boost::mpi::broadcast(::comm_cart, valid_decomposition, 0);
+    std::optional<std::string> retval{"conflict with FFT domain decomposition"};
+    if (valid_decomposition) {
+      retval = std::nullopt;
+    }
+    return retval;
   }
 
   std::tuple<double, double, double, double>
@@ -689,6 +725,16 @@ public:
           max_npart_per_dim, std::cbrt(static_cast<double>(p3m.sum_qpart)));
       m_mesh_density_min = min_npart_per_dim / normalized_box_dim;
       m_mesh_density_max = max_npart_per_dim / normalized_box_dim;
+      if (m_tune_limits.first or m_tune_limits.second) {
+        auto const &box_l = box_geo.length();
+        auto const dim = std::max({box_l[0], box_l[1], box_l[2]});
+        if (m_tune_limits.first) {
+          m_mesh_density_min = static_cast<double>(*m_tune_limits.first) / dim;
+        }
+        if (m_tune_limits.second) {
+          m_mesh_density_max = static_cast<double>(*m_tune_limits.second) / dim;
+        }
+      }
       m_tune_mesh = true;
     } else {
       m_mesh_density_min = m_mesh_density_max = mesh_density;
@@ -772,7 +818,7 @@ void CoulombP3MImpl<FloatType, Architecture>::tune() {
     }
     try {
       CoulombTuningAlgorithm<FloatType, Architecture> parameters(
-          system, p3m, prefactor, tune_timings);
+          system, p3m, prefactor, tune_timings, tune_limits);
       parameters.setup_logger(tune_verbose);
       // parameter ranges
       parameters.determine_mesh_limits();

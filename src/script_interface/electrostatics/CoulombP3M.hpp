@@ -33,6 +33,7 @@
 #include "script_interface/get_value.hpp"
 
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -51,6 +52,7 @@ class CoulombP3M : public Actor<CoulombP3M<Architecture>, ::CoulombP3M> {
   bool m_tune_verbose;
   bool m_check_complex_residuals;
   bool m_single_precision;
+  std::pair<std::optional<int>, std::optional<int>> m_tune_limits;
 
 public:
   using Base = Actor<CoulombP3M<Architecture>, ::CoulombP3M>;
@@ -93,6 +95,15 @@ public:
          [this]() { return m_tune_verbose; }},
         {"timings", AutoParameter::read_only,
          [this]() { return m_tune_timings; }},
+        {"tune_limits", AutoParameter::read_only,
+         [this]() {
+           auto const &[range_min, range_max] = m_tune_limits;
+           std::vector<Variant> retval = {
+               range_min ? Variant{*range_min} : Variant{None{}},
+               range_max ? Variant{*range_max} : Variant{None{}},
+           };
+           return retval;
+         }},
         {"tune", AutoParameter::read_only, [this]() { return m_tune; }},
         {"check_complex_residuals", AutoParameter::read_only,
          [this]() { return m_check_complex_residuals; }},
@@ -103,6 +114,40 @@ public:
     m_tune = get_value<bool>(params, "tune");
     m_tune_timings = get_value<int>(params, "timings");
     m_tune_verbose = get_value<bool>(params, "verbose");
+    m_tune_limits = {std::nullopt, std::nullopt};
+    if (params.contains("tune_limits")) {
+      auto const &variant = params.at("tune_limits");
+      std::size_t range_length = 0u;
+      if (is_type<std::vector<int>>(variant)) {
+        auto const range = get_value<std::vector<int>>(variant);
+        range_length = range.size();
+        if (range_length == 2u) {
+          m_tune_limits = {range[0u], range[1u]};
+        }
+      } else {
+        auto const range = get_value<std::vector<Variant>>(variant);
+        range_length = range.size();
+        if (range_length == 2u) {
+          if (not is_none(range[0u])) {
+            m_tune_limits.first = get_value<int>(range[0u]);
+          }
+          if (not is_none(range[1u])) {
+            m_tune_limits.second = get_value<int>(range[1u]);
+          }
+        }
+      }
+      context()->parallel_try_catch([&]() {
+        if (range_length != 2u) {
+          throw std::invalid_argument("Parameter 'tune_limits' needs 2 values");
+        }
+        if (m_tune_limits.first and *m_tune_limits.first <= 0) {
+          throw std::domain_error("Parameter 'tune_limits' must be > 0");
+        }
+        if (m_tune_limits.second and *m_tune_limits.second <= 0) {
+          throw std::domain_error("Parameter 'tune_limits' must be > 0");
+        }
+      });
+    }
     m_check_complex_residuals =
         get_value<bool>(params, "check_complex_residuals");
     auto const single_precision = get_value<bool>(params, "single_precision");
@@ -121,7 +166,7 @@ public:
                                get_value<double>(params, "accuracy")};
       make_handle(single_precision, std::move(p3m),
                   get_value<double>(params, "prefactor"), m_tune_timings,
-                  m_tune_verbose, m_check_complex_residuals);
+                  m_tune_verbose, m_tune_limits, m_check_complex_residuals);
     });
     set_charge_neutrality_tolerance(params);
   }

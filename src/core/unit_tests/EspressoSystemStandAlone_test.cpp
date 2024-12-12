@@ -75,6 +75,7 @@ namespace utf = boost::unit_test;
 #include <initializer_list>
 #include <limits>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <unordered_map>
 #include <utility>
@@ -228,6 +229,8 @@ BOOST_FIXTURE_TEST_CASE(espresso_system_stand_alone, ParticleFactory) {
 
     // set up P3M
     auto const prefactor = 2.;
+    auto const mesh_range = std::pair<std::optional<int>, std::optional<int>>{
+        std::nullopt, std::nullopt};
     auto p3m = P3MParameters{false,
                              0.0,
                              3.5,
@@ -238,7 +241,7 @@ BOOST_FIXTURE_TEST_CASE(espresso_system_stand_alone, ParticleFactory) {
                              1e-3};
     auto solver =
         new_p3m_handle<double, Arch::CPU, FFTBackendLegacy, FFTBuffersLegacy>(
-            std::move(p3m), prefactor, 1, false, true);
+            std::move(p3m), prefactor, 1, false, mesh_range, true);
     add_actor(comm, espresso::system, system.coulomb.impl->solver, solver,
               [&system]() { system.on_coulomb_change(); });
     BOOST_CHECK(not solver->is_gpu());
@@ -297,6 +300,8 @@ BOOST_FIXTURE_TEST_CASE(espresso_system_stand_alone, ParticleFactory) {
 
     // set up P3M
     auto const prefactor = 2.;
+    auto const mesh_range = std::pair<std::optional<int>, std::optional<int>>{
+        std::nullopt, std::nullopt};
     auto p3m = P3MParameters{false,
                              0.0,
                              3.5,
@@ -307,7 +312,7 @@ BOOST_FIXTURE_TEST_CASE(espresso_system_stand_alone, ParticleFactory) {
                              1e-3};
     auto solver =
         new_dp3m_handle<double, Arch::CPU, FFTBackendLegacy, FFTBuffersLegacy>(
-            std::move(p3m), prefactor, 1, false);
+            std::move(p3m), prefactor, 1, false, mesh_range);
     add_actor(comm, espresso::system, system.dipoles.impl->solver, solver,
               [&system]() { system.on_dipoles_change(); });
     BOOST_CHECK(not solver->is_gpu());

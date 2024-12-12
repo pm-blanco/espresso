@@ -19,6 +19,10 @@
 
 #pragma once
 
+#include "config/config.hpp"
+
+#if defined(P3M)
+
 #include "p3m/common.hpp"
 #include "p3m/for_each_3d.hpp"
 #include "p3m/math.hpp"
@@ -36,34 +40,54 @@
 #include <vector>
 
 /**
- * @brief Hockney/Eastwood/Ballenegger optimal influence function.
+ * @brief Calculate the aliasing sums for the optimal influence function.
  *
  * This implements Eq. 30 of @cite cerda08d, which can be used
  * for monopole and dipole P3M by choosing the appropriate S factor.
  *
- * @tparam S Order of the differential operator, e.g. 0 for potential,
- *          1 for electric field, ...
- * @tparam m Number of aliasing terms to take into account.
+ * The full equation is:
+ * @f{align*}{
+ * G_{\text{opt}}(\vec{n}, S, \text{cao}) &=
+ *   \displaystyle\frac{4\pi}{\sum_\vec{m} U^2}
+ *   \sum_\vec{m}U^2
+ *   \displaystyle\frac{\left(\vec{k}\odot\vec{k}_m\right)^S}
+ *                     {|\vec{k}_m|^2}
+ *   e^{-1/(2\alpha)^2|\vec{k}_m|^2} \\
  *
- * @param cao Charge assignment order.
- * @param alpha Ewald splitting parameter.
- * @param k k-vector to evaluate the function for.
- * @param h Grid spacing.
+ * U &= \operatorname{det}\left[I_3\cdot\operatorname{sinc}\left(
+ *          \frac{\vec{k}_m\odot\vec{a}}{2\pi}\right)\right]^{\text{cao}} \\
+ *
+ * \vec{k} &= \frac{2\pi}{\vec{N}\odot\vec{a}}\vec{s}[\vec{n}] \\
+ *
+ * \vec{k}_m &= \frac{2\pi}{\vec{N}\odot\vec{a}}
+ *              \left(\vec{s}[\vec{n}]+\vec{m}\odot\vec{N}\right)
+ * @f}
+ *
+ * with @f$ I_3 @f$ the 3x3 identity matrix, @f$ \vec{N} @f$ the global mesh
+ * size in k-space coordinates, @f$ \vec{a} @f$ the mesh size, @f$ \vec{m} @f$
+ * the Brillouin zone coordinates, @f$ \odot @f$ the Hadamard product.
+ *
+ * @tparam S Order of the differential operator (0 for potential, 1 for E-field)
+ * @tparam m Number of Brillouin zones that contribute to the aliasing sums
+ *
+ * @param params   P3M parameters
+ * @param k        k-vector to evaluate the function for.
+ * @return The optimal influence function for a specific k-vector.
  */
 template <std::size_t S, std::size_t m>
-double G_opt(int cao, double alpha, Utils::Vector3d const &k,
-             Utils::Vector3d const &h) {
+double G_opt(P3MParameters const &params, Utils::Vector3d const &k) {
 
   auto const k2 = k.norm2();
   if (k2 == 0.) {
     return 0.;
   }
 
-  auto constexpr limit = 30.;
+  auto constexpr exp_limit = 30.;
   auto constexpr m_start = Utils::Vector3i::broadcast(-m);
   auto constexpr m_stop = Utils::Vector3i::broadcast(m + 1);
-  auto const exponent_prefactor = Utils::sqr(1. / (2. * alpha));
-  auto const wavevector = (2. * std::numbers::pi) / h;
+  auto const cao = params.cao;
+  auto const exponent_prefactor = Utils::sqr(1. / (2. * params.alpha));
+  auto const wavevector = (2. * std::numbers::pi) / params.a;
   auto const wavevector_i = 1. / wavevector;
   auto indices = Utils::Vector3i{};
   auto km = Utils::Vector3d{};
@@ -76,9 +100,9 @@ double G_opt(int cao, double alpha, Utils::Vector3d const &k,
       [&]() {
         auto const U2 = std::pow(Utils::product(fnm), 2 * cao);
         auto const km2 = km.norm2();
-        auto const exponent = exponent_prefactor * km2;
-        if (exponent < limit) {
-          auto const f3 = std::exp(-exponent) * (4. * std::numbers::pi / km2);
+        auto const exp_term = exponent_prefactor * km2;
+        if (exp_term < exp_limit) {
+          auto const f3 = std::exp(-exp_term) * (4. * std::numbers::pi / km2);
           numerator += U2 * f3 * Utils::int_pow<S>(k * km);
         }
         denominator += U2;
@@ -97,26 +121,25 @@ double G_opt(int cao, double alpha, Utils::Vector3d const &k,
  * This evaluates the optimal influence function @ref G_opt
  * over a regular grid of k vectors, and returns the values as a vector.
  *
- * @tparam S Order of the differential operator, e.g. 0 for potential,
- *          1 for electric field...
- * @tparam m Number of aliasing terms to take into account.
+ * @tparam S Order of the differential operator (0 for potential, 1 for E-field)
+ * @tparam m Number of Brillouin zones that contribute to the aliasing sums
  *
  * @param params P3M parameters.
- * @param n_start Lower left corner of the grid.
- * @param n_stop Upper right corner of the grid.
+ * @param n_start Lower left corner of the grid in k-space.
+ * @param n_stop Upper right corner of the grid in k-space.
  * @param KX k-space x-axis index.
  * @param KY k-space y-axis index.
  * @param KZ k-space z-axis index.
  * @param inv_box_l Inverse box length.
  * @return Values of G_opt at regular grid points.
  */
-template <typename FloatType, std::size_t S, std::size_t m = 0>
+template <typename FloatType, std::size_t S, std::size_t m>
 std::vector<FloatType> grid_influence_function(
     P3MParameters const &params, Utils::Vector3i const &n_start,
     Utils::Vector3i const &n_stop, int const KX, int const KY, int const KZ,
     Utils::Vector3d const &inv_box_l) {
 
-  auto const shifts = detail::calc_meshift(params.mesh);
+  auto const shifts = calc_p3m_mesh_shift(params.mesh);
   auto const size = n_stop - n_start;
 
   /* The influence function grid */
@@ -141,10 +164,12 @@ std::vector<FloatType> grid_influence_function(
           Utils::Vector3d{{shifts[0u][indices[KX]] * wavevector[0u],
                            shifts[1u][indices[KY]] * wavevector[1u],
                            shifts[2u][indices[KZ]] * wavevector[2u]}};
-      g[index] = FloatType(G_opt<S, m>(params.cao, params.alpha, k, params.a));
+      g[index] = FloatType(G_opt<S, m>(params, k));
     }
     ++index;
   });
 
   return g;
 }
+
+#endif // defined(P3M)

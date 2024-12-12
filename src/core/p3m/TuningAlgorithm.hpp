@@ -147,6 +147,12 @@ public:
   virtual std::optional<std::string>
   layer_correction_veto_r_cut(double r_cut) const = 0;
 
+  /** @brief Veto FFT decomposition in non-cubic boxes. */
+  virtual std::optional<std::string>
+  fft_decomposition_veto(Utils::Vector3i const &) const {
+    return std::nullopt;
+  }
+
   /** @brief Write tuned parameters to the P3M parameter struct. */
   void commit(Utils::Vector3i const &mesh, int cao, double r_cut_iL,
               double alpha_L);

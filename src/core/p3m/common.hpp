@@ -53,6 +53,7 @@ auto constexpr P3M_EPSILON_METALLIC = 0.0;
 #include <span>
 #include <stdexcept>
 
+/** @brief P3M kernel architecture. */
 enum class Arch { CPU, GPU };
 
 /** @brief Structure to hold P3M parameters and some dependent variables. */
@@ -65,8 +66,8 @@ struct P3MParameters {
   /** cutoff radius for real space electrostatics (>0), rescaled to
    *  @p r_cut_iL = @p r_cut * @p box_l_i. */
   double r_cut_iL;
-  /** number of mesh points per coordinate direction (>0). */
-  Utils::Vector3i mesh = {};
+  /** number of mesh points per coordinate direction (>0), in real space. */
+  Utils::Vector3i mesh;
   /** offset of the first mesh point (lower left corner) from the
    *  coordinate origin ([0,1[). */
   Utils::Vector3d mesh_off;
@@ -237,15 +238,14 @@ template <typename FloatType> struct P3MFFTMesh {
 
 #endif // defined(P3M) or defined(DP3M)
 
-namespace detail {
-/** Calculate indices that shift @ref P3MParameters::mesh "mesh" by `mesh/2`.
+/** @brief Calculate indices that shift @ref P3MParameters::mesh by `mesh/2`.
  *  For each mesh size @f$ n @f$ in @c mesh_size, create a sequence of integer
  *  values @f$ \left( 0, \ldots, \lfloor n/2 \rfloor, -\lfloor n/2 \rfloor,
  *  \ldots, -1\right) @f$ if @c zero_out_midpoint is false, otherwise
  *  @f$ \left( 0, \ldots, \lfloor n/2 - 1 \rfloor, 0, -\lfloor n/2 \rfloor,
  *  \ldots, -1\right) @f$.
  */
-std::array<std::vector<int>, 3> inline calc_meshift(
+std::array<std::vector<int>, 3> inline calc_p3m_mesh_shift(
     Utils::Vector3i const &mesh_size, bool zero_out_midpoint = false) {
   std::array<std::vector<int>, 3> ret{};
 
@@ -262,4 +262,3 @@ std::array<std::vector<int>, 3> inline calc_meshift(
 
   return ret;
 }
-} // namespace detail
