@@ -36,8 +36,9 @@ namespace Observables {
 class TimeObservable : virtual public Observable {
 public:
   double contact_threshold;
-  TimeObservable(double contact_threshold)
-      : contact_threshold(contact_threshold) {}
+  std::vector<int> const target_ids;
+  TimeObservable(double contact_threshold,std::vector<int> const &target_ids)
+      : contact_threshold(contact_threshold), target_ids(target_ids) {}
   
   };
 

@@ -47,7 +47,8 @@ public:
   using Base::Base;
   TimeObservable() {
     this->add_parameters(
-        {
+        {{"target_ids", AutoParameter::read_only,
+          [this]() { return time_observable()->target_ids(); }},
          {"contact_threshold",
           [this](const Variant &v) {
             time_observable()->contact_threshold= get_value<double>(v);

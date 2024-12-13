@@ -52,6 +52,8 @@ public:
     this->add_parameters(
         {{"ids", AutoParameter::read_only,
           [this]() { return pid_time_observable()->ids(); }},
+          {"target_ids", AutoParameter::read_only,
+          [this]() { return pid_time_observable()->target_ids; }},
          {"contact_threshold", AutoParameter::read_only,
           [this]() { return pid_time_observable()->contact_threshold; }}});
   }
@@ -59,8 +61,8 @@ public:
   void do_construct(VariantMap const &params) override {
     ObjectHandle::context()->parallel_try_catch([&]() {
       m_observable =
-          make_shared_from_args<CoreObs, std::vector<int>, double>(
-              params, "ids", "contact_threshold");
+          make_shared_from_args<CoreObs, std::vector<int>, std::vector<int>, double>(
+              params, "ids", "target_ids", "contact_threshold");
     });
   }
 

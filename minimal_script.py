@@ -12,10 +12,11 @@ system.cell_system.skin = 1
 system.part.add(pos  = [0,0,0])
 system.part.add(pos  = [2,2,2])
 
-system.part.add(pos  = [5,5,5])
+system.part.add(pos  = [1,1,1])
 system.part.add(pos  = [6,6,6])
 
 obs = espressomd.observables.ContactTimes(ids=[0,1],
+                                          target_ids=[2,3],
                                           contact_threshold=2)
 accumulator = espressomd.accumulators.TimeSeries(obs=obs, 
                                                 delta_N=1)
@@ -30,7 +31,11 @@ system.non_bonded_inter[0,0].lennard_jones.set_params(epsilon = 1,
                                                     )
 
 system.integrator.run(1)
-obs.calculate()
-
+res=obs.calculate()
+print(res)
 system.integrator.run(10000)
-obs.calculate()
+res=obs.calculate()
+print(res)
+system.integrator.run(10000)
+res=obs.calculate()
+print(res)

@@ -29,9 +29,9 @@ namespace Observables {
 // Observable which acts on a given list of particle ids
 class PidTimeObservable : public PidObservable, public TimeObservable {
 public:
-  PidTimeObservable(std::vector<int> const &ids, double contact_threshold)
+  PidTimeObservable(std::vector<int> const &ids, std::vector<int> const &target_ids, double contact_threshold)
       : PidObservable(ids),
-        TimeObservable(contact_threshold) {}
+        TimeObservable(contact_threshold,target_ids) {}
 };
 
 } // Namespace Observables
