@@ -34,7 +34,7 @@ add_subdirectory(utils)
 add_subdirectory(shapes)
 add_subdirectory(core)
 add_subdirectory(config)
-add_subdirectory(profiler)
+add_subdirectory(instrumentation)
 
 if(ESPRESSO_BUILD_WITH_SCAFACOS)
   add_subdirectory(scafacos)

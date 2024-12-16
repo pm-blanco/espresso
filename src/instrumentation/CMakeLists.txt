@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2022 The ESPResSo project
+# Copyright (C) 2019-2024 The ESPResSo project
 #
 # This file is part of ESPResSo.
 #
@@ -17,22 +17,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-add_library(espresso_profiler INTERFACE)
-add_library(espresso::profiler ALIAS espresso_profiler)
+add_library(espresso_instrumentation INTERFACE)
+add_library(espresso::instrumentation ALIAS espresso_instrumentation)
 
 if(ESPRESSO_BUILD_WITH_VALGRIND)
-  target_include_directories(espresso_profiler
+  target_include_directories(espresso_instrumentation
                              INTERFACE "${VALGRIND_INCLUDE_DIRS}")
 endif()
 
 if(ESPRESSO_BUILD_WITH_CALIPER)
-  target_link_libraries(espresso_profiler INTERFACE caliper)
-  # workaround to handle the case where the build directory is outside `_deps`
-  cmake_path(GET CMAKE_BINARY_DIR FILENAME CMAKE_BINARY_DIR_BASENAME)
-  set(caliper_BINARY_DIR_ALTERNATIVE
-      "${CMAKE_BINARY_DIR}/${CMAKE_BINARY_DIR_BASENAME}/_deps/caliper-src")
+  target_link_libraries(espresso_instrumentation INTERFACE caliper)
   target_include_directories(
-    espresso_profiler
-    INTERFACE "${caliper_SOURCE_DIR}/include" "${caliper_BINARY_DIR}/include"
-              "${caliper_BINARY_DIR_ALTERNATIVE}/include")
+    espresso_instrumentation INTERFACE "${caliper_SOURCE_DIR}/include"
+                                       "${caliper_BINARY_DIR}/include")
 endif()

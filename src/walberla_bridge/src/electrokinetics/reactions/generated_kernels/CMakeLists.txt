@@ -20,7 +20,7 @@
 foreach(n_species RANGE 1 5)
   foreach(precision double_precision single_precision)
     target_sources(
-      espresso_walberla
+      espresso_walberla_codegen
       PRIVATE ReactionKernelBulk_${n_species}_${precision}.cpp
               ReactionKernelIndexed_${n_species}_${precision}.cpp)
   endforeach()
