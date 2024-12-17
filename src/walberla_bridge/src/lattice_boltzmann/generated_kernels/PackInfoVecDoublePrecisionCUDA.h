@@ -41,7 +41,7 @@ class PackInfoVecDoublePrecisionCUDA
     : public ::walberla::gpu::GeneratedGPUPackInfo {
 public:
   PackInfoVecDoublePrecisionCUDA(BlockDataID fieldID_) : fieldID(fieldID_){};
-  virtual ~PackInfoVecDoublePrecisionCUDA() {}
+  ~PackInfoVecDoublePrecisionCUDA() override = default;
 
   void pack(stencil::Direction dir, unsigned char *buffer, IBlock *block,
             gpuStream_t stream) override;

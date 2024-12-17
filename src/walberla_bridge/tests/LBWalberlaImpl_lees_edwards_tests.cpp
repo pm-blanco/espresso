@@ -45,7 +45,6 @@
 #include <cmath>
 #include <functional>
 #include <iostream>
-#include <math.h>
 #include <memory>
 #include <vector>
 

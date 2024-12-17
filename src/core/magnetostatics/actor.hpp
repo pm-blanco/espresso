@@ -30,6 +30,10 @@
 namespace Dipoles {
 
 template <typename Class> class Actor : public System::Leaf<Actor<Class>> {
+private:
+  Actor() = default;
+  friend Class;
+
 public:
   /**
    * @brief Magnetostatics prefactor.

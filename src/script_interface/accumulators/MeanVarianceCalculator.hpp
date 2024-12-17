@@ -66,12 +66,24 @@ public:
           [&]() { mean_variance_calculator()->update(context()->get_comm()); });
       return {};
     }
-    if (method == "mean")
-      return mean_variance_calculator()->mean();
-    if (method == "variance")
-      return mean_variance_calculator()->variance();
-    if (method == "std_error")
-      return mean_variance_calculator()->std_error();
+    if (method == "mean") {
+      if (context()->is_head_node()) {
+        return mean_variance_calculator()->mean();
+      }
+      return {};
+    }
+    if (method == "variance") {
+      if (context()->is_head_node()) {
+        return mean_variance_calculator()->variance();
+      }
+      return {};
+    }
+    if (method == "std_error") {
+      if (context()->is_head_node()) {
+        return mean_variance_calculator()->std_error();
+      }
+      return {};
+    }
     return AccumulatorBase::do_call_method(method, parameters);
   }
 

@@ -58,9 +58,11 @@ protected:
     m_actor->bind_system(m_system.lock());
   }
 
-public:
+private:
+  friend SIClass;
   Actor();
 
+public:
   Variant do_call_method(std::string const &name,
                          VariantMap const &params) override;
 

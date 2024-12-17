@@ -151,6 +151,7 @@ static auto p3m_tune_aliasing_sums(Utils::Vector3i const &shift,
 
   auto constexpr mesh_start = Utils::Vector3i::broadcast(-P3M_BRILLOUIN);
   auto constexpr mesh_stop = Utils::Vector3i::broadcast(P3M_BRILLOUIN + 1);
+  auto constexpr exp_min = -708.4; // for IEEE-compatible double
   auto const factor1 = Utils::sqr(std::numbers::pi * alpha_L_i);
   auto alias1 = 0.;
   auto alias2 = 0.;
@@ -162,7 +163,9 @@ static auto p3m_tune_aliasing_sums(Utils::Vector3i const &shift,
       mesh_start, mesh_stop, indices,
       [&]() {
         auto const norm_sq = nm.norm2();
-        auto const ex = exp(-factor1 * norm_sq);
+        auto const exponent = -factor1 * norm_sq;
+        auto const exp_limit = (exp_min + std::log(norm_sq)) / 2.;
+        auto const ex = (exponent < exp_limit) ? 0. : std::exp(exponent);
         auto const energy = std::pow(Utils::product(fnm), 2 * cao);
         alias1 += Utils::sqr(ex) / norm_sq;
         alias2 += energy * ex * (shift * nm) / norm_sq;

@@ -107,7 +107,9 @@ public:
   };
 
 protected:
+  // NOLINTNEXTLINE(bugprone-crtp-constructor-accessibility)
   AutoParameters() = default;
+  // NOLINTNEXTLINE(bugprone-crtp-constructor-accessibility)
   explicit AutoParameters(std::vector<AutoParameter> &&params) {
     add_parameters(std::move(params));
   }

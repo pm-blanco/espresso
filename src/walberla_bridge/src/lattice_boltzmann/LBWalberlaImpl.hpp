@@ -112,7 +112,7 @@ public:
   /** @brief Stencil for ghost communication (includes domain corners). */
   using StencilFull = stencil::D3Q27;
   /** @brief Lattice model (e.g. blockforest). */
-  using Lattice_T = LatticeWalberla::Lattice_T;
+  using BlockStorage = LatticeWalberla::Lattice_T;
 
 protected:
   template <typename FT, lbmpy::Arch AT = lbmpy::Arch::CPU> struct FieldTrait {
@@ -200,7 +200,7 @@ public:
     return static_cast<std::size_t>(Stencil::Size);
   }
 
-  [[nodiscard]] virtual bool is_double_precision() const noexcept override {
+  [[nodiscard]] bool is_double_precision() const noexcept override {
     return std::is_same_v<FloatType, double>;
   }
 
@@ -248,8 +248,7 @@ private:
             shear_relaxation);
   }
 
-  void reset_boundary_handling() {
-    auto const &blocks = get_lattice().get_blocks();
+  void reset_boundary_handling(std::shared_ptr<BlockStorage> const &blocks) {
     m_boundary = std::make_shared<BoundaryModel>(blocks, m_pdf_field_id,
                                                  m_flag_field_id);
   }
@@ -506,7 +505,7 @@ public:
     m_flag_field_id = field::addFlagFieldToStorage<FlagField>(
         blocks, "flag field", n_ghost_layers);
     // Initialize boundary sweep
-    reset_boundary_handling();
+    reset_boundary_handling(m_lattice->get_blocks());
 
     // Set up the communication and register fields
     setup_streaming_communicator();
@@ -556,12 +555,12 @@ public:
   }
 
 private:
-  void integrate_stream(std::shared_ptr<Lattice_T> const &blocks) {
+  void integrate_stream(std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_stream)(&*b);
   }
 
-  void integrate_collide(std::shared_ptr<Lattice_T> const &blocks) {
+  void integrate_collide(std::shared_ptr<BlockStorage> const &blocks) {
     auto &cm_variant = *m_collision_model;
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       std::visit(m_run_collide_sweep, cm_variant, std::variant<IBlock *>(&*b));
@@ -576,29 +575,29 @@ private:
   }
 
   void apply_lees_edwards_pdf_interpolation(
-      std::shared_ptr<Lattice_T> const &blocks) {
+      std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_lees_edwards_pdf_interpol_sweep)(&*b);
   }
 
   void apply_lees_edwards_vel_interpolation_and_shift(
-      std::shared_ptr<Lattice_T> const &blocks) {
+      std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_lees_edwards_vel_interpol_sweep)(&*b);
   }
 
   void apply_lees_edwards_last_applied_force_interpolation(
-      std::shared_ptr<Lattice_T> const &blocks) {
+      std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_lees_edwards_last_applied_force_interpol_sweep)(&*b);
   }
 
-  void integrate_reset_force(std::shared_ptr<Lattice_T> const &blocks) {
+  void integrate_reset_force(std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_reset_force)(&*b);
   }
 
-  void integrate_boundaries(std::shared_ptr<Lattice_T> const &blocks) {
+  void integrate_boundaries(std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_boundary)(&*b);
   }
@@ -673,7 +672,7 @@ public:
     }
   }
 
-  void ghost_communication_pdf() override {
+  void ghost_communication_pdf() override { // TODO: is this never traversed???
     if (m_pending_ghost_comm.test(GhostComm::PDF)) {
       m_pdf_communicator->communicate();
       if (has_lees_edwards_bc()) {
@@ -1463,7 +1462,7 @@ public:
   }
 
   void clear_boundaries() override {
-    reset_boundary_handling();
+    reset_boundary_handling(get_lattice().get_blocks());
     m_pending_ghost_comm.set(GhostComm::UBB);
     ghost_communication();
     m_has_boundaries = false;

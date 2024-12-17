@@ -41,7 +41,7 @@ class PackInfoPdfSinglePrecisionCUDA
     : public ::walberla::gpu::GeneratedGPUPackInfo {
 public:
   PackInfoPdfSinglePrecisionCUDA(BlockDataID pdfsID_) : pdfsID(pdfsID_){};
-  virtual ~PackInfoPdfSinglePrecisionCUDA() {}
+  ~PackInfoPdfSinglePrecisionCUDA() override = default;
 
   void pack(stencil::Direction dir, unsigned char *buffer, IBlock *block,
             gpuStream_t stream) override;

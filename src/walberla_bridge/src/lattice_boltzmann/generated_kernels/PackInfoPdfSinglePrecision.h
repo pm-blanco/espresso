@@ -46,19 +46,19 @@ class PackInfoPdfSinglePrecision
     : public ::walberla::communication::UniformPackInfo {
 public:
   PackInfoPdfSinglePrecision(BlockDataID pdfsID_) : pdfsID(pdfsID_){};
-  virtual ~PackInfoPdfSinglePrecision() {}
+  ~PackInfoPdfSinglePrecision() override = default;
 
-  bool constantDataExchange() const { return true; }
-  bool threadsafeReceiving() const { return true; }
+  bool constantDataExchange() const override { return true; }
+  bool threadsafeReceiving() const override { return true; }
 
   void unpackData(IBlock *receiver, stencil::Direction dir,
-                  mpi::RecvBuffer &buffer) {
+                  mpi::RecvBuffer &buffer) override {
     const auto dataSize = size(dir, receiver);
     unpack(dir, buffer.skip(dataSize + sizeof(float)), receiver);
   }
 
   void communicateLocal(const IBlock *sender, IBlock *receiver,
-                        stencil::Direction dir) {
+                        stencil::Direction dir) override {
     mpi::SendBuffer sBuffer;
     packData(sender, dir, sBuffer);
     mpi::RecvBuffer rBuffer(sBuffer);
@@ -66,7 +66,7 @@ public:
   }
 
   void packDataImpl(const IBlock *sender, stencil::Direction dir,
-                    mpi::SendBuffer &outBuffer) const {
+                    mpi::SendBuffer &outBuffer) const override {
     const auto dataSize = size(dir, sender);
     pack(dir, outBuffer.forward(dataSize + sizeof(float)),
          const_cast<IBlock *>(sender));

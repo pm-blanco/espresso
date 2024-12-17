@@ -89,6 +89,8 @@ protected:
   using BoundaryModelDensity = BoundaryHandling<FloatType, Dirichlet>;
   using BoundaryModelFlux = BoundaryHandling<Vector3<FloatType>, FixedFlux>;
 
+  using BlockStorage = LatticeWalberla::Lattice_T;
+
 public:
   template <typename T> FloatType FloatType_c(T t) {
     return numeric_cast<FloatType>(t);
@@ -157,14 +159,14 @@ protected:
     return {CellInterval(lower_bc->cell, upper_bc->cell)};
   }
 
-  void reset_density_boundary_handling() {
-    auto const &blocks = get_lattice().get_blocks();
+  void
+  reset_density_boundary_handling(std::shared_ptr<BlockStorage> const &blocks) {
     m_boundary_density = std::make_unique<BoundaryModelDensity>(
         blocks, m_density_field_id, m_flag_field_density_id);
   }
 
-  void reset_flux_boundary_handling() {
-    auto const &blocks = get_lattice().get_blocks();
+  void
+  reset_flux_boundary_handling(std::shared_ptr<BlockStorage> const &blocks) {
     m_boundary_flux = std::make_unique<BoundaryModelFlux>(
         blocks, m_flux_field_id, m_flag_field_flux_id);
   }
@@ -182,48 +184,44 @@ public:
         m_valency(FloatType_c(valency)), m_ext_efield(ext_efield),
         m_advection(advection), m_friction_coupling(friction_coupling),
         m_seed(seed), m_lattice(std::move(lattice)) {
+
+    auto const &blocks = m_lattice->get_blocks();
+    auto const n_ghost_layers = m_lattice->get_ghost_layers();
+
     m_density_field_id = field::addToStorage<DensityField>(
-        m_lattice->get_blocks(), "density field", FloatType_c(density),
-        field::fzyx, m_lattice->get_ghost_layers());
+        blocks, "density field", FloatType_c(density), field::fzyx,
+        n_ghost_layers);
     m_density_field_flattened_id =
         field::addFlattenedShallowCopyToStorage<DensityField>(
-            m_lattice->get_blocks(), m_density_field_id,
-            "flattened density field");
+            blocks, m_density_field_id, "flattened density field");
     m_flux_field_id = field::addToStorage<FluxField>(
-        m_lattice->get_blocks(), "flux field", FloatType{0}, field::fzyx,
-        m_lattice->get_ghost_layers());
+        blocks, "flux field", FloatType{0}, field::fzyx, n_ghost_layers);
     m_flux_field_flattened_id =
         field::addFlattenedShallowCopyToStorage<FluxField>(
-            m_lattice->get_blocks(), m_flux_field_id, "flattened flux field");
+            blocks, m_flux_field_id, "flattened flux field");
 
     m_continuity = std::make_unique<ContinuityKernel>(
         m_flux_field_flattened_id, m_density_field_flattened_id);
 
     if (thermalized) {
-      set_diffusion_kernels(seed);
+      set_diffusion_kernels(*m_lattice, seed);
     } else {
       set_diffusion_kernels();
     }
 
     // Init boundary related stuff
     m_flag_field_density_id = field::addFlagFieldToStorage<FlagField>(
-        m_lattice->get_blocks(), "flag field density",
-        m_lattice->get_ghost_layers());
-    reset_density_boundary_handling();
+        blocks, "flag field density", n_ghost_layers);
+    reset_density_boundary_handling(blocks);
 
     m_flag_field_flux_id = field::addFlagFieldToStorage<FlagField>(
-        m_lattice->get_blocks(), "flag field flux",
-        m_lattice->get_ghost_layers());
-    reset_flux_boundary_handling();
+        blocks, "flag field flux", n_ghost_layers);
+    reset_flux_boundary_handling(blocks);
 
-    m_full_communication =
-        std::make_shared<FullCommunicator>(m_lattice->get_blocks());
+    m_full_communication = std::make_shared<FullCommunicator>(blocks);
     m_full_communication->addPackInfo(
         std::make_shared<field::communication::PackInfo<DensityField>>(
             m_density_field_id));
-
-    // Synchronize ghost layers
-    ghost_communication();
   }
 
   // Global parameters
@@ -334,8 +332,9 @@ private:
             std::move(kernel_electrostatic));
   }
 
-  void set_diffusion_kernels(unsigned int seed) {
-    auto const grid_dim = get_lattice().get_grid_dimensions();
+  void set_diffusion_kernels(LatticeWalberla const &lattice,
+                             unsigned int seed) {
+    auto const grid_dim = lattice.get_grid_dimensions();
 
     auto kernel = DiffusiveFluxKernelThermalized(
         m_flux_field_flattened_id, m_density_field_flattened_id,
@@ -349,7 +348,7 @@ private:
         grid_dim[1], grid_dim[2], FloatType_c(m_kT), seed, 0,
         FloatType_c(m_valency));
 
-    auto const blocks = get_lattice().get_blocks();
+    auto const blocks = lattice.get_blocks();
 
     for (auto b = blocks->begin(); b != blocks->end(); ++b) {
       kernel.configure(blocks, &*b);
@@ -584,10 +583,12 @@ public:
     }
   }
 
-  void clear_flux_boundaries() override { reset_flux_boundary_handling(); }
+  void clear_flux_boundaries() override {
+    reset_flux_boundary_handling(get_lattice().get_blocks());
+  }
 
   void clear_density_boundaries() override {
-    reset_density_boundary_handling();
+    reset_density_boundary_handling(get_lattice().get_blocks());
   }
 
   bool set_node_flux_boundary(Utils::Vector3i const &node,

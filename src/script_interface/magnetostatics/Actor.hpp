@@ -57,7 +57,8 @@ protected:
     m_actor->bind_system(m_system.lock());
   }
 
-public:
+private:
+  friend SIClass;
   Actor() {
     add_parameters({
         {"prefactor", AutoParameter::read_only,
@@ -65,6 +66,7 @@ public:
     });
   }
 
+public:
   Variant do_call_method(std::string const &name,
                          VariantMap const &params) override;
 

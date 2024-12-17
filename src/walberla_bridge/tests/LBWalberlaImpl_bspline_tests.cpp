@@ -119,9 +119,12 @@ BOOST_DATA_TEST_CASE(velocity_interpolation_bspline, bdata::make(all_lbs()),
 
   lb->ghost_communication();
 
-  for (double x = 0.0; x < params.box_dimensions[0]; x += 0.3) {
-    for (double y = 0.1; y < params.box_dimensions[1]; y += 0.3) {
-      for (double z = 0.2; z < params.box_dimensions[2]; z += 0.3) {
+  auto x = 0.0;
+  while (x < params.box_dimensions[0]) {
+    auto y = 0.1;
+    while (y < params.box_dimensions[1]) {
+      auto z = 0.2;
+      while (z < params.box_dimensions[2]) {
         Vector3d const pos{x, y, z};
         if (lb->get_lattice().pos_in_local_domain(pos)) {
           auto const factor = std::accumulate(
@@ -133,8 +136,11 @@ BOOST_DATA_TEST_CASE(velocity_interpolation_bspline, bdata::make(all_lbs()),
           BOOST_CHECK(res); // locally available
           BOOST_CHECK_SMALL((*res - ref).norm(), 1E-10);
         }
+        z += 0.3;
       }
+      y += 0.3;
     }
+    x += 0.3;
   }
 }
 

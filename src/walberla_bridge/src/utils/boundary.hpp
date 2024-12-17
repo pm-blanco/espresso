@@ -49,7 +49,7 @@ fill_3D_vector_array(std::vector<double> const &vec_flat,
   } else {
     output_vector.reserve(n_grid_points);
     for (auto it = vec_begin; it < vec_end; it += 3u) {
-      output_vector.emplace_back(Utils::Vector3d(it, it + 3u));
+      output_vector.emplace_back(it, it + 3u);
     }
   }
 

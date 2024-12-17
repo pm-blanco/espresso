@@ -768,6 +768,7 @@ static double dp3m_k_space_error(double box_size, int mesh, int cao,
 static double dp3m_real_space_error(double box_size, double r_cut_iL,
                                     int n_c_part, double sum_q2,
                                     double alpha_L) {
+  auto constexpr exp_min = -708.4; // for IEEE-compatible double
   double d_error_f, d_cc, d_dc, d_con;
 
   auto const d_rcut = r_cut_iL * box_size;
@@ -775,8 +776,9 @@ static double dp3m_real_space_error(double box_size, double r_cut_iL,
   auto const d_rcut4 = Utils::sqr(d_rcut2);
 
   auto const d_a2 = Utils::sqr(alpha_L) / Utils::sqr(box_size);
-
-  auto const d_c = sum_q2 * exp(-d_a2 * d_rcut2);
+  auto const exponent = -d_a2 * d_rcut2;
+  auto const exp_term = (exponent < exp_min) ? 0. : std::exp(exponent);
+  auto const d_c = sum_q2 * exp_term;
 
   d_cc = 4. * Utils::sqr(d_a2) * Utils::sqr(d_rcut2) + 6. * d_a2 * d_rcut2 + 3.;
 
