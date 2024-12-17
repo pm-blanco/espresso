@@ -114,6 +114,8 @@ CheckOptions:
     value:           'NULL'
   - key:             modernize-use-transparent-functors.SafeMode
     value:           'true'
+  - key:             modernize-use-using.IgnoreExternC
+    value:           'true'
   - key:             readability-simplify-boolean-expr.ChainedConditionalAssignment
     value:           '0'
   - key:             readability-simplify-boolean-expr.ChainedConditionalReturn

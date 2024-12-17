@@ -59,6 +59,7 @@ include(GNUInstallDirs)
 include(FetchContent)
 include(espresso_option_enum)
 include(espresso_enable_avx2_support)
+include(espresso_override_clang_tidy_checks)
 
 if(EXISTS "${PROJECT_BINARY_DIR}/CMakeLists.txt")
   message(
@@ -589,6 +590,33 @@ if(ESPRESSO_BUILD_WITH_CLANG_TIDY)
   find_package(ClangTidy "${CMAKE_CXX_COMPILER_VERSION}" EXACT REQUIRED)
   set(ESPRESSO_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
   set(ESPRESSO_CUDA_CLANG_TIDY "${CLANG_TIDY_EXE};--extra-arg=--cuda-host-only")
+  set(SKIP_CLANG_TIDY_CHECKS "")
+  set(SKIP_CLANG_TIDY_CHECKS_CXX "")
+  set(SKIP_CLANG_TIDY_CHECKS_CUDA "")
+  if(ESPRESSO_BUILD_WITH_CALIPER)
+    # Clang-Tidy sometimes emits diagnostics in code enclosed in `extern "C"`
+    # that are not always actionable, since they may rely on keywords only
+    # available in the C++ language. While some checks have an extra flag
+    # 'IgnoreExternC' to disable them inside C code, not all affected checks
+    # have been fixed yet. For an in-depth discussion on this topic, see
+    # https://github.com/llvm/llvm-project/issues/35272
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-auto")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-nullptr")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-deprecated-headers")
+  endif()
+  if(ESPRESSO_BUILD_WITH_CUDA)
+    # silence casts in cuda_runtime.h (for both C++ and CUDA source files)
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-casting-through-void")
+    # silence nullptr dereference in cuda::thrust
+    list(APPEND SKIP_CLANG_TIDY_CHECKS_CUDA
+         "-clang-analyzer-core.NonNullParamChecker")
+  endif()
+  espresso_override_clang_tidy_checks(
+    ESPRESSO_CXX_CLANG_TIDY "${SKIP_CLANG_TIDY_CHECKS}"
+    "${SKIP_CLANG_TIDY_CHECKS_CXX}")
+  espresso_override_clang_tidy_checks(
+    ESPRESSO_CUDA_CLANG_TIDY "${SKIP_CLANG_TIDY_CHECKS}"
+    "${SKIP_CLANG_TIDY_CHECKS_CUDA}")
 endif()
 
 if(ESPRESSO_BUILD_WITH_CPPCHECK)
@@ -742,6 +770,7 @@ if(ESPRESSO_BUILD_WITH_CALIPER)
     PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wno-maybe-uninitialized>
             $<$<CXX_COMPILER_ID:GNU>:-Wno-volatile>
             $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-deprecated-volatile>)
+  set_target_properties(caliper-runtime PROPERTIES CXX_CLANG_TIDY "")
 endif()
 
 #
