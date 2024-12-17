@@ -254,13 +254,13 @@ public:
     if (!kernel) {
       return std::nullopt;
     }
-    return {static_cast<uint64_t>(kernel->time_step_)};
+    return {static_cast<uint64_t>(kernel->getTime_step())};
   }
 
   void set_diffusion(double diffusion) override {
     m_diffusion = FloatType_c(diffusion);
     auto visitor = [m_diffusion = m_diffusion](auto &kernel) {
-      kernel.D_ = m_diffusion;
+      kernel.setD(m_diffusion);
     };
     std::visit(visitor, *m_diffusive_flux);
     std::visit(visitor, *m_diffusive_flux_electrostatic);
@@ -268,14 +268,15 @@ public:
 
   void set_kT(double kT) override {
     m_kT = FloatType_c(kT);
-    std::visit([m_kT = m_kT](auto &kernel) { kernel.kT_ = m_kT; },
+    std::visit([m_kT = m_kT](auto &kernel) { kernel.setKt(m_kT); },
                *m_diffusive_flux_electrostatic);
   }
 
   void set_valency(double valency) override {
     m_valency = FloatType_c(valency);
-    std::visit([m_valency = m_valency](auto &kernel) { kernel.z_ = m_valency; },
-               *m_diffusive_flux_electrostatic);
+    std::visit(
+        [m_valency = m_valency](auto &kernel) { kernel.setZ(m_valency); },
+        *m_diffusive_flux_electrostatic);
   }
 
   void set_advection(bool advection) override { m_advection = advection; }
@@ -296,8 +297,8 @@ public:
     }
     assert(counter <=
            static_cast<uint32_t>(std::numeric_limits<uint_t>::max()));
-    kernel->time_step_ = static_cast<uint32_t>(counter);
-    kernel_electrostatic->time_step_ = static_cast<uint32_t>(counter);
+    kernel->setTime_step(static_cast<uint32_t>(counter));
+    kernel_electrostatic->setTime_step(static_cast<uint32_t>(counter));
   }
 
   void set_ext_efield(Utils::Vector3d const &field) override {
@@ -305,9 +306,9 @@ public:
 
     std::visit(
         [this](auto &kernel) {
-          kernel.f_ext_0_ = FloatType_c(m_ext_efield[0]);
-          kernel.f_ext_1_ = FloatType_c(m_ext_efield[1]);
-          kernel.f_ext_2_ = FloatType_c(m_ext_efield[2]);
+          kernel.setF_ext_0(FloatType_c(m_ext_efield[0]));
+          kernel.setF_ext_1(FloatType_c(m_ext_efield[1]));
+          kernel.setF_ext_2(FloatType_c(m_ext_efield[2]));
         },
         *m_diffusive_flux_electrostatic);
   }
@@ -387,12 +388,13 @@ private:
 
     if (auto *kernel =
             std::get_if<DiffusiveFluxKernelThermalized>(&*m_diffusive_flux)) {
-      kernel->time_step_++;
+      kernel->setTime_step(kernel->getTime_step() + 1u);
 
       auto *kernel_electrostatic =
           std::get_if<DiffusiveFluxKernelElectrostaticThermalized>(
               &*m_diffusive_flux_electrostatic);
-      kernel_electrostatic->time_step_++;
+      kernel_electrostatic->setTime_step(kernel_electrostatic->getTime_step() +
+                                         1u);
     }
   }
 
@@ -416,7 +418,7 @@ private:
 
   void kernel_diffusion_electrostatic(const std::size_t &potential_id) {
     auto const phiID = BlockDataID(potential_id);
-    std::visit([phiID](auto &kernel) { kernel.phiID = phiID; },
+    std::visit([phiID](auto &kernel) { kernel.setPhiID(phiID); },
                *m_diffusive_flux_electrostatic);
 
     for (auto &block : *m_lattice->get_blocks()) {
@@ -427,11 +429,12 @@ private:
     if (auto *kernel_electrostatic =
             std::get_if<DiffusiveFluxKernelElectrostaticThermalized>(
                 &*m_diffusive_flux_electrostatic)) {
-      kernel_electrostatic->time_step_++;
+      kernel_electrostatic->setTime_step(kernel_electrostatic->getTime_step() +
+                                         1u);
 
       auto *kernel =
           std::get_if<DiffusiveFluxKernelThermalized>(&*m_diffusive_flux);
-      kernel->time_step_++;
+      kernel->setTime_step(kernel->getTime_step() + 1u);
     }
   }
 

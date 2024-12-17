@@ -17,9 +17,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from pystencils.astnodes import LoopOverCoordinate
-from pystencils.typing.typed_sympy import TypedSymbol
-from pystencils.typing import CastFunc
+from pystencils_espresso import get_loop_counter_symbol
+
+try:
+    from pystencils.typing import CastFunc
+except ImportError:
+    from pystencils.sympyextensions import CastFunc
+
+from pystencils import TypedSymbol
 from pystencils import Assignment
 
 from lbmpy.macroscopic_value_kernels import macroscopic_values_setter
@@ -50,8 +55,7 @@ def velocity_offset_eqs(config, method, pdfs, shear_dir_normal, stencil):
 
     # Symbol for the coordinate index within the field,
     # used to identify boundary layers
-    counters = [LoopOverCoordinate.get_loop_counter_symbol(
-        i) for i in range(dim)]
+    counters = [get_loop_counter_symbol(i) for i in range(dim)]
 
     grid_size = TypedSymbol("grid_size", dtype=default_dtype)
 

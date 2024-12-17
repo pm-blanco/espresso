@@ -17,9 +17,9 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -30,7 +30,9 @@
 #include "domain_decomposition/StructuredBlockStorage.h"
 #include "field/GhostLayerField.h"
 #include "field/SwapableCompare.h"
-#include <set>
+
+#include <functional>
+#include <unordered_map>
 
 #ifdef __GNUC__
 #define RESTRICT __restrict__
@@ -57,7 +59,7 @@ public:
                                             double grid_size,
                                             double omega_shear, double v_s)
       : forceID(forceID_), pdfsID(pdfsID_), grid_size_(grid_size),
-        omega_shear_(omega_shear), v_s_(v_s){};
+        omega_shear_(omega_shear), v_s_(v_s) {}
 
   void run(IBlock *block);
 
@@ -94,9 +96,17 @@ public:
     };
   }
 
-  void configure(const shared_ptr<StructuredBlockStorage> &blocks,
-                 IBlock *block) {}
+  void configure(const shared_ptr<StructuredBlockStorage> & /*blocks*/,
+                 IBlock * /*block*/) {}
 
+  inline double getGrid_size() const { return grid_size_; }
+  inline double getOmega_shear() const { return omega_shear_; }
+  inline double getV_s() const { return v_s_; }
+  inline void setGrid_size(const double value) { grid_size_ = value; }
+  inline void setOmega_shear(const double value) { omega_shear_ = value; }
+  inline void setV_s(const double value) { v_s_ = value; }
+
+private:
   BlockDataID forceID;
   BlockDataID pdfsID;
   double grid_size_;

@@ -102,7 +102,7 @@ protected:
   using BoundaryModel =
       BoundaryHandling<Vector3<FloatType>,
                        typename detail::BoundaryHandlingTrait<
-                           FloatType, Architecture>::Dynamic_UBB>;
+                           FloatType, Architecture>::DynamicUBB>;
   using CollisionModel =
       std::variant<CollisionModelThermalized, CollisionModelLeesEdwards>;
 
@@ -215,8 +215,8 @@ private:
     }
 
     void operator()(CollisionModelLeesEdwards &cm, IBlock *b) {
-      cm.v_s_ = static_cast<decltype(cm.v_s_)>(
-          m_lees_edwards_callbacks->get_shear_velocity());
+      cm.setV_s(static_cast<decltype(cm.getV_s())>(
+          m_lees_edwards_callbacks->get_shear_velocity()));
       cm(b);
     }
 
@@ -565,7 +565,7 @@ private:
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       std::visit(m_run_collide_sweep, cm_variant, std::variant<IBlock *>(&*b));
     if (auto *cm = std::get_if<CollisionModelThermalized>(&cm_variant)) {
-      cm->time_step_++;
+      cm->setTime_step(cm->getTime_step() + 1u);
     }
   }
 
@@ -1568,7 +1568,7 @@ public:
     if (!cm or m_kT == 0.) {
       return std::nullopt;
     }
-    return {static_cast<uint64_t>(cm->time_step_)};
+    return {static_cast<uint64_t>(cm->getTime_step())};
   }
 
   void set_rng_state(uint64_t counter) override {
@@ -1578,7 +1578,7 @@ public:
     }
     assert(counter <=
            static_cast<uint32_t>(std::numeric_limits<uint_t>::max()));
-    cm->time_step_ = static_cast<uint32_t>(counter);
+    cm->setTime_step(static_cast<uint32_t>(counter));
   }
 
   [[nodiscard]] LatticeWalberla const &get_lattice() const noexcept override {

@@ -17,9 +17,9 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "communication/UniformPackInfo.h"
@@ -28,6 +28,8 @@
 #include "domain_decomposition/IBlock.h"
 #include "field/GhostLayerField.h"
 #include "stencil/Directions.h"
+
+#include <memory>
 
 #define FUNC_PREFIX
 
@@ -45,7 +47,7 @@ namespace pystencils {
 class PackInfoVecDoublePrecision
     : public ::walberla::communication::UniformPackInfo {
 public:
-  PackInfoVecDoublePrecision(BlockDataID fieldID_) : fieldID(fieldID_){};
+  PackInfoVecDoublePrecision(BlockDataID fieldID_) : fieldID(fieldID_) {}
   ~PackInfoVecDoublePrecision() override = default;
 
   bool constantDataExchange() const override { return true; }
@@ -54,7 +56,10 @@ public:
   void unpackData(IBlock *receiver, stencil::Direction dir,
                   mpi::RecvBuffer &buffer) override {
     const auto dataSize = size(dir, receiver);
-    unpack(dir, buffer.skip(dataSize + sizeof(double)), receiver);
+    auto bufferSize = dataSize + sizeof(double);
+    auto bufferPtr = reinterpret_cast<void *>(buffer.skip(bufferSize));
+    std::align(alignof(double), dataSize, bufferPtr, bufferSize);
+    unpack(dir, reinterpret_cast<unsigned char *>(bufferPtr), receiver);
   }
 
   void communicateLocal(const IBlock *sender, IBlock *receiver,
@@ -68,7 +73,10 @@ public:
   void packDataImpl(const IBlock *sender, stencil::Direction dir,
                     mpi::SendBuffer &outBuffer) const override {
     const auto dataSize = size(dir, sender);
-    pack(dir, outBuffer.forward(dataSize + sizeof(double)),
+    auto bufferSize = dataSize + sizeof(double);
+    auto bufferPtr = reinterpret_cast<void *>(outBuffer.forward(bufferSize));
+    std::align(alignof(double), dataSize, bufferPtr, bufferSize);
+    pack(dir, reinterpret_cast<unsigned char *>(bufferPtr),
          const_cast<IBlock *>(sender));
   }
 

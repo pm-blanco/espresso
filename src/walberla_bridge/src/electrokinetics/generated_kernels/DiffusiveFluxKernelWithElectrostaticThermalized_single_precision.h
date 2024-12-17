@@ -17,9 +17,9 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -30,7 +30,9 @@
 #include "domain_decomposition/StructuredBlockStorage.h"
 #include "field/GhostLayerField.h"
 #include "field/SwapableCompare.h"
-#include <set>
+
+#include <functional>
+#include <unordered_map>
 
 #ifdef __GNUC__
 #define RESTRICT __restrict__
@@ -60,7 +62,9 @@ public:
       : jID(jID_), phiID(phiID_), rhoID(rhoID_), D_(D), f_ext_0_(f_ext_0),
         f_ext_1_(f_ext_1), f_ext_2_(f_ext_2), field_size_0_(field_size_0),
         field_size_1_(field_size_1), field_size_2_(field_size_2), kT_(kT),
-        seed_(seed), time_step_(time_step), z_(z), configured_(false){};
+        seed_(seed), time_step_(time_step), z_(z), block_offset_0_(uint32_t(0)),
+        block_offset_1_(uint32_t(0)), block_offset_2_(uint32_t(0)),
+        configured_(false) {}
 
   void run(IBlock *block);
 
@@ -110,8 +114,49 @@ public:
     configured_ = true;
   }
 
+  inline float getD() const { return D_; }
+  inline uint32_t getBlock_offset_0() const { return block_offset_0_; }
+  inline uint32_t getBlock_offset_1() const { return block_offset_1_; }
+  inline uint32_t getBlock_offset_2() const { return block_offset_2_; }
+  inline float getF_ext_0() const { return f_ext_0_; }
+  inline float getF_ext_1() const { return f_ext_1_; }
+  inline float getF_ext_2() const { return f_ext_2_; }
+  inline uint32_t getField_size_0() const { return field_size_0_; }
+  inline uint32_t getField_size_1() const { return field_size_1_; }
+  inline uint32_t getField_size_2() const { return field_size_2_; }
+  inline float getKt() const { return kT_; }
+  inline uint32_t getSeed() const { return seed_; }
+  inline uint32_t getTime_step() const { return time_step_; }
+  inline float getZ() const { return z_; }
+  inline void setD(const float value) { D_ = value; }
+  inline void setBlock_offset_0(const uint32_t value) {
+    block_offset_0_ = value;
+  }
+  inline void setBlock_offset_1(const uint32_t value) {
+    block_offset_1_ = value;
+  }
+  inline void setBlock_offset_2(const uint32_t value) {
+    block_offset_2_ = value;
+  }
+  inline void setF_ext_0(const float value) { f_ext_0_ = value; }
+  inline void setF_ext_1(const float value) { f_ext_1_ = value; }
+  inline void setF_ext_2(const float value) { f_ext_2_ = value; }
+  inline void setField_size_0(const uint32_t value) { field_size_0_ = value; }
+  inline void setField_size_1(const uint32_t value) { field_size_1_ = value; }
+  inline void setField_size_2(const uint32_t value) { field_size_2_ = value; }
+  inline void setKt(const float value) { kT_ = value; }
+  inline void setSeed(const uint32_t value) { seed_ = value; }
+  inline void setTime_step(const uint32_t value) { time_step_ = value; }
+  inline void setZ(const float value) { z_ = value; }
+
+private:
   BlockDataID jID;
   BlockDataID phiID;
+
+public:
+  inline void setPhiID(BlockDataID phiID_) { phiID = phiID_; }
+
+private:
   BlockDataID rhoID;
   float D_;
   uint32_t block_offset_0_;
@@ -127,6 +172,7 @@ public:
   uint32_t seed_;
   uint32_t time_step_;
   float z_;
+
   bool configured_;
 };
 

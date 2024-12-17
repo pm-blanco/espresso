@@ -13,13 +13,13 @@
 //  You should have received a copy of the GNU General Public License along
 //  with waLBerla (see COPYING.txt). If not, see <http://www.gnu.org/licenses/>.
 //
-//! \\file Dynamic_UBB_single_precision.h
+//! \\file DynamicUBBSinglePrecision.h
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -50,7 +50,7 @@ using walberla::half;
 namespace walberla {
 namespace lbm {
 
-class Dynamic_UBB_single_precision {
+class DynamicUBBSinglePrecision {
 public:
   struct IndexInfo {
     int32_t x;
@@ -89,18 +89,18 @@ public:
     std::vector<CpuIndexVector> cpuVectors_{NUM_TYPES};
   };
 
-  Dynamic_UBB_single_precision(
+  DynamicUBBSinglePrecision(
       const shared_ptr<StructuredBlockForest> &blocks, BlockDataID pdfsID_,
-      std::function<Vector3<float>(const Cell &,
-                                   const shared_ptr<StructuredBlockForest> &,
-                                   IBlock &)> &velocityCallback)
+      std::function<Vector3<float32>(const Cell &,
+                                     const shared_ptr<StructuredBlockForest> &,
+                                     IBlock &)> &velocityCallback)
       : elementInitialiser(velocityCallback), pdfsID(pdfsID_) {
     auto createIdxVector = [](IBlock *const, StructuredBlockStorage *const) {
       return new IndexVectors();
     };
     indexVectorID = blocks->addStructuredBlockData<IndexVectors>(
-        createIdxVector, "IndexField_Dynamic_UBB_single_precision");
-  };
+        createIdxVector, "IndexField_DynamicUBBSinglePrecision");
+  }
 
   void run(IBlock *block);
 
@@ -109,6 +109,13 @@ public:
   void inner(IBlock *block);
 
   void outer(IBlock *block);
+
+  Vector3<double> getForce(IBlock * /*block*/) {
+
+    WALBERLA_ABORT(
+        "Boundary condition was not generated including force calculation.")
+    return Vector3<double>(double_c(0.0));
+  }
 
   std::function<void(IBlock *)> getSweep() {
     return [this](IBlock *b) { this->run(b); };
@@ -562,7 +569,8 @@ private:
   void run_impl(IBlock *block, IndexVectors::Type type);
 
   BlockDataID indexVectorID;
-  std::function<Vector3<float>(
+
+  std::function<Vector3<float32>(
       const Cell &, const shared_ptr<StructuredBlockForest> &, IBlock &)>
       elementInitialiser;
 

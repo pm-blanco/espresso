@@ -23,8 +23,8 @@
 
 #include "lb_kernels.hpp"
 
-#include "generated_kernels/Dynamic_UBB_double_precisionCUDA.h"
-#include "generated_kernels/Dynamic_UBB_single_precisionCUDA.h"
+#include "generated_kernels/DynamicUBBDoublePrecisionCUDA.h"
+#include "generated_kernels/DynamicUBBSinglePrecisionCUDA.h"
 #include "generated_kernels/FieldAccessorsDoublePrecisionCUDA.cuh"
 #include "generated_kernels/FieldAccessorsSinglePrecisionCUDA.cuh"
 #include "generated_kernels/InitialPDFsSetterDoublePrecisionCUDA.h"
@@ -69,11 +69,11 @@ template <> struct KernelTrait<float, Arch::GPU> {
 };
 
 template <> struct BoundaryHandlingTrait<double, Arch::GPU> {
-  using Dynamic_UBB = lbm::Dynamic_UBB_double_precisionCUDA;
+  using DynamicUBB = lbm::DynamicUBBDoublePrecisionCUDA;
 };
 
 template <> struct BoundaryHandlingTrait<float, Arch::GPU> {
-  using Dynamic_UBB = lbm::Dynamic_UBB_single_precisionCUDA;
+  using DynamicUBB = lbm::DynamicUBBSinglePrecisionCUDA;
 };
 
 } // namespace detail

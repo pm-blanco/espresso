@@ -17,9 +17,9 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -32,7 +32,9 @@
 #include "domain_decomposition/IBlock.h"
 #include "domain_decomposition/StructuredBlockStorage.h"
 #include "field/SwapableCompare.h"
-#include <set>
+
+#include <functional>
+#include <unordered_map>
 
 #ifdef __GNUC__
 #define RESTRICT __restrict__
@@ -56,11 +58,11 @@ class StreamSweepDoublePrecisionCUDA {
 public:
   StreamSweepDoublePrecisionCUDA(BlockDataID forceID_, BlockDataID pdfsID_,
                                  BlockDataID velocityID_)
-      : forceID(forceID_), pdfsID(pdfsID_), velocityID(velocityID_){};
+      : forceID(forceID_), pdfsID(pdfsID_), velocityID(velocityID_) {}
 
   ~StreamSweepDoublePrecisionCUDA() {
     for (auto p : cache_pdfs_) {
-      delete p;
+      delete p.second;
     }
   }
 
@@ -106,17 +108,14 @@ public:
     };
   }
 
-  void configure(const shared_ptr<StructuredBlockStorage> &blocks,
-                 IBlock *block) {}
+  void configure(const shared_ptr<StructuredBlockStorage> & /*blocks*/,
+                 IBlock * /*block*/) {}
 
+private:
   BlockDataID forceID;
   BlockDataID pdfsID;
   BlockDataID velocityID;
-
-private:
-  std::set<gpu::GPUField<double> *,
-           field::SwapableCompare<gpu::GPUField<double> *>>
-      cache_pdfs_;
+  std::unordered_map<IBlock *, gpu::GPUField<double> *> cache_pdfs_;
 };
 
 } // namespace pystencils

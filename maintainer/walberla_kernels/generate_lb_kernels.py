@@ -25,10 +25,27 @@ import sympy as sp
 import numpy as np
 
 import pystencils as ps
-import pystencils_walberla
-import pystencils_espresso
 
 import lbmpy
+
+kernel_codes = "packinfo boundary collide stream init accessors".split()
+parser = argparse.ArgumentParser(description="Generate the waLBerla kernels.")
+parser.add_argument("--single-precision", action="store_true", required=False,
+                    help="Use single-precision")
+parser.add_argument("--gpu", action="store_true")
+parser.add_argument("--kernels", nargs="+", type=str, default="all",
+                    choices=["all"] + kernel_codes,
+                    help="Which kernels to generate")
+args = parser.parse_args()
+
+# Make sure we have the correct versions of the required dependencies
+for module, requirement in [(ps, "==1.3.7"), (lbmpy, "==1.3.7")]:
+    assert packaging.specifiers.SpecifierSet(requirement).contains(module.__version__), \
+        f"{module.__name__} version {module.__version__} " \
+        f"doesn't match requirement {requirement}"
+
+import pystencils_walberla
+import pystencils_espresso
 import lbmpy.creationfunctions
 import lbmpy.forcemodels
 import lbmpy.stencils
@@ -42,22 +59,6 @@ import relaxation_rates
 import walberla_lbm_generation
 import code_generation_context
 import custom_additional_extensions
-
-kernel_codes = "packinfo boundary collide stream init accessors".split()
-parser = argparse.ArgumentParser(description="Generate the waLBerla kernels.")
-parser.add_argument("--single-precision", action="store_true", required=False,
-                    help="Use single-precision")
-parser.add_argument("--gpu", action="store_true")
-parser.add_argument("--kernels", nargs="+", type=str, default="all",
-                    choices=["all"] + kernel_codes,
-                    help="Which kernels to generate")
-args = parser.parse_args()
-
-# Make sure we have the correct versions of the required dependencies
-for module, requirement in [(ps, "==1.3.3"), (lbmpy, "==1.3.3")]:
-    assert packaging.specifiers.SpecifierSet(requirement).contains(module.__version__), \
-        f"{module.__name__} version {module.__version__} " \
-        f"doesn't match requirement {requirement}"
 
 if args.gpu:
     target = ps.Target.GPU
@@ -108,7 +109,7 @@ def generate_init_kernels(ctx, method):
         pystencils_walberla.generate_sweep(
             ctx,
             f"InitialPDFsSetter{precision_prefix}{target_suffix}",
-            pystencils_espresso.generate_setters(ctx, method, params),
+            pystencils_espresso.generate_setters(method, data_type),
             **params)
 
 
@@ -118,11 +119,12 @@ def generate_stream_kernels(ctx, method):
         pystencils_espresso.generate_stream_sweep(
             ctx,
             method,
+            data_type,
             f"StreamSweep{precision_prefix}{target_suffix}",
             params)
 
 
-def generate_collide_lees_edwards_kernels(ctx, fields):
+def generate_collide_lees_edwards_kernels(ctx, data_type, fields):
     precision_prefix = pystencils_espresso.precision_prefix[ctx.double_accuracy]
     lbm_opt = lbmpy.LBMOptimisation(symbolic_field=fields["pdfs"])
     shear_dir_normal = 1  # y-axis
@@ -145,13 +147,14 @@ def generate_collide_lees_edwards_kernels(ctx, fields):
         pystencils_espresso.generate_collision_sweep(
             ctx,
             le_config,
+            data_type,
             le_collision_rule_unthermalized,
             f"CollideSweep{precision_prefix}LeesEdwards{target_suffix}",
             params
         )
 
 
-def generate_collide_kernels(ctx, method):
+def generate_collide_kernels(ctx, method, data_type):
     precision_prefix = pystencils_espresso.precision_prefix[ctx.double_accuracy]
     precision_rng = pystencils_espresso.precision_rng[ctx.double_accuracy]
     block_offsets = tuple(
@@ -168,11 +171,13 @@ def generate_collide_kernels(ctx, method):
         optimization={"cse_global": True,
                       "double_precision": ctx.double_accuracy}
     )
+
     for params, target_suffix in paramlist(parameters, ("GPU", "CPU", "AVX")):
         stem = f"CollideSweep{precision_prefix}Thermalized{target_suffix}"
         pystencils_espresso.generate_collision_sweep(
             ctx,
             method,
+            data_type,
             lb_collision_rule_thermalized,
             stem,
             params,
@@ -198,12 +203,12 @@ def generate_accessors_kernels(ctx, method):
         )
 
 
-def generate_packinfo_kernels(ctx, fields):
+def generate_packinfo_kernels(ctx, data_type, fields):
     precision_prefix = pystencils_espresso.precision_prefix[ctx.double_accuracy]
     assignments = pystencils_espresso.generate_pack_info_pdfs_field_assignments(
         fields, streaming_pattern="pull")
     spec = pystencils_espresso.generate_pack_info_field_specifications(
-        config, stencil, fields["force"].layout)
+        stencil, data_type, fields["force"].layout)
 
     def patch_packinfo_header(content, target_suffix):
         if target_suffix in ["", "AVX"]:
@@ -247,17 +252,17 @@ def generate_packinfo_kernels(ctx, fields):
                            patch_packinfo_kernel, target_suffix)
 
 
-def generate_boundary_kernels(ctx, method):
-    precision_suffix = pystencils_espresso.precision_suffix[ctx.double_accuracy]
+def generate_boundary_kernels(ctx, method, data_type):
+    precision_prefix = pystencils_espresso.precision_prefix[ctx.double_accuracy]
     ubb_dynamic = lbmpy_espresso.UBB(
-        lambda *args: None, dim=3, data_type=config.data_type.default_factory())
+        lambda *args: None, dim=3, data_type=data_type)
     ubb_data_handler = lbmpy_espresso.BounceBackSlipVelocityUBB(
         method.stencil, ubb_dynamic)
 
     # pylint: disable=unused-argument
     def patch_boundary_header(content, target_suffix):
         # replace real_t by actual floating-point type
-        return content.replace("real_t", config.data_type.default_factory().c_name)  # nopep8
+        return content.replace("real_t", data_type)
 
     def patch_boundary_kernel(content, target_suffix):
         if target_suffix in ["CUDA"]:
@@ -272,7 +277,7 @@ def generate_boundary_kernels(ctx, method):
         return content
 
     for _, target_suffix in paramlist(parameters, ("CPU", "GPU")):
-        class_name = f"Dynamic_UBB_{precision_suffix}{target_suffix}"
+        class_name = f"DynamicUBB{precision_prefix}{target_suffix}"
         lbmpy_walberla.generate_boundary(
             ctx, class_name, ubb_dynamic, method,
             additional_data_handler=ubb_data_handler,
@@ -292,7 +297,8 @@ with code_generation_context.CodeGeneration() as ctx:
     # codegen configuration
     config = pystencils_espresso.generate_config(
         ctx, parameters[default_key][0])
-    fields = pystencils_espresso.generate_fields(config, stencil)
+    data_type = "float64" if ctx.double_accuracy else "float32"
+    fields = pystencils_espresso.generate_fields(stencil, data_type)
 
     # LB Method definition
     method = lbmpy.creationfunctions.create_mrt_orthogonal(
@@ -308,11 +314,11 @@ with code_generation_context.CodeGeneration() as ctx:
     if "init" in args.kernels:
         generate_init_kernels(ctx, method)
     if "collide" in args.kernels:
-        generate_collide_kernels(ctx, method)
-        generate_collide_lees_edwards_kernels(ctx, fields)
+        generate_collide_kernels(ctx, method, data_type)
+        generate_collide_lees_edwards_kernels(ctx, data_type, fields)
     if "accessors" in args.kernels:
         generate_accessors_kernels(ctx, method)
     if "packinfo" in args.kernels:
-        generate_packinfo_kernels(ctx, fields)
+        generate_packinfo_kernels(ctx, data_type, fields)
     if "boundary" in args.kernels:
-        generate_boundary_kernels(ctx, method)
+        generate_boundary_kernels(ctx, method, data_type)

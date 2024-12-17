@@ -17,9 +17,9 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -30,7 +30,9 @@
 #include "domain_decomposition/StructuredBlockStorage.h"
 #include "field/GhostLayerField.h"
 #include "field/SwapableCompare.h"
-#include <set>
+
+#include <functional>
+#include <unordered_map>
 
 #ifdef __GNUC__
 #define RESTRICT __restrict__
@@ -55,7 +57,7 @@ public:
   InitialPDFsSetterSinglePrecision(BlockDataID forceID_, BlockDataID pdfsID_,
                                    BlockDataID velocityID_, float rho_0)
       : forceID(forceID_), pdfsID(pdfsID_), velocityID(velocityID_),
-        rho_0_(rho_0){};
+        rho_0_(rho_0) {}
 
   void run(IBlock *block);
 
@@ -92,9 +94,13 @@ public:
     };
   }
 
-  void configure(const shared_ptr<StructuredBlockStorage> &blocks,
-                 IBlock *block) {}
+  void configure(const shared_ptr<StructuredBlockStorage> & /*blocks*/,
+                 IBlock * /*block*/) {}
 
+  inline float getRho_0() const { return rho_0_; }
+  inline void setRho_0(const float value) { rho_0_ = value; }
+
+private:
   BlockDataID forceID;
   BlockDataID pdfsID;
   BlockDataID velocityID;
