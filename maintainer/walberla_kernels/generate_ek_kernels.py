@@ -32,9 +32,9 @@ import ekin
 import custom_additional_extensions
 
 
-parser = argparse.ArgumentParser(description='Generate the waLBerla kernels.')
-parser.add_argument('--single-precision', action='store_true', required=False,
-                    help='Use single-precision')
+parser = argparse.ArgumentParser(description="Generate the waLBerla kernels.")
+parser.add_argument("--single-precision", action="store_true", required=False,
+                    help="Use single-precision")
 args = parser.parse_args()
 
 # Make sure we have the correct versions of the required dependencies
@@ -51,18 +51,17 @@ precision_suffix = pystencils_espresso.precision_suffix[double_precision]
 precision_rng = pystencils_espresso.precision_rng_modulo[double_precision]
 
 
-def replace_macros(filename: str) -> None:
-    with open(filename, "r+") as f:
-        content = f.read()
-        f.seek(0)
-        f.truncate(0)
-        # replace getData with uncheckedFastGetData
-        content = content.replace("block->getData<IndexVectors>(indexVectorID);",
-                                  "block->uncheckedFastGetData<IndexVectors>(indexVectorID);")
-        # remove dummy assignment
-        content = content.replace(
-            r"const int32_t dummy = *((int32_t *  )(& _data_indexVector[12*ctr_0]));", "")
-        f.write(content)
+def patch_reaction_indexed_kernel(content: str) -> str:
+    # replace getData with uncheckedFastGetData
+    access_slow = "block->getData<IndexVectors>(indexVectorID);"
+    access_fast = "block->uncheckedFastGetData<IndexVectors>(indexVectorID);"
+    assert access_slow in content
+    content = content.replace(access_slow, access_fast)
+    # remove dummy assignment
+    token = "const int32_t dummy = *((int32_t *  )(& _data_indexVector[12*ctr_0]));"
+    assert token in content
+    content = content.replace(token, "")
+    return content
 
 
 dim: int = 3
@@ -214,21 +213,21 @@ with code_generation_context.CodeGeneration() as ctx:
     # ek reactions
     for i in range(1, max_num_reactants + 1):
         assignments = list(reaction_obj.generate_reaction(num_reactants=i))
-        filename_stem: str = f"ReactionKernelBulk_{i}_{precision_suffix}"
+        class_name: str = f"ReactionKernelBulk_{i}_{precision_suffix}"
         pystencils_walberla.generate_sweep(
             ctx,
-            filename_stem,
+            class_name,
             assignments)
 
-        filename_stem: str = f"ReactionKernelIndexed_{i}_{precision_suffix}"
+        class_name: str = f"ReactionKernelIndexed_{i}_{precision_suffix}"
         custom_additional_extensions.generate_boundary(
             generation_context=ctx,
             stencil=dirichlet_stencil,
-            class_name=filename_stem,
+            class_name=class_name,
             dim=dim,
             target=target,
             assignment=assignments)
-        replace_macros(filename=f"{filename_stem}.cpp")
+        ctx.patch_file(class_name, "cpp", patch_reaction_indexed_kernel)
 
     # ek reactions helper functions
     custom_additional_extensions.generate_kernel_selector(
