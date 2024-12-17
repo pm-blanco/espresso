@@ -60,6 +60,13 @@ include(FetchContent)
 include(espresso_option_enum)
 include(espresso_enable_avx2_support)
 
+if(EXISTS "${PROJECT_BINARY_DIR}/CMakeLists.txt")
+  message(
+    FATAL_ERROR
+      "${PROJECT_NAME} cannot be built in-place. Instead, create a build directory and run CMake from there. A new file 'CMakeCache.txt' and a new folder 'CMakeFiles' have just been created by CMake in the current folder and need to be removed."
+  )
+endif()
+
 #
 # CMake internal vars
 #
@@ -478,7 +485,7 @@ target_compile_options(
     $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wimplicit-float-conversion>
     $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wunused-exception-parameter>
     $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wmissing-variable-declarations>
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,11.0.0>>:-Wnon-c-typedef-for-linkage>
+    $<$<CXX_COMPILER_ID:Clang>:-Wnon-c-typedef-for-linkage>
     $<$<NOT:$<CXX_COMPILER_ID:Intel>>:-Wdelete-non-virtual-dtor>
     # disable warnings from -Wall and -Wextra
     -Wno-sign-compare
@@ -487,9 +494,9 @@ target_compile_options(
     -Wno-array-bounds
     $<$<CXX_COMPILER_ID:GNU>:-Wno-restrict>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-clobbered>
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-cast-function-type>
     $<$<CXX_COMPILER_ID:Intel,IntelLLVM>:-diag-disable=592>
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-gnu-zero-variadic-macro-arguments>
-    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,8.1.0>>:-Wno-cast-function-type>
     $<$<NOT:$<CXX_COMPILER_ID:Intel,IntelLLVM>>:-Wno-implicit-fallthrough>
     $<$<NOT:$<CXX_COMPILER_ID:Intel,IntelLLVM,GNU>>:-Wno-unused-private-field>
     # warnings are errors
@@ -687,7 +694,8 @@ if(ESPRESSO_BUILD_WITH_CALIPER)
   target_compile_options(
     caliper-runtime
     PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wno-maybe-uninitialized>
-            $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-volatile>)
+            $<$<CXX_COMPILER_ID:GNU>:-Wno-volatile>
+            $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-deprecated-volatile>)
 endif()
 
 #

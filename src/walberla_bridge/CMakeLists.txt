@@ -17,6 +17,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+function(espresso_configure_walberla_target)
+  set(TARGET_NAME ${ARGV0})
+  set_target_properties(${TARGET_NAME} PROPERTIES CXX_CLANG_TIDY "")
+  target_link_libraries(${TARGET_NAME} PRIVATE ${WALBERLA_LIBS})
+  target_include_directories(
+    ${TARGET_NAME} PUBLIC include PRIVATE ${WALBERLA_INCLUDE_DIRS}
+                                          ${walberla_BINARY_DIR}/src)
+  install(TARGETS ${TARGET_NAME}
+          LIBRARY DESTINATION ${ESPRESSO_INSTALL_PYTHON}/espressomd)
+endfunction()
+
 add_library(espresso_walberla_cpp_flags INTERFACE)
 add_library(espresso::walberla::cpp_flags ALIAS espresso_walberla_cpp_flags)
 target_link_libraries(
@@ -30,31 +41,33 @@ target_link_libraries(
   INTERFACE espresso::cuda_flags
             $<$<BOOL:${ESPRESSO_BUILD_WITH_WALBERLA_AVX}>:espresso::avx_flags>)
 
-function(espresso_configure_walberla_target)
-  set(TARGET_NAME ${ARGV0})
-  set_target_properties(${TARGET_NAME} PROPERTIES CXX_CLANG_TIDY "")
-  target_link_libraries(${TARGET_NAME} PRIVATE ${WALBERLA_LIBS})
-  target_include_directories(
-    ${TARGET_NAME} PUBLIC include PRIVATE ${WALBERLA_INCLUDE_DIRS}
-                                          ${walberla_BINARY_DIR}/src)
-  install(TARGETS ${TARGET_NAME}
-          LIBRARY DESTINATION ${ESPRESSO_INSTALL_PYTHON}/espressomd)
-endfunction()
-
 add_library(espresso_walberla SHARED)
+add_library(espresso_walberla_codegen SHARED)
 add_library(espresso::walberla ALIAS espresso_walberla)
+add_library(espresso::walberla_codegen ALIAS espresso_walberla_codegen)
 
 espresso_configure_walberla_target(espresso_walberla)
+espresso_configure_walberla_target(espresso_walberla_codegen)
 
-target_link_libraries(espresso_walberla PUBLIC MPI::MPI_CXX espresso::utils
+target_link_libraries(
+  espresso_walberla PUBLIC MPI::MPI_CXX espresso::utils
+  PRIVATE espresso::walberla::cpp_flags espresso::walberla_codegen)
+target_link_libraries(espresso_walberla_codegen
                       PRIVATE espresso::walberla::cpp_flags)
 
-if(ESPRESSO_BUILD_WITH_CUDA AND WALBERLA_BUILD_WITH_CUDA)
+if(WALBERLA_BUILD_WITH_CUDA)
   espresso_add_gpu_library(espresso_walberla_cuda SHARED)
+  espresso_add_gpu_library(espresso_walberla_codegen_cuda SHARED)
   add_library(espresso::walberla_cuda ALIAS espresso_walberla_cuda)
+  add_library(espresso::walberla_codegen_cuda ALIAS
+              espresso_walberla_codegen_cuda)
   espresso_configure_walberla_target(espresso_walberla_cuda)
-  target_link_libraries(espresso_walberla_cuda PUBLIC espresso::utils
-                        PRIVATE CUDA::cuda_driver CUDA::cudart)
+  espresso_configure_walberla_target(espresso_walberla_codegen_cuda)
+  target_link_libraries(
+    espresso_walberla_cuda PUBLIC espresso::utils
+    PRIVATE CUDA::cuda_driver CUDA::cudart espresso::walberla_codegen_cuda)
+  target_link_libraries(espresso_walberla_codegen_cuda PRIVATE CUDA::cuda_driver
+                                                               CUDA::cudart)
 endif()
 
 add_subdirectory(src)
