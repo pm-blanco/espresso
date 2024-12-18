@@ -24,6 +24,10 @@
 #include "ObjectState.hpp"
 #include "packed_variant.hpp"
 
+#include <config/config.hpp>
+
+#include <instrumentation/fe_trap.hpp>
+
 #include <utils/serialization/pack.hpp>
 
 #include <algorithm>
@@ -39,6 +43,9 @@ void ObjectHandle::set_parameter(const std::string &name,
   if (m_context)
     m_context->notify_set_parameter(this, name, value);
 
+#ifdef FPE
+  auto const trap = fe_trap::make_shared_scoped();
+#endif
   this->do_set_parameter(name, value);
 }
 
@@ -47,6 +54,9 @@ Variant ObjectHandle::call_method(const std::string &name,
   if (m_context)
     m_context->notify_call_method(this, name, params);
 
+#ifdef FPE
+  auto const trap = fe_trap::make_shared_scoped();
+#endif
   return this->do_call_method(name, params);
 }
 

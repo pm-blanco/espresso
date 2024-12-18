@@ -134,6 +134,8 @@ option(ESPRESSO_BUILD_BENCHMARKS "Enable benchmarks" OFF)
 option(ESPRESSO_BUILD_WITH_VALGRIND "Build with Valgrind instrumentation" OFF)
 option(ESPRESSO_BUILD_WITH_CALIPER "Build with Caliper instrumentation" OFF)
 option(ESPRESSO_BUILD_WITH_CPPCHECK "Run Cppcheck during compilation" OFF)
+option(ESPRESSO_BUILD_WITH_FPE
+       "Build with floating-point exceptions instrumentation" OFF)
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   option(ESPRESSO_BUILD_WITH_CLANG_TIDY "Run Clang-Tidy during compilation" OFF)
 endif()

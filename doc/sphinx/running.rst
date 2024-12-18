@@ -516,6 +516,11 @@ you can as a last resort activate sanitizers:
 The resulting build will be around 5 times slower that a debug build,
 but it will generate valuable reports when detecting fatal exceptions.
 
+If you are dealing with non-finite math errors (infinity, NaN, etc.),
+you can interrupt code execution at the first occurence of a non-finite
+value using :ref:`floating-point exceptions <FPE>` and investigate
+the failing mathematical operation in GDB.
+
 It is possible to attach an external debugger to ``pypresso``, albeit with
 a custom syntax. The ``pypresso`` executable file is actually not a program
 but a script which sets the Python path appropriately and starts the Python
@@ -755,6 +760,59 @@ for undefined behavior. It detects bugs caused by dangling references,
 array accesses out of bounds, signed integer overflows, etc.
 
 For more details, please consult the tool online documentation [6]_.
+
+.. _FPE:
+
+FPE
+~~~
+
+.. note::
+
+    Requires specific compiler and linker flags, enabled with the CMake option
+    ``-D ESPRESSO_BUILD_WITH_FPE=ON -D CMAKE_BUILD_TYPE=Debug``.
+
+When abnormal mathematical operations take place at runtime,
+for example divisions by zero, multiplication of infinity with zero,
+square roots and logarithms of negative numbers, overflows, underflows,
+or conversion of NaN values to integers, CPU flags may be raised.
+The flags are known as *CPU exceptions*, and can be queried to detect
+if a past operation yielded an abnormal result. They can be unmasked
+to automatically *trap*, i.e. leave the user space and enter kernel space,
+where the operating system will run a callback function, which may send
+a POSIX signal such as ``SIGFPE`` or ``SIGILL``. Those signals can be
+captured by a user-defined *signal handler*, which takes the form of a
+C++ function with strict restrictions on which operations it can execute,
+and are typically assigning an integer into a global variable for debugging.
+Execution then resumes in user space on the exact same instruction that
+originally trapped, potentially entering an infinite loop.
+
+C libraries like GNU libc provide support for floating-point exceptions
+(FPE or FE). These can be unmasked to interrupt |es| on the first occurrence
+of an abnormal floating-point operation. This is achieved by sending a signal
+that can be caught in GDB to allow inspection of the failing code.
+
+When FPE instrumentation is enabled, most script interface calls will be
+monitored for abnormal mathematical operations. One can select which subset
+of CPU exceptions will trap by explicitly providing a bitmask to the FPE
+handler constructor, like so:
+
+.. code-block:: c++
+
+    Variant ObjectHandle::call_method(const std::string &name,
+                                      const VariantMap &params) {
+      if (m_context)
+        m_context->notify_call_method(this, name, params);
+
+    #ifdef FPE
+      auto const trap = fe_trap::make_shared_scoped(FE_DIVBYZERO | FE_INVALID);
+    #endif
+      return this->do_call_method(name, params);
+    }
+
+For more details, see annex F IEC 60559 "floating-point arithmetic"
+in ISO/EIC 9899 :cite:`ISO-EIC-9899-1999` and chapter 7
+"Exceptions and default exception handling" in
+ISO/IEC 60559:2020(E) :cite:`ISO-EIC-60559-2020`.
 
 .. _Caliper:
 
