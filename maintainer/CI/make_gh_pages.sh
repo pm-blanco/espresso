@@ -47,11 +47,15 @@ gitlab_rest_api_get() {
 }
 rest_api="https://gitlab.icp.uni-stuttgart.de/api/v4"
 project_id=390
+# get the status of the most recent CI pipelines
 gitlab_rest_api_get --silent "${rest_api}/projects/${project_id}/pipelines?per_page=60" > pipelines.json
+# get the most recent successful nightly build (where tutorials are available)
+# and the most recent successful build (where sphinx and doxygen are available)
 pipeline_sched_id=$(jq '[ .[] | select(.ref=="python" and .status=="success" and .source=="schedule") ][0].id' pipelines.json)
 pipeline_merge_id=$(jq '[ .[] | select(.ref=="python" and .status=="success") ][0].id' pipelines.json)
 gitlab_rest_api_get --silent "${rest_api}/projects/${project_id}/pipelines/${pipeline_sched_id}/jobs?per_page=100" > jobs_scheduled_pipeline.json
 gitlab_rest_api_get --silent "${rest_api}/projects/${project_id}/pipelines/${pipeline_merge_id}/jobs?per_page=100" > jobs_branch_head_pipeline.json
+# get the tutorial, sphinx, and doxygen CI job ids and download their artifacts
 tutorial_job_id=$(jq '.[] | select(.name=="run_tutorials").id' jobs_scheduled_pipeline.json)
 doxygen_job_id=$(jq '.[] | select(.name=="run_doxygen").id' jobs_branch_head_pipeline.json)
 sphinx_job_id=$(jq '.[] | select(.name=="check_sphinx").id' jobs_branch_head_pipeline.json)
