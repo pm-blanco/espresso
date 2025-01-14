@@ -21,6 +21,7 @@ stages:
   image: ghcr.io/espressomd/docker/fedora:f7f8ef2c0ca93c67aa16b9f91785492fb04ecc1b
   variables:
     GIT_SUBMODULE_STRATEGY: none
+    GET_SOURCES_ATTEMPTS: 3
   before_script:
     - git config --global --add safe.directory ${CI_PROJECT_DIR}
   dependencies: []
@@ -32,6 +33,7 @@ stages:
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
+  GET_SOURCES_ATTEMPTS: 3
   CCACHE_DIR: /cache
   CCACHE_MAXSIZE: 100G
   with_ccache: 'true'

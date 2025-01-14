@@ -122,6 +122,16 @@ BOOST_AUTO_TEST_CASE(test_interpolation_force) {
   auto const ghost_node = Vector3i{force_node[0] - offset, -1, force_node[2]};
   auto const laf = *(lb->get_node_last_applied_force(ghost_node, true));
   BOOST_CHECK_SMALL((laf - f1).norm(), 1E-10);
+
+  // check setter
+  auto const f = Vector3d{{0.1, 0.2, -0.3}};
+  lb->set_node_last_applied_force(force_node, f);
+
+  lb->ghost_communication_laf();
+  lb->ghost_communication_vel();
+
+  auto const ghost_laf = *(lb->get_node_last_applied_force(ghost_node, true));
+  BOOST_CHECK_SMALL((ghost_laf - f).norm(), 1E-10);
 }
 
 BOOST_AUTO_TEST_CASE(test_interpolation_velocity) {
@@ -135,7 +145,8 @@ BOOST_AUTO_TEST_CASE(test_interpolation_velocity) {
   auto const v = Vector3d{0.3, -0.2, 0.3};
   lb->set_node_velocity(source_node, v);
 
-  lb->ghost_communication();
+  lb->ghost_communication_pdf();
+  lb->ghost_communication_vel();
 
   auto const ghost_node = Vector3i{source_node[0] - offset, -1, source_node[2]};
   auto const ghost_vel = *(lb->get_node_velocity(ghost_node, true));
@@ -158,7 +169,7 @@ BOOST_AUTO_TEST_CASE(test_interpolation_pdf) {
     x += .1;
   });
   lb->set_node_population(source_node, source_pop);
-  lb->ghost_communication();
+  lb->ghost_communication_pdf();
 
   auto const ghost_node = Vector3i{source_node[0] - offset, -1, source_node[2]};
   auto const ghost_pop = *(lb->get_node_population(ghost_node, true));

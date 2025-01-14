@@ -640,7 +640,7 @@ private:
     m_pending_ghost_comm.set(GhostComm::VEL);
     m_pending_ghost_comm.set(GhostComm::LAF);
     // Refresh ghost layers
-    ghost_communication_pdfs();
+    ghost_communication_full();
   }
 
 protected:
@@ -668,11 +668,11 @@ public:
   void ghost_communication() override {
     if (m_pending_ghost_comm.any()) {
       ghost_communication_boundary();
-      ghost_communication_pdfs();
+      ghost_communication_full();
     }
   }
 
-  void ghost_communication_pdf() override { // TODO: is this never traversed???
+  void ghost_communication_pdf() override {
     if (m_pending_ghost_comm.test(GhostComm::PDF)) {
       m_pdf_communicator->communicate();
       if (has_lees_edwards_bc()) {
@@ -694,7 +694,7 @@ public:
     }
   }
 
-  void ghost_communication_laf() {
+  void ghost_communication_laf() override {
     if (m_pending_ghost_comm.test(GhostComm::LAF)) {
       m_laf_communicator->communicate();
       if (has_lees_edwards_bc()) {
@@ -712,7 +712,7 @@ public:
     }
   }
 
-  void ghost_communication_pdfs() {
+  void ghost_communication_full() {
     m_full_communicator->communicate();
     if (has_lees_edwards_bc()) {
       auto const &blocks = get_lattice().get_blocks();
@@ -975,15 +975,14 @@ public:
     if (pos.empty()) {
       return {};
     }
+    std::vector<Utils::Vector3d> vel{};
     if constexpr (Architecture == lbmpy::Arch::CPU) {
-      std::vector<Utils::Vector3d> vel{};
       vel.reserve(pos.size());
       for (auto const &vec : pos) {
         auto res = get_velocity_at_pos(vec, true);
         assert(res.has_value());
         vel.emplace_back(*res);
       }
-      return vel;
     }
 #if defined(__CUDACC__)
     if constexpr (Architecture == lbmpy::Arch::GPU) {
@@ -1003,17 +1002,15 @@ public:
       auto field =
           block.template uncheckedFastGetData<VectorField>(m_velocity_field_id);
       auto const res = lbm::accessor::Interpolation::get(field, host_pos, gl);
-      std::vector<Utils::Vector3d> vel{};
       vel.reserve(res.size() / 3ul);
       for (auto it = res.begin(); it != res.end(); it += 3) {
         vel.emplace_back(Utils::Vector3d{static_cast<double>(*(it + 0)),
                                          static_cast<double>(*(it + 1)),
                                          static_cast<double>(*(it + 2))});
       }
-      return vel;
     }
 #endif
-    return {};
+    return vel;
   }
 
   std::optional<Utils::Vector3d>

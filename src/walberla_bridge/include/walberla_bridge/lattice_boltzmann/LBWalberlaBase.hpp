@@ -59,6 +59,9 @@ public:
   /** @brief Perform a ghost communication of the velocity field. */
   virtual void ghost_communication_vel() = 0;
 
+  /** @brief Perform a ghost communication of the last applied forces field. */
+  virtual void ghost_communication_laf() = 0;
+
   /** @brief Number of discretized velocities in the PDF. */
   virtual std::size_t stencil_size() const noexcept = 0;
 
