@@ -81,6 +81,17 @@ public:
   bool is_target_in_vec(const std::vector<int>& vec, int target) const {
     return std::find(vec.begin(), vec.end(), target) != vec.end();
   }
+  
+  void update_contact_times_when_not_in_contact(double time, int index1, int index2) const{
+    if (this->contacts[index1][index2]){ // index1 and index2 are now not in contact but they were before
+      // # Calculate the total contact time
+      auto first_contact_time = this->first_contact_times[index1][index2];
+      auto contact_time = time - first_contact_time;
+      this->contacts[index1][index2] = false;
+      this->contact_times.push_back(contact_time);
+    }
+    else{this->contact_times.push_back(0);} // index1 and index2 were also not in contact before
+  }
 
   std::vector<double> evaluate(boost::mpi::communicator const &comm,
            ParticleReferenceRange const &local_particles,
@@ -91,57 +102,37 @@ public:
     auto const &system = System::get_system();
     auto const &box_geo  = *system.box_geo;
     auto &cell_structure = *system.cell_structure;
-    std::vector<std::pair<Particle *, Particle *>> verlet_list = cell_structure.m_verlet_list;
-    // if there are no particles in the verlet list, there is nothing to update
-    if (verlet_list.empty()) {return this->contact_times;}
-    // Otherwise, update the contact times
+    auto neighbor_map = get_neighbor_pids(system);
     double time = system.get_sim_time();
-    // check the particles in the same verlet list
     auto ids1=this->ids();
     auto ids2=this->target_ids;
-    for (auto &particle_pair : verlet_list) {
-      // check if the pair of particles are the ones we are studying
-      auto pid1 = particle_pair.first  -> id();
-      auto pid2 = particle_pair.second -> id();
-      
-      // Check if that pid1 and pid2 are in ids1 or ids2 but not in the same list
-      auto check1 =  (is_target_in_vec(ids1, pid1) && is_target_in_vec(ids2,pid2));
-      auto check2 =  (is_target_in_vec(ids2, pid1) && is_target_in_vec(ids1,pid2));
-      if (!(check1 || check2)) { continue;  } // not a particle pair of interest
-      size_t index1, index2; 
-      if (check1){
-        index1=std::find(ids1.begin(), ids1.end(), pid1)-ids1.begin();
-        index2=std::find(ids2.begin(), ids2.end(), pid2)-ids2.begin();
+
+    // Update the contact times
+    for (auto &id1: ids1){
+      auto neighbor_pids = neighbor_map[id1].neighbor_pids;
+      for (auto &id2: ids2){
+        auto index1=std::find(ids1.begin(), ids1.end(), id1)-ids1.begin();
+        auto index2=std::find(ids2.begin(), ids2.end(), id2)-ids2.begin();
+        if (is_target_in_vec(neighbor_pids,id2)){ // id1 and id2 are in the same neighbor list
+          auto p1 = cell_structure.get_local_particle(id1);
+          auto p2 = cell_structure.get_local_particle(id2);
+          auto const dist =  box_geo.get_mi_vector(p1->pos(), p2->pos()).norm();  
+          if (dist < contact_threshold) { // pid1 and pid2 are in contact now
+            if (!(this->contacts[index1][index2])){ // but they were not in contact before!
+              this->contacts[index1][index2]=true;
+              this->first_contact_times[index1][index2]=time;
+            }
+          }
+          else{update_contact_times_when_not_in_contact(time, index1,index2);} // // pid1 and pid2 are not in contact now               
+        }
+        else{update_contact_times_when_not_in_contact(time, index1,index2);} // // pid1 and pid2 are not in contact now
       }
-      else {
-        index1=std::find(ids2.begin(), ids2.end(), pid1)-ids2.begin();
-        index2=std::find(ids1.begin(), ids1.end(), pid2)-ids1.begin();
-      }
-              
-      auto pos1 = particle_pair.first  -> pos();
-      auto pos2 = particle_pair.second -> pos();
-      auto const dist =  box_geo.get_mi_vector(pos1, pos2).norm();
-      if (dist < contact_threshold) { // pid1 and pid2 are in contact now
-        if (!(this->contacts[index1][index2])) // but they were not in contact before!
-        {
-          this->contacts[index1][index2]=true;
-          this->first_contact_times[index1][index2]=time;
-        }}
-      else{ // // pid1 and pid2 are not in contact now   
-       if (this->contacts[index1][index2]){ // but they were before!
-       // # Calculate the total contact time
-        auto first_contact_time = this->first_contact_times[index1][index2];
-        auto contact_time = time - first_contact_time;
-        this->contacts[index1][index2] = false;
-        this->contact_times.push_back(contact_time);
-      }
-       else{this->contact_times.push_back(0);} // and they were not before
-    }}
+    }   
     return this->contact_times;
   }
   std::vector<std::size_t> shape() const override {
-    assert(!ids().empty());
-    return {ids().size() - 1};
+    assert(!contact_times.empty());
+    return {contact_times.size()};
   }
 };
 

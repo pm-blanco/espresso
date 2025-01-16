@@ -23,12 +23,15 @@ accumulator = espressomd.accumulators.TimeSeries(obs=obs,
 system.thermostat.set_langevin(kT=1, 
                                 gamma=1, 
                                 seed=1)
+
 system.non_bonded_inter[0,0].lennard_jones.set_params(epsilon = 1,
                                                     sigma   = 1,
                                                     cutoff  = 2**(1./6.),
                                                     offset  = 1,
                                                     shift   = "auto",
                                                     )
+
+
 
 system.integrator.run(1)
 res=obs.calculate()
