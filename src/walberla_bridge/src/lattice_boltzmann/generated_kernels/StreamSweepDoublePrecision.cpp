@@ -17,7 +17,7 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3, lbmpy_walberla/pystencils_walberla from waLBerla commit b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1, lbmpy_walberla/pystencils_walberla from waLBerla commit f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #include <cmath>
 
@@ -114,13 +114,11 @@ void StreamSweepDoublePrecision::run(IBlock *block) {
   auto velocity = block->getData<field::GhostLayerField<double, 3>>(velocityID);
   field::GhostLayerField<double, 19> *pdfs_tmp;
   {
-    // Getting temporary field pdfs_tmp
-    auto it = cache_pdfs_.find(pdfs);
-    if (it != cache_pdfs_.end()) {
-      pdfs_tmp = *it;
-    } else {
+    if (cache_pdfs_.find(block) == cache_pdfs_.end()) {
       pdfs_tmp = pdfs->cloneUninitialized();
-      cache_pdfs_.insert(pdfs_tmp);
+      cache_pdfs_[block] = pdfs_tmp;
+    } else {
+      pdfs_tmp = cache_pdfs_[block];
     }
   }
 
@@ -180,13 +178,11 @@ void StreamSweepDoublePrecision::runOnCellInterval(const shared_ptr<StructuredBl
   auto velocity = block->getData<field::GhostLayerField<double, 3>>(velocityID);
   field::GhostLayerField<double, 19> *pdfs_tmp;
   {
-    // Getting temporary field pdfs_tmp
-    auto it = cache_pdfs_.find(pdfs);
-    if (it != cache_pdfs_.end()) {
-      pdfs_tmp = *it;
-    } else {
+    if (cache_pdfs_.find(block) == cache_pdfs_.end()) {
       pdfs_tmp = pdfs->cloneUninitialized();
-      cache_pdfs_.insert(pdfs_tmp);
+      cache_pdfs_[block] = pdfs_tmp;
+    } else {
+      pdfs_tmp = cache_pdfs_[block];
     }
   }
 

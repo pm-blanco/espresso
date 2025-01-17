@@ -59,6 +59,7 @@ include(GNUInstallDirs)
 include(FetchContent)
 include(espresso_option_enum)
 include(espresso_enable_avx2_support)
+include(espresso_override_clang_tidy_checks)
 
 if(EXISTS "${PROJECT_BINARY_DIR}/CMakeLists.txt")
   message(
@@ -79,6 +80,10 @@ espresso_option_enum(
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_COVERAGE} -Og -g")
 set(CMAKE_CXX_FLAGS_RELWITHASSERT "${CMAKE_CXX_FLAGS_RELWITHASSERT} -O3 -g")
 
+# build targets as static libraries unless otherwise specified
+set(ESPRESSO_BUILD_SHARED_LIBS_DEFAULT OFF)
+set(BUILD_SHARED_LIBS ${ESPRESSO_BUILD_SHARED_LIBS_DEFAULT})
+
 # On Mac OS X, first look for other packages, then frameworks
 set(CMAKE_FIND_FRAMEWORK LAST)
 
@@ -93,7 +98,7 @@ set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 FetchContent_Declare(
   walberla
   GIT_REPOSITORY https://i10git.cs.fau.de/walberla/walberla.git
-  GIT_TAG        b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+  GIT_TAG        f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 )
 FetchContent_Declare(
   stokesian_dynamics
@@ -103,7 +108,7 @@ FetchContent_Declare(
 FetchContent_Declare(
   caliper
   GIT_REPOSITORY https://github.com/LLNL/Caliper.git
-  GIT_TAG        v2.10.0
+  GIT_TAG        v2.12.0
 )
 # cmake-format: on
 
@@ -129,6 +134,8 @@ option(ESPRESSO_BUILD_BENCHMARKS "Enable benchmarks" OFF)
 option(ESPRESSO_BUILD_WITH_VALGRIND "Build with Valgrind instrumentation" OFF)
 option(ESPRESSO_BUILD_WITH_CALIPER "Build with Caliper instrumentation" OFF)
 option(ESPRESSO_BUILD_WITH_CPPCHECK "Run Cppcheck during compilation" OFF)
+option(ESPRESSO_BUILD_WITH_FPE
+       "Build with floating-point exceptions instrumentation" OFF)
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   option(ESPRESSO_BUILD_WITH_CLANG_TIDY "Run Clang-Tidy during compilation" OFF)
 endif()
@@ -258,7 +265,7 @@ endif()
 # Python interpreter and Cython interface library
 if(ESPRESSO_BUILD_WITH_PYTHON)
   find_package(Python 3.10 REQUIRED COMPONENTS Interpreter Development NumPy)
-  find_package(Cython 0.29.28...<3.0.10 REQUIRED)
+  find_package(Cython 0.29.28...<3.0.12 REQUIRED)
   find_program(IPYTHON_EXECUTABLE NAMES jupyter ipython3 ipython)
 endif()
 
@@ -273,6 +280,8 @@ set(ESPRESSO_INSTALL_BINDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}")
 
 # folder for C++ and CUDA shared objects
 set(ESPRESSO_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+
+set(ESPRESSO_OLD_CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_LIBDIR}")
 
 # python site-packages, can be overriden with CMake options
 if(ESPRESSO_BUILD_WITH_PYTHON)
@@ -342,11 +351,12 @@ if(ESPRESSO_BUILD_WITH_GSL)
 endif()
 
 if(ESPRESSO_BUILD_WITH_STOKESIAN_DYNAMICS)
-  set(CMAKE_INSTALL_LIBDIR "${ESPRESSO_INSTALL_LIBDIR}")
   FetchContent_GetProperties(stokesian_dynamics)
   set(STOKESIAN_DYNAMICS 1)
   if(NOT stokesian_dynamics_POPULATED)
+    set(CMAKE_INSTALL_LIBDIR "${ESPRESSO_INSTALL_LIBDIR}")
     FetchContent_MakeAvailable(stokesian_dynamics)
+    set(CMAKE_INSTALL_LIBDIR "${ESPRESSO_OLD_CMAKE_INSTALL_LIBDIR}")
   endif()
 endif()
 
@@ -454,7 +464,8 @@ set(CMAKE_INSTALL_RPATH "${ESPRESSO_INSTALL_LIBDIR}")
 #
 
 # drop 'lib' prefix from all libraries
-set(CMAKE_SHARED_LIBRARY_PREFIX "")
+set(ESPRESSO_SHARED_LIBRARY_PREFIX "")
+set(CMAKE_SHARED_LIBRARY_PREFIX "${ESPRESSO_SHARED_LIBRARY_PREFIX}")
 
 add_library(espresso_coverage_flags INTERFACE)
 add_library(espresso::coverage_flags ALIAS espresso_coverage_flags)
@@ -581,6 +592,33 @@ if(ESPRESSO_BUILD_WITH_CLANG_TIDY)
   find_package(ClangTidy "${CMAKE_CXX_COMPILER_VERSION}" EXACT REQUIRED)
   set(ESPRESSO_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
   set(ESPRESSO_CUDA_CLANG_TIDY "${CLANG_TIDY_EXE};--extra-arg=--cuda-host-only")
+  set(SKIP_CLANG_TIDY_CHECKS "")
+  set(SKIP_CLANG_TIDY_CHECKS_CXX "")
+  set(SKIP_CLANG_TIDY_CHECKS_CUDA "")
+  if(ESPRESSO_BUILD_WITH_CALIPER)
+    # Clang-Tidy sometimes emits diagnostics in code enclosed in `extern "C"`
+    # that are not always actionable, since they may rely on keywords only
+    # available in the C++ language. While some checks have an extra flag
+    # 'IgnoreExternC' to disable them inside C code, not all affected checks
+    # have been fixed yet. For an in-depth discussion on this topic, see
+    # https://github.com/llvm/llvm-project/issues/35272
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-auto")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-nullptr")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-deprecated-headers")
+  endif()
+  if(ESPRESSO_BUILD_WITH_CUDA)
+    # silence casts in cuda_runtime.h (for both C++ and CUDA source files)
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-casting-through-void")
+    # silence nullptr dereference in cuda::thrust
+    list(APPEND SKIP_CLANG_TIDY_CHECKS_CUDA
+         "-clang-analyzer-core.NonNullParamChecker")
+  endif()
+  espresso_override_clang_tidy_checks(
+    ESPRESSO_CXX_CLANG_TIDY "${SKIP_CLANG_TIDY_CHECKS}"
+    "${SKIP_CLANG_TIDY_CHECKS_CXX}")
+  espresso_override_clang_tidy_checks(
+    ESPRESSO_CUDA_CLANG_TIDY "${SKIP_CLANG_TIDY_CHECKS}"
+    "${SKIP_CLANG_TIDY_CHECKS_CUDA}")
 endif()
 
 if(ESPRESSO_BUILD_WITH_CPPCHECK)
@@ -650,22 +688,51 @@ if(ESPRESSO_BUILD_WITH_WALBERLA)
   endif()
   set(WALBERLA_BUILD_WITH_FASTMATH off CACHE BOOL "")
   if(NOT walberla_POPULATED)
+    set(BUILD_SHARED_LIBS ON)
+    set(CMAKE_SHARED_LIBRARY_PREFIX "libwalberla_")
     FetchContent_MakeAvailable(walberla)
+    set(BUILD_SHARED_LIBS ${ESPRESSO_BUILD_SHARED_LIBS_DEFAULT})
+    set(CMAKE_SHARED_LIBRARY_PREFIX "${ESPRESSO_SHARED_LIBRARY_PREFIX}")
   endif()
   set(WALBERLA_LIBS
       walberla::core walberla::domain_decomposition walberla::blockforest
       walberla::boundary walberla::field walberla::lbm walberla::timeloop
       walberla::vtk)
-  if(ESPRESSO_BUILD_WITH_WALBERLA_FFT)
+  if(WALBERLA_BUILD_WITH_FFTW)
     set(WALBERLA_LIBS ${WALBERLA_LIBS} walberla::fft)
   endif()
-  if(ESPRESSO_BUILD_WITH_CUDA AND WALBERLA_BUILD_WITH_CUDA)
+  if(WALBERLA_BUILD_WITH_CUDA)
     set(WALBERLA_LIBS ${WALBERLA_LIBS} walberla::gpu)
   endif()
+  set(WALBERLA_LIBS_EXPORT
+      ${WALBERLA_LIBS}
+      walberla::lodepng
+      walberla::sqlite3
+      walberla::lbm_generated
+      walberla::pe
+      walberla::pe_coupling
+      walberla::pde
+      walberla::mesa_pd
+      walberla::lbm_mesapd_coupling
+      walberla::sqlite
+      walberla::executiontree
+      walberla::geometry
+      walberla::postprocessing
+      walberla::gather
+      walberla::gui)
   # workaround for https://gitlab.kitware.com/cmake/cmake/-/issues/21283
   foreach(target_w_namespace IN LISTS WALBERLA_LIBS)
     string(REPLACE "walberla::" "" target_wo_namespace ${target_w_namespace})
     add_library(${target_w_namespace} ALIAS ${target_wo_namespace})
+  endforeach()
+  # install all waLBerla shared objects
+  foreach(target_w_namespace IN LISTS WALBERLA_LIBS_EXPORT)
+    string(REPLACE "walberla::" "" target_wo_namespace ${target_w_namespace})
+    get_target_property(target_type ${target_wo_namespace} TYPE)
+    if(${target_type} STREQUAL "SHARED_LIBRARY")
+      install(TARGETS ${target_wo_namespace}
+              LIBRARY DESTINATION "${ESPRESSO_INSTALL_LIBDIR}")
+    endif()
   endforeach()
   if(ESPRESSO_BUILD_WITH_WALBERLA_AVX)
     function(espresso_avx_flags_callback COMPILER_AVX2_FLAG)
@@ -683,10 +750,19 @@ if(ESPRESSO_BUILD_WITH_CALIPER)
   set(CALIPER_WITH_MPI on CACHE BOOL "")
   set(CALIPER_WITH_NVTX off CACHE BOOL "")
   set(CALIPER_WITH_CUPTI off CACHE BOOL "")
-  set(CALIPER_BUILD_SHARED_LIBS on CACHE BOOL "")
+  set(CALIPER_INSTALL_CONFIG off CACHE BOOL "")
+  set(CALIPER_INSTALL_HEADERS off CACHE BOOL "")
   if(NOT caliper_POPULATED)
+    set(BUILD_SHARED_LIBS ON)
+    set(CMAKE_INSTALL_LIBDIR "${ESPRESSO_INSTALL_LIBDIR}")
+    set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
     FetchContent_MakeAvailable(caliper)
+    set(BUILD_SHARED_LIBS ${ESPRESSO_BUILD_SHARED_LIBS_DEFAULT})
+    set(CMAKE_INSTALL_LIBDIR "${ESPRESSO_OLD_CMAKE_INSTALL_LIBDIR}")
+    set(CMAKE_SHARED_LIBRARY_PREFIX "${ESPRESSO_SHARED_LIBRARY_PREFIX}")
   endif()
+  target_compile_options(caliper-common
+                         PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wno-restrict>)
   target_compile_options(
     caliper-services
     PRIVATE
@@ -696,6 +772,7 @@ if(ESPRESSO_BUILD_WITH_CALIPER)
     PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wno-maybe-uninitialized>
             $<$<CXX_COMPILER_ID:GNU>:-Wno-volatile>
             $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-deprecated-volatile>)
+  set_target_properties(caliper-runtime PROPERTIES CXX_CLANG_TIDY "")
 endif()
 
 #

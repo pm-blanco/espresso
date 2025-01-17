@@ -17,14 +17,13 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 
 #include "core/DataTypes.h"
-#include "core/cell/CellInterval.h"
 
 #include "domain_decomposition/IBlock.h"
 
@@ -40,17 +39,18 @@ namespace pystencils {
 class PackInfoVecSinglePrecisionCUDA
     : public ::walberla::gpu::GeneratedGPUPackInfo {
 public:
-  PackInfoVecSinglePrecisionCUDA(BlockDataID fieldID_) : fieldID(fieldID_){};
-  virtual ~PackInfoVecSinglePrecisionCUDA() {}
+  PackInfoVecSinglePrecisionCUDA(BlockDataID fieldID_) : fieldID(fieldID_) {}
+  ~PackInfoVecSinglePrecisionCUDA() override = default;
 
   void pack(stencil::Direction dir, unsigned char *buffer, IBlock *block,
             gpuStream_t stream) override;
   void communicateLocal(stencil::Direction /*dir*/, const IBlock * /* sender */,
                         IBlock * /* receiver */,
                         gpuStream_t /* stream */) override {
-    WALBERLA_ABORT("Local Communication not implemented yet for standard "
-                   "PackInfos. To run your application turn of local "
-                   "communication in the Communication class")
+    WALBERLA_ABORT(
+        "Local Communication not implemented yet for standard PackInfos. To "
+        "run your application, turn off local communication in the "
+        "communication class, e.g. with useLocalCommunication=false")
   }
   void unpack(stencil::Direction dir, unsigned char *buffer, IBlock *block,
               gpuStream_t stream) override;

@@ -17,9 +17,72 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+set(WALBERLA_CXX_CLANG_TIDY "${ESPRESSO_CXX_CLANG_TIDY}")
+set(WALBERLA_CUDA_CLANG_TIDY "${ESPRESSO_CUDA_CLANG_TIDY}")
+set(WALBERLA_CXX_CLANG_TIDY_CODEGEN "${ESPRESSO_CXX_CLANG_TIDY}")
+set(WALBERLA_CUDA_CLANG_TIDY_CODEGEN "${ESPRESSO_CUDA_CLANG_TIDY}")
+set(SKIP_CLANG_TIDY_CHECKS "")
+set(SKIP_CLANG_TIDY_CHECKS_CXX "")
+set(SKIP_CLANG_TIDY_CHECKS_CUDA "")
+# silence waLBerla diagnostics
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-clang-analyzer-deadcode.DeadStores")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-readability-non-const-parameter")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-readability-avoid-const-params-in-decls")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-readability-else-after-return")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-readability-simplify-boolean-expr")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-auto")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-loop-convert")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-pass-by-value")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-equals-delete")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-return-braced-init-list")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-crtp-constructor-accessibility")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-narrowing-conversions")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-assert-side-effect")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-exception-escape")
+list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-branch-clone")
+if(WALBERLA_BUILD_WITH_CUDA)
+  # silence diagnostics from cuda header files
+  list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-casting-through-void")
+  list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-redundant-void-arg")
+  list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-nullptr")
+  # silence nullptr dereference in cuda::thrust
+  list(APPEND SKIP_CLANG_TIDY_CHECKS_CUDA
+       "-clang-analyzer-core.NonNullParamChecker")
+endif()
+
+espresso_override_clang_tidy_checks(
+  WALBERLA_CXX_CLANG_TIDY "${SKIP_CLANG_TIDY_CHECKS}"
+  "${SKIP_CLANG_TIDY_CHECKS_CXX}")
+espresso_override_clang_tidy_checks(
+  WALBERLA_CUDA_CLANG_TIDY "${SKIP_CLANG_TIDY_CHECKS}"
+  "${SKIP_CLANG_TIDY_CHECKS_CUDA}")
+
+# codegen-specific Clang-Tidy overrides
+list(APPEND SKIP_CLANG_TIDY_CHECKS_CUDA
+     "-bugprone-multi-level-implicit-pointer-conversion")
+espresso_override_clang_tidy_checks(
+  WALBERLA_CXX_CLANG_TIDY_CODEGEN "${SKIP_CLANG_TIDY_CHECKS}"
+  "${SKIP_CLANG_TIDY_CHECKS_CXX}")
+espresso_override_clang_tidy_checks(
+  WALBERLA_CUDA_CLANG_TIDY_CODEGEN "${SKIP_CLANG_TIDY_CHECKS}"
+  "${SKIP_CLANG_TIDY_CHECKS_CUDA}")
+
 function(espresso_configure_walberla_target)
   set(TARGET_NAME ${ARGV0})
-  set_target_properties(${TARGET_NAME} PROPERTIES CXX_CLANG_TIDY "")
+  if(ESPRESSO_BUILD_WITH_CLANG_TIDY)
+    set(TARGET_LANG "CXX")
+    if(TARGET_NAME MATCHES "_cuda")
+      set(TARGET_LANG "CUDA")
+    endif()
+    set(TARGET_SUFFIX "")
+    if(TARGET_NAME MATCHES "_codegen")
+      set(TARGET_SUFFIX "_CODEGEN")
+    endif()
+    set_target_properties(
+      ${TARGET_NAME}
+      PROPERTIES ${TARGET_LANG}_CLANG_TIDY
+                 "${WALBERLA_${TARGET_LANG}_CLANG_TIDY${TARGET_SUFFIX}}")
+  endif()
   target_link_libraries(${TARGET_NAME} PRIVATE ${WALBERLA_LIBS})
   target_include_directories(
     ${TARGET_NAME} PUBLIC include PRIVATE ${WALBERLA_INCLUDE_DIRS}

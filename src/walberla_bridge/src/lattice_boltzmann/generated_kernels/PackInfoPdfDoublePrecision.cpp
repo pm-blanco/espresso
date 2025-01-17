@@ -17,7 +17,7 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3, lbmpy_walberla/pystencils_walberla from waLBerla commit b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1, lbmpy_walberla/pystencils_walberla from waLBerla commit f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #include "PackInfoPdfDoublePrecision.h"
 #include "core/DataTypes.h"
@@ -519,7 +519,6 @@ static FUNC_PREFIX void unpack_NE(double *RESTRICT const _data_buffer, double *R
 } // namespace internal_unpack_NE
 
 void PackInfoPdfDoublePrecision::pack(Direction dir, unsigned char *byte_buffer, IBlock *block) const {
-  byte_buffer += sizeof(double) - (reinterpret_cast<std::size_t>(byte_buffer) - (reinterpret_cast<std::size_t>(byte_buffer) / sizeof(double)) * sizeof(double));
   double *buffer = reinterpret_cast<double *>(byte_buffer);
 
   auto pdfs = block->getData<field::GhostLayerField<double, 19>>(pdfsID);
@@ -894,7 +893,6 @@ void PackInfoPdfDoublePrecision::pack(Direction dir, unsigned char *byte_buffer,
 }
 
 void PackInfoPdfDoublePrecision::unpack(Direction dir, unsigned char *byte_buffer, IBlock *block) const {
-  byte_buffer += sizeof(double) - (reinterpret_cast<std::size_t>(byte_buffer) - (reinterpret_cast<std::size_t>(byte_buffer) / sizeof(double)) * sizeof(double));
   double *buffer = reinterpret_cast<double *>(byte_buffer);
 
   auto pdfs = block->getData<field::GhostLayerField<double, 19>>(pdfsID);
@@ -1275,83 +1273,83 @@ uint_t PackInfoPdfDoublePrecision::size(stencil::Direction dir, const IBlock *bl
   CellInterval ci;
   pdfs->getGhostRegion(dir, ci, 1, false);
 
-  uint_t elementsPerCell = 0;
+  uint_t elementsPerCell = uint_t{0u};
 
   switch (dir) {
   case stencil::SW:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::BW:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::W:
-    elementsPerCell = 5;
+    elementsPerCell = uint_t{5u};
     break;
 
   case stencil::TW:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::NW:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::BS:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::S:
-    elementsPerCell = 5;
+    elementsPerCell = uint_t{5u};
     break;
 
   case stencil::TS:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::B:
-    elementsPerCell = 5;
+    elementsPerCell = uint_t{5u};
     break;
 
   case stencil::T:
-    elementsPerCell = 5;
+    elementsPerCell = uint_t{5u};
     break;
 
   case stencil::BN:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::N:
-    elementsPerCell = 5;
+    elementsPerCell = uint_t{5u};
     break;
 
   case stencil::TN:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::SE:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::BE:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::E:
-    elementsPerCell = 5;
+    elementsPerCell = uint_t{5u};
     break;
 
   case stencil::TE:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   case stencil::NE:
-    elementsPerCell = 1;
+    elementsPerCell = uint_t{1u};
     break;
 
   default:
-    elementsPerCell = 0;
+    elementsPerCell = uint_t{0u};
   }
   return ci.numCells() * elementsPerCell * sizeof(double);
 }

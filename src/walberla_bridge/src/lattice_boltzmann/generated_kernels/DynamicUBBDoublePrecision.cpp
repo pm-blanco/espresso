@@ -13,13 +13,13 @@
 //  You should have received a copy of the GNU General Public License along
 //  with waLBerla (see COPYING.txt). If not, see <http://www.gnu.org/licenses/>.
 //
-//! \\file Dynamic_UBB_double_precision.cpp
+//! \\file DynamicUBBDoublePrecision.cpp
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3, lbmpy_walberla/pystencils_walberla from waLBerla commit b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1, lbmpy_walberla/pystencils_walberla from waLBerla commit f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
-#include "Dynamic_UBB_double_precision.h"
+#include "DynamicUBBDoublePrecision.h"
 #include "core/DataTypes.h"
 #include "core/Macros.h"
 
@@ -46,12 +46,12 @@ namespace lbm {
 #endif
 #endif
 // NOLINTBEGIN(readability-non-const-parameter*)
-namespace internal_451fd042b8d7665063ea81b98853365b {
-static FUNC_PREFIX void dynamic_ubb_double_precision_boundary_Dynamic_UBB_double_precision(uint8_t *RESTRICT const _data_indexVector, double *RESTRICT _data_pdfs, int64_t const _stride_pdfs_0, int64_t const _stride_pdfs_1, int64_t const _stride_pdfs_2, int64_t const _stride_pdfs_3, int32_t indexVectorSize) {
+namespace internal_3cfabb7f34e389af9363b890d8729bed {
+static FUNC_PREFIX void dynamicubbdoubleprecision_boundary_DynamicUBBDoublePrecision(uint8_t *RESTRICT const _data_indexVector, double *RESTRICT _data_pdfs, int64_t const _stride_pdfs_0, int64_t const _stride_pdfs_1, int64_t const _stride_pdfs_2, int64_t const _stride_pdfs_3, int32_t indexVectorSize) {
 
   const int32_t f_in_inv_dir_idx[] = {0, 2, 1, 4, 3, 6, 5, 10, 9, 8, 7, 16, 15, 18, 17, 12, 11, 14, 13};
 
-  const double weights[] = {0.33333333333333333, 0.055555555555555556, 0.055555555555555556, 0.055555555555555556, 0.055555555555555556, 0.055555555555555556, 0.055555555555555556, 0.027777777777777778, 0.027777777777777778, 0.027777777777777778, 0.027777777777777778, 0.027777777777777778, 0.027777777777777778, 0.027777777777777778, 0.027777777777777778, 0.027777777777777778, 0.027777777777777778, 0.027777777777777778, 0.027777777777777778};
+  const double weights[] = {((double)(0.33333333333333333)), ((double)(0.055555555555555556)), ((double)(0.055555555555555556)), ((double)(0.055555555555555556)), ((double)(0.055555555555555556)), ((double)(0.055555555555555556)), ((double)(0.055555555555555556)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778)), ((double)(0.027777777777777778))};
 
   const int32_t neighbour_offset_x[] = {0, 0, 0, -1, 1, 0, 0, -1, 1, -1, 1, 0, 0, -1, 1, 0, 0, -1, 1};
   const int32_t neighbour_offset_y[] = {0, 1, -1, 0, 0, 0, 0, 1, 1, -1, -1, 1, -1, 0, 0, 1, -1, 0, 0};
@@ -69,7 +69,7 @@ static FUNC_PREFIX void dynamic_ubb_double_precision_boundary_Dynamic_UBB_double
     _data_pdfs[_stride_pdfs_0 * x + _stride_pdfs_0 * neighbour_offset_x[dir] + _stride_pdfs_1 * y + _stride_pdfs_1 * neighbour_offset_y[dir] + _stride_pdfs_2 * z + _stride_pdfs_2 * neighbour_offset_z[dir] + _stride_pdfs_3 * f_in_inv_dir_idx[dir]] = -rho * (6.0 * ((double)(neighbour_offset_x[dir])) * *((double *)(&_data_indexVector[40 * ctr_0 + 16])) + 6.0 * ((double)(neighbour_offset_y[dir])) * *((double *)(&_data_indexVector[40 * ctr_0 + 24])) + 6.0 * ((double)(neighbour_offset_z[dir])) * *((double *)(&_data_indexVector[40 * ctr_0 + 32]))) * weights[dir] + _data_pdfs[_stride_pdfs_0 * x + _stride_pdfs_1 * y + _stride_pdfs_2 * z + _stride_pdfs_3 * dir];
   }
 }
-} // namespace internal_451fd042b8d7665063ea81b98853365b
+} // namespace internal_3cfabb7f34e389af9363b890d8729bed
 
 // NOLINTEND(readability-non-const-parameter*)
 #ifdef __GNUC__
@@ -80,7 +80,7 @@ static FUNC_PREFIX void dynamic_ubb_double_precision_boundary_Dynamic_UBB_double
 #pragma pop
 #endif
 
-void Dynamic_UBB_double_precision::run_impl(IBlock *block, IndexVectors::Type type) {
+void DynamicUBBDoublePrecision::run_impl(IBlock *block, IndexVectors::Type type) {
   auto *indexVectors = block->getData<IndexVectors>(indexVectorID);
   int32_t indexVectorSize = int32_c(indexVectors->indexVector(type).size());
   if (indexVectorSize == 0)
@@ -98,18 +98,18 @@ void Dynamic_UBB_double_precision::run_impl(IBlock *block, IndexVectors::Type ty
   const int64_t _stride_pdfs_1 = int64_t(pdfs->yStride());
   const int64_t _stride_pdfs_2 = int64_t(pdfs->zStride());
   const int64_t _stride_pdfs_3 = int64_t(1 * int64_t(pdfs->fStride()));
-  internal_451fd042b8d7665063ea81b98853365b::dynamic_ubb_double_precision_boundary_Dynamic_UBB_double_precision(_data_indexVector, _data_pdfs, _stride_pdfs_0, _stride_pdfs_1, _stride_pdfs_2, _stride_pdfs_3, indexVectorSize);
+  internal_3cfabb7f34e389af9363b890d8729bed::dynamicubbdoubleprecision_boundary_DynamicUBBDoublePrecision(_data_indexVector, _data_pdfs, _stride_pdfs_0, _stride_pdfs_1, _stride_pdfs_2, _stride_pdfs_3, indexVectorSize);
 }
 
-void Dynamic_UBB_double_precision::run(IBlock *block) {
+void DynamicUBBDoublePrecision::run(IBlock *block) {
   run_impl(block, IndexVectors::ALL);
 }
 
-void Dynamic_UBB_double_precision::inner(IBlock *block) {
+void DynamicUBBDoublePrecision::inner(IBlock *block) {
   run_impl(block, IndexVectors::INNER);
 }
 
-void Dynamic_UBB_double_precision::outer(IBlock *block) {
+void DynamicUBBDoublePrecision::outer(IBlock *block) {
   run_impl(block, IndexVectors::OUTER);
 }
 

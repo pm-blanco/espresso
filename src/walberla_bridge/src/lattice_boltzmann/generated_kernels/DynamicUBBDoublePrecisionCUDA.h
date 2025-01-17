@@ -13,13 +13,13 @@
 //  You should have received a copy of the GNU General Public License along
 //  with waLBerla (see COPYING.txt). If not, see <http://www.gnu.org/licenses/>.
 //
-//! \\file Dynamic_UBB_double_precisionCUDA.h
+//! \\file DynamicUBBDoublePrecisionCUDA.h
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -52,7 +52,7 @@ using walberla::half;
 namespace walberla {
 namespace lbm {
 
-class Dynamic_UBB_double_precisionCUDA {
+class DynamicUBBDoublePrecisionCUDA {
 public:
   struct IndexInfo {
     int32_t x;
@@ -114,18 +114,18 @@ public:
     std::vector<GpuIndexVector> gpuVectors_;
   };
 
-  Dynamic_UBB_double_precisionCUDA(
+  DynamicUBBDoublePrecisionCUDA(
       const shared_ptr<StructuredBlockForest> &blocks, BlockDataID pdfsID_,
-      std::function<Vector3<double>(const Cell &,
-                                    const shared_ptr<StructuredBlockForest> &,
-                                    IBlock &)> &velocityCallback)
+      std::function<Vector3<float64>(const Cell &,
+                                     const shared_ptr<StructuredBlockForest> &,
+                                     IBlock &)> &velocityCallback)
       : elementInitialiser(velocityCallback), pdfsID(pdfsID_) {
     auto createIdxVector = [](IBlock *const, StructuredBlockStorage *const) {
       return new IndexVectors();
     };
     indexVectorID = blocks->addStructuredBlockData<IndexVectors>(
-        createIdxVector, "IndexField_Dynamic_UBB_double_precisionCUDA");
-  };
+        createIdxVector, "IndexField_DynamicUBBDoublePrecisionCUDA");
+  }
 
   void run(IBlock *block, gpuStream_t stream = nullptr);
 
@@ -136,6 +136,13 @@ public:
   void inner(IBlock *block, gpuStream_t stream = nullptr);
 
   void outer(IBlock *block, gpuStream_t stream = nullptr);
+
+  Vector3<double> getForce(IBlock * /*block*/) {
+
+    WALBERLA_ABORT(
+        "Boundary condition was not generated including force calculation.")
+    return Vector3<double>(double_c(0.0));
+  }
 
   std::function<void(IBlock *)> getSweep(gpuStream_t stream = nullptr) {
     return [this, stream](IBlock *b) { this->run(b, stream); };
@@ -590,7 +597,8 @@ private:
                 gpuStream_t stream = nullptr);
 
   BlockDataID indexVectorID;
-  std::function<Vector3<double>(
+
+  std::function<Vector3<float64>(
       const Cell &, const shared_ptr<StructuredBlockForest> &, IBlock &)>
       elementInitialiser;
 

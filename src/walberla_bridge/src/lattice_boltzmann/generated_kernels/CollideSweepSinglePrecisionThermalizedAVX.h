@@ -17,9 +17,9 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -30,7 +30,9 @@
 #include "domain_decomposition/StructuredBlockStorage.h"
 #include "field/GhostLayerField.h"
 #include "field/SwapableCompare.h"
-#include <set>
+
+#include <functional>
+#include <unordered_map>
 
 #ifdef __GNUC__
 #define RESTRICT __restrict__
@@ -60,7 +62,8 @@ public:
       : forceID(forceID_), pdfsID(pdfsID_), kT_(kT), omega_bulk_(omega_bulk),
         omega_even_(omega_even), omega_odd_(omega_odd),
         omega_shear_(omega_shear), seed_(seed), time_step_(time_step),
-        configured_(false){};
+        block_offset_0_(uint32_t(0)), block_offset_1_(uint32_t(0)),
+        block_offset_2_(uint32_t(0)), configured_(false) {}
 
   void run(IBlock *block);
 
@@ -106,6 +109,34 @@ public:
     configured_ = true;
   }
 
+  inline uint32_t getBlock_offset_0() const { return block_offset_0_; }
+  inline uint32_t getBlock_offset_1() const { return block_offset_1_; }
+  inline uint32_t getBlock_offset_2() const { return block_offset_2_; }
+  inline float getKt() const { return kT_; }
+  inline float getOmega_bulk() const { return omega_bulk_; }
+  inline float getOmega_even() const { return omega_even_; }
+  inline float getOmega_odd() const { return omega_odd_; }
+  inline float getOmega_shear() const { return omega_shear_; }
+  inline uint32_t getSeed() const { return seed_; }
+  inline uint32_t getTime_step() const { return time_step_; }
+  inline void setBlock_offset_0(const uint32_t value) {
+    block_offset_0_ = value;
+  }
+  inline void setBlock_offset_1(const uint32_t value) {
+    block_offset_1_ = value;
+  }
+  inline void setBlock_offset_2(const uint32_t value) {
+    block_offset_2_ = value;
+  }
+  inline void setKt(const float value) { kT_ = value; }
+  inline void setOmega_bulk(const float value) { omega_bulk_ = value; }
+  inline void setOmega_even(const float value) { omega_even_ = value; }
+  inline void setOmega_odd(const float value) { omega_odd_ = value; }
+  inline void setOmega_shear(const float value) { omega_shear_ = value; }
+  inline void setSeed(const uint32_t value) { seed_ = value; }
+  inline void setTime_step(const uint32_t value) { time_step_ = value; }
+
+private:
   BlockDataID forceID;
   BlockDataID pdfsID;
   uint32_t block_offset_0_;
@@ -118,6 +149,7 @@ public:
   float omega_shear_;
   uint32_t seed_;
   uint32_t time_step_;
+
   bool configured_;
 };
 

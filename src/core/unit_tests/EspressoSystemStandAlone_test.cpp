@@ -58,6 +58,8 @@ namespace utf = boost::unit_test;
 #include "particle_node.hpp"
 #include "system/System.hpp"
 
+#include <instrumentation/fe_trap.hpp>
+
 #include <utils/Vector.hpp>
 #include <utils/index.hpp>
 #include <utils/math/int_pow.hpp>
@@ -95,6 +97,9 @@ BOOST_FIXTURE_TEST_CASE(espresso_system_stand_alone, ParticleFactory) {
   auto const comm = boost::mpi::communicator();
   auto const rank = comm.rank();
   auto const n_nodes = comm.size();
+#if defined(FPE)
+  auto const trap = fe_trap::make_unique_scoped();
+#endif
 
   auto const box_l = 12.;
   auto const box_center = box_l / 2.;

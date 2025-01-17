@@ -247,8 +247,7 @@ def generate_boundary(
         index_struct_dtype,
         layout=[0],
         shape=(
-            ps.typing.TypedSymbol("indexVectorSize",
-                                  ps.typing.BasicType(np.int32)),
+            ps.TypedSymbol("indexVectorSize", ps.typing.BasicType(np.int32)),
             1,
         ),
         strides=(1, 1),
@@ -298,6 +297,7 @@ def generate_boundary(
         "namespace": namespace,
         "inner_or_boundary": False,
         "single_link": False,
+        "calculate_force": False,
         "additional_data_handler": additional_data_handler,
     }
 

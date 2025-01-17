@@ -21,6 +21,8 @@
 
 #cmakedefine ESPRESSO_BUILD_WITH_CALIPER
 
+#cmakedefine ESPRESSO_BUILD_WITH_FPE
+
 #define PACKAGE_NAME "${PROJECT_NAME}"
 
 /**

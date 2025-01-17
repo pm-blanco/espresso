@@ -32,6 +32,10 @@ class System;
  * See @ref SystemClassDesign for more details.
  */
 template <typename Class> class Leaf {
+private:
+  Leaf() = default;
+  friend Class;
+
 protected:
   std::weak_ptr<System> m_system;
 

@@ -17,9 +17,9 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -30,7 +30,9 @@
 #include "domain_decomposition/StructuredBlockStorage.h"
 #include "field/GhostLayerField.h"
 #include "field/SwapableCompare.h"
-#include <set>
+
+#include <functional>
+#include <unordered_map>
 
 #ifdef __GNUC__
 #define RESTRICT __restrict__
@@ -61,7 +63,7 @@ public:
         rho_3ID(rho_3ID_), order_0_(order_0), order_1_(order_1),
         order_2_(order_2), order_3_(order_3),
         rate_coefficient_(rate_coefficient), stoech_0_(stoech_0),
-        stoech_1_(stoech_1), stoech_2_(stoech_2), stoech_3_(stoech_3){};
+        stoech_1_(stoech_1), stoech_2_(stoech_2), stoech_3_(stoech_3) {}
 
   void run(IBlock *block);
 
@@ -98,9 +100,31 @@ public:
     };
   }
 
-  void configure(const shared_ptr<StructuredBlockStorage> &blocks,
-                 IBlock *block) {}
+  void configure(const shared_ptr<StructuredBlockStorage> & /*blocks*/,
+                 IBlock * /*block*/) {}
 
+  inline float getOrder_0() const { return order_0_; }
+  inline float getOrder_1() const { return order_1_; }
+  inline float getOrder_2() const { return order_2_; }
+  inline float getOrder_3() const { return order_3_; }
+  inline float getRate_coefficient() const { return rate_coefficient_; }
+  inline float getStoech_0() const { return stoech_0_; }
+  inline float getStoech_1() const { return stoech_1_; }
+  inline float getStoech_2() const { return stoech_2_; }
+  inline float getStoech_3() const { return stoech_3_; }
+  inline void setOrder_0(const float value) { order_0_ = value; }
+  inline void setOrder_1(const float value) { order_1_ = value; }
+  inline void setOrder_2(const float value) { order_2_ = value; }
+  inline void setOrder_3(const float value) { order_3_ = value; }
+  inline void setRate_coefficient(const float value) {
+    rate_coefficient_ = value;
+  }
+  inline void setStoech_0(const float value) { stoech_0_ = value; }
+  inline void setStoech_1(const float value) { stoech_1_ = value; }
+  inline void setStoech_2(const float value) { stoech_2_ = value; }
+  inline void setStoech_3(const float value) { stoech_3_ = value; }
+
+private:
   BlockDataID rho_0ID;
   BlockDataID rho_1ID;
   BlockDataID rho_2ID;

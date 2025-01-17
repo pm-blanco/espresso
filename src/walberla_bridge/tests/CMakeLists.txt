@@ -31,10 +31,17 @@ function(ESPRESSO_ADD_TEST)
   endif()
   if(${TEST_SRC} MATCHES ".*\.cu$")
     target_link_libraries(${TEST_NAME} PRIVATE espresso::walberla::cuda_flags)
+    if(ESPRESSO_BUILD_WITH_CLANG_TIDY)
+      set_target_properties(
+        ${TEST_NAME} PROPERTIES CUDA_CLANG_TIDY "${WALBERLA_CUDA_CLANG_TIDY}")
+    endif()
   else()
     target_link_libraries(${TEST_NAME} PRIVATE espresso::walberla::cpp_flags)
+    if(ESPRESSO_BUILD_WITH_CLANG_TIDY)
+      set_target_properties(
+        ${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "${WALBERLA_CXX_CLANG_TIDY}")
+    endif()
   endif()
-  set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
   target_include_directories(${TEST_NAME} PRIVATE ${WALBERLA_INCLUDE_DIRS}
                                                   ${walberla_BINARY_DIR}/src)
   target_link_libraries(${TEST_NAME} PRIVATE ${WALBERLA_LIBS})

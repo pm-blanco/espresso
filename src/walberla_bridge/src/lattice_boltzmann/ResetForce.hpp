@@ -53,7 +53,9 @@ public:
     m_ext_force = to_vector3<FloatType>(ext_force);
   }
 
-  Utils::Vector3d get_ext_force() const { return to_vector3d(m_ext_force); }
+  Utils::Vector3d get_ext_force() const noexcept {
+    return to_vector3d(m_ext_force);
+  }
 
   void operator()(IBlock *block) {
     auto force_field =

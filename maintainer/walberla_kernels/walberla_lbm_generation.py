@@ -23,8 +23,16 @@ import re
 import sympy as sp
 import pystencils as ps
 import lbmpy_walberla
-from pystencils.typing.typed_sympy import TypedSymbol
-from pystencils.typing import BasicType, CastFunc, TypedSymbol
+from pystencils import TypedSymbol
+try:
+    from pystencils.typing import CastFunc
+except ImportError:
+    from pystencils.sympyextensions import CastFunc
+try:
+    from pystencils.typing import BasicType as PsScalarType
+except ImportError:
+    from pystencils.types import PsScalarType
+
 
 # File derived from lbmpy_walberla.walberla_lbm_generation in the
 # walberla project, commit 3455bf3eebc64efa9beaecd74ebde3459b98991d
@@ -82,7 +90,7 @@ def make_velocity_getters(cqc, rho_sym, vel_arr_symbols):
 def equations_to_code(equations, variable_prefix="",
                       variables_without_prefix=None, dtype=None, backend=None):
     if dtype is None:
-        dtype = BasicType("float64")
+        dtype = PsScalarType("float64")
 
     if variables_without_prefix is None:
         variables_without_prefix = []

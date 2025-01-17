@@ -13,16 +13,19 @@ The following dependencies need to be in the Python path:
 The Python dependencies can be pip installed locally with the following command:
 
 ```sh
-python3 -m pip install --user -c requirements.txt numpy sympy lbmpy pystencils islpy
+python3 -m venv codegen
+source codegen/bin/activate
+python3 -m pip install -c "$(git rev-parse --show-toplevel)/requirements.txt" \
+    numpy cython lbmpy pystencils sympy islpy jinja2 setuptools packaging
+deactivate
 ```
 
 The kernels can be regenerated with this shell script:
 
 ```sh
 # adapt these paths to the build environment
-export VERSION=1.3.3
-export DEPS="${HOME}/walberla_deps"
-export PYTHONPATH="${DEPS}/${VERSION}/lbmpy:${DEPS}/${VERSION}/pystencils:${DEPS}/devel/walberla/python/"
+source codegen/bin/activate
+export PYTHONPATH="$(realpath build/_deps/walberla-src/python/)"
 
 # convenience functions
 function generate_lb_kernels {

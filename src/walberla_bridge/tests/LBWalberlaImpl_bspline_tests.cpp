@@ -119,9 +119,12 @@ BOOST_DATA_TEST_CASE(velocity_interpolation_bspline, bdata::make(all_lbs()),
 
   lb->ghost_communication();
 
-  for (double x = 0.0; x < params.box_dimensions[0]; x += 0.3) {
-    for (double y = 0.1; y < params.box_dimensions[1]; y += 0.3) {
-      for (double z = 0.2; z < params.box_dimensions[2]; z += 0.3) {
+  auto x = 0.0;
+  while (x < params.box_dimensions[0]) {
+    auto y = 0.1;
+    while (y < params.box_dimensions[1]) {
+      auto z = 0.2;
+      while (z < params.box_dimensions[2]) {
         Vector3d const pos{x, y, z};
         if (lb->get_lattice().pos_in_local_domain(pos)) {
           auto const factor = std::accumulate(
@@ -133,13 +136,57 @@ BOOST_DATA_TEST_CASE(velocity_interpolation_bspline, bdata::make(all_lbs()),
           BOOST_CHECK(res); // locally available
           BOOST_CHECK_SMALL((*res - ref).norm(), 1E-10);
         }
+        z += 0.3;
+      }
+      y += 0.3;
+    }
+    x += 0.3;
+  }
+}
+
+BOOST_DATA_TEST_CASE(force_interpolation_ghosts, bdata::make(all_lbs()),
+                     lb_generator) {
+  auto lb = lb_generator(params);
+
+  auto const agrid = params.box_dimensions[0] / params.grid_dimensions[0];
+  auto const force = Vector3d{{1., 2., -3.}};
+  lb->add_force_at_pos(Vector3d{{-agrid / 2., 0., 0.}}, force);
+  lb->add_force_at_pos(Vector3d{{+agrid / 2., 0., 0.}}, force);
+  for (int x : {-1, 0, 1}) {
+    for (int y : {-1, 0, 1}) {
+      for (int z : {-1, 0, 1}) {
+        auto const check_node = Vector3i{{x, y, z}};
+        if (lb->get_lattice().node_in_local_halo(check_node)) {
+          auto const res = lb->get_node_force_to_be_applied(check_node);
+          if (x <= 0 and y <= 0 and z <= 0) {
+            BOOST_CHECK_SMALL(((*res) - force / 4.).norm(), 1E-10);
+          } else {
+            BOOST_CHECK_SMALL((*res).norm(), 1E-10);
+          }
+        }
+      }
+    }
+  }
+  lb->integrate();
+  lb->ghost_communication();
+  // last applied forces should now contain forces to be applied,
+  // and its ghost layer should have been zeroed out
+  for (int x : {-1, 0, 1}) {
+    for (int y : {-1, 0, 1}) {
+      for (int z : {-1, 0, 1}) {
+        auto const check_node = Vector3i{{x, y, z}};
+        if (lb->get_lattice().node_in_local_halo(check_node)) {
+          auto const res = lb->get_node_last_applied_force(check_node, true);
+          if (x == 0 and y == 0 and z == 0) {
+            BOOST_CHECK_SMALL(((*res) - force / 4.).norm(), 1E-10);
+          } else {
+            BOOST_CHECK_SMALL((*res).norm(), 1E-10);
+          }
+        }
       }
     }
   }
 }
-
-// TODO: check last applied force on a ghost node, i.e. when two forces
-// are applied at (agrid/2, 0, 0) and (box_l - agrid/2, 0, 0)
 
 int main(int argc, char **argv) {
   int n_nodes;

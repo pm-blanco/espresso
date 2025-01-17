@@ -109,11 +109,13 @@ CheckOptions:
   - key:             modernize-use-noexcept.ReplacementString
     value:           ''
   - key:             modernize-use-noexcept.UseNoexceptFalse
-    value:           '1'
+    value:           'true'
   - key:             modernize-use-nullptr.NullMacros
     value:           'NULL'
   - key:             modernize-use-transparent-functors.SafeMode
-    value:           '1'
+    value:           'true'
+  - key:             modernize-use-using.IgnoreExternC
+    value:           'true'
   - key:             readability-simplify-boolean-expr.ChainedConditionalAssignment
     value:           '0'
   - key:             readability-simplify-boolean-expr.ChainedConditionalReturn

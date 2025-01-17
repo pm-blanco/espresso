@@ -21,6 +21,7 @@ stages:
   image: ghcr.io/espressomd/docker/fedora:f7f8ef2c0ca93c67aa16b9f91785492fb04ecc1b
   variables:
     GIT_SUBMODULE_STRATEGY: none
+    GET_SOURCES_ATTEMPTS: 3
   before_script:
     - git config --global --add safe.directory ${CI_PROJECT_DIR}
   dependencies: []
@@ -32,6 +33,7 @@ stages:
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
+  GET_SOURCES_ATTEMPTS: 3
   CCACHE_DIR: /cache
   CCACHE_MAXSIZE: 100G
   with_ccache: 'true'
@@ -69,7 +71,7 @@ style_doxygen:
     - mkdir build
     - cd build
     - cp ../maintainer/configs/maxset.hpp myconfig.hpp
-    - cmake .. -D ESPRESSO_BUILD_WITH_CUDA=ON -D ESPRESSO_BUILD_WITH_GSL=ON -D ESPRESSO_BUILD_WITH_HDF5=ON -D ESPRESSO_BUILD_WITH_SCAFACOS=ON -D ESPRESSO_BUILD_WITH_WALBERLA=ON -D ESPRESSO_BUILD_WITH_WALBERLA_FFT=ON -D ESPRESSO_BUILD_WITH_STOKESIAN_DYNAMICS=ON -D ESPRESSO_BUILD_WITH_CALIPER=ON
+    - cmake .. -D ESPRESSO_BUILD_WITH_CUDA=ON -D ESPRESSO_BUILD_WITH_GSL=ON -D ESPRESSO_BUILD_WITH_HDF5=ON -D ESPRESSO_BUILD_WITH_SCAFACOS=ON -D ESPRESSO_BUILD_WITH_WALBERLA=ON -D ESPRESSO_BUILD_WITH_WALBERLA_FFT=ON -D ESPRESSO_BUILD_WITH_STOKESIAN_DYNAMICS=ON -D ESPRESSO_BUILD_WITH_CALIPER=ON -D ESPRESSO_BUILD_WITH_FPE=ON
     - sh ../maintainer/CI/dox_warnings.sh
   tags:
     - espresso
@@ -132,7 +134,8 @@ no_rotation:
      with_cuda: 'false'
      myconfig: 'no_rotation'
      with_coverage: 'true'
-     with_scafacos: 'true'
+     with_scafacos: 'false'
+     with_fpe: 'true'
      check_skip_long: 'true'
   script:
     - bash maintainer/CI/build_cmake.sh
@@ -148,6 +151,8 @@ fedora:40:
   variables:
      with_cuda: 'false'
      with_gsl: 'false'
+     with_scafacos: 'false'
+     with_fpe: 'true'
      myconfig: 'maxset'
      make_check_python: 'true'
      with_stokesian_dynamics: 'true'
@@ -422,6 +427,7 @@ empty:
      with_scafacos: 'false'
      with_walberla: 'false'
      with_stokesian_dynamics: 'false'
+     with_fpe: 'true'
      with_coverage: 'false'
      with_coverage_python: 'true'
   script:

@@ -150,6 +150,7 @@ BOOST_AUTO_TEST_CASE(ek_interface_walberla) {
         espresso::ek_lattice, params.diffusion, params.kT, params.valency,
         params.ext_efield, params.density, false, false, single_precision,
         false, 0u);
+    ek_species->ghost_communication();
     auto ek_reactant = std::make_shared<EKReactant>(ek_species, stoich, order);
     auto ek_reaction = std::make_shared<walberla::EKReactionImpl>(
         espresso::ek_lattice,

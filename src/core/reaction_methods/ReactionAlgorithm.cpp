@@ -274,7 +274,9 @@ double ReactionAlgorithm::make_reaction_mc_move_attempt(int reaction_id,
                                                         double bf,
                                                         double E_pot_old,
                                                         double E_pot_new) {
-  auto const exponential = std::exp(-(E_pot_new - E_pot_old) / kT);
+  auto constexpr exp_min = -708.4; // for IEEE-compatible double
+  auto const exponent = -(E_pot_new - E_pot_old) / kT;
+  auto const exponential = (exponent < exp_min) ? 0. : std::exp(exponent);
   auto &reaction = *reactions[reaction_id];
   reaction.accumulator_potential_energy_difference_exponential(
       std::vector<double>{exponential});
@@ -579,9 +581,12 @@ bool ReactionAlgorithm::make_displacement_mc_move_attempt(int type,
   auto const E_pot_new = (particle_inside_exclusion_range_touched)
                              ? std::numeric_limits<double>::max()
                              : calculate_potential_energy();
+  auto constexpr exp_min = -708.4; // for IEEE-compatible double
+  auto const exponent = -(E_pot_new - E_pot_old) / kT;
+  auto const exponential = (exponent < exp_min) ? 0. : std::exp(exponent);
 
   // Metropolis algorithm since proposal density is symmetric
-  auto const bf = std::min(1., std::exp(-(E_pot_new - E_pot_old) / kT));
+  auto const bf = std::min(1., exponential);
 
   // // correct for enhanced proposal of small radii by using the
   // // Metropolis-Hastings algorithm for asymmetric proposal densities

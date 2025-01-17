@@ -17,9 +17,9 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -30,7 +30,9 @@
 #include "domain_decomposition/StructuredBlockStorage.h"
 #include "field/GhostLayerField.h"
 #include "field/SwapableCompare.h"
-#include <set>
+
+#include <functional>
+#include <unordered_map>
 
 #ifdef __GNUC__
 #define RESTRICT __restrict__
@@ -56,7 +58,7 @@ public:
       BlockDataID jID_, BlockDataID phiID_, BlockDataID rhoID_, double D,
       double f_ext_0, double f_ext_1, double f_ext_2, double kT, double z)
       : jID(jID_), phiID(phiID_), rhoID(rhoID_), D_(D), f_ext_0_(f_ext_0),
-        f_ext_1_(f_ext_1), f_ext_2_(f_ext_2), kT_(kT), z_(z){};
+        f_ext_1_(f_ext_1), f_ext_2_(f_ext_2), kT_(kT), z_(z) {}
 
   void run(IBlock *block);
 
@@ -95,11 +97,30 @@ public:
     };
   }
 
-  void configure(const shared_ptr<StructuredBlockStorage> &blocks,
-                 IBlock *block) {}
+  void configure(const shared_ptr<StructuredBlockStorage> & /*blocks*/,
+                 IBlock * /*block*/) {}
 
+  inline double getD() const { return D_; }
+  inline double getF_ext_0() const { return f_ext_0_; }
+  inline double getF_ext_1() const { return f_ext_1_; }
+  inline double getF_ext_2() const { return f_ext_2_; }
+  inline double getKt() const { return kT_; }
+  inline double getZ() const { return z_; }
+  inline void setD(const double value) { D_ = value; }
+  inline void setF_ext_0(const double value) { f_ext_0_ = value; }
+  inline void setF_ext_1(const double value) { f_ext_1_ = value; }
+  inline void setF_ext_2(const double value) { f_ext_2_ = value; }
+  inline void setKt(const double value) { kT_ = value; }
+  inline void setZ(const double value) { z_ = value; }
+
+private:
   BlockDataID jID;
   BlockDataID phiID;
+
+public:
+  inline void setPhiID(BlockDataID phiID_) { phiID = phiID_; }
+
+private:
   BlockDataID rhoID;
   double D_;
   double f_ext_0_;

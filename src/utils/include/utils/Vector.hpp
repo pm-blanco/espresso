@@ -64,14 +64,14 @@ public:
   using Array<T, N>::max_size;
   using Array<T, N>::fill;
   using Array<T, N>::broadcast;
-  Vector() = default;
+  Vector() noexcept = default;
   Vector(Vector const &) = default;
   Vector &operator=(Vector const &) = default;
 
   void swap(Vector &rhs) { std::swap_ranges(begin(), end(), rhs.begin()); }
 
 private:
-  constexpr void copy_init(T const *first, T const *last) {
+  constexpr void copy_init(T const *first, T const *last) noexcept {
     auto it = begin();
     while (first != last) {
       *it++ = *first++;
@@ -82,7 +82,7 @@ public:
   template <class Range>
   explicit constexpr Vector(Range const &rng)
       : Vector(std::begin(rng), std::end(rng)) {}
-  explicit constexpr Vector(T const (&v)[N]) : Base() {
+  explicit constexpr Vector(T const (&v)[N]) noexcept : Base() {
     copy_init(std::begin(v), std::end(v));
   }
 
@@ -107,7 +107,7 @@ public:
 
   /** @brief Create a vector that has all entries set to the same value. */
   DEVICE_QUALIFIER static constexpr Vector<T, N>
-  broadcast(typename Base::value_type const &value) {
+  broadcast(typename Base::value_type const &value) noexcept {
     Vector<T, N> ret{};
     for (std::size_t i = 0u; i != N; ++i) {
       ret[i] = value;
