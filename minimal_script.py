@@ -35,13 +35,12 @@ system.non_bonded_inter[0,0].lennard_jones.set_params(epsilon = 1,
 
 
 system.integrator.run(10)
-res=obs.calculate()
-current_times = obs.current_contact_times()
+res=obs.get_contact_times_series()
+current_times = obs.get_instantaneous_contact_times()
 print(res)
-print(len(res))
+print(current_times)
 obs.clean_contact_times()
-res=obs.calculate()
+res=obs.get_contact_times_series()
 print(res)
-print(len(res))
-current_times = obs.current_contact_times()
+current_times = obs.get_instantaneous_contact_times()
 print(current_times)

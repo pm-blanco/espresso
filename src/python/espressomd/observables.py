@@ -86,9 +86,7 @@ class TimeObservable(Observable):
     """
     Base class for observables that track time
     """
-    _so_bind_methods = ("shape","shape_last_contact_time","get_current_contact_times","clean_contact_times")
-    def current_contact_times(self):
-        return np.array(self.call_method("get_current_contact_times")).reshape(self.shape_last_contact_time())
+
     
     
 @script_interface_register
@@ -669,10 +667,13 @@ class ContactTimes(TimeObservable):
 
     """
     _so_name = "Observables::ContactTimes"
-    _so_bind_methods = ("shape","shape_last_contact_time","get_current_contact_times","clean_contact_times")
-    def current_contact_times(self):
-        print(self.call_method("shape_last_contact_time"))
-        return np.array(self.call_method("get_current_contact_times")).reshape(self.call_method("shape_last_contact_time"))
+    _so_bind_methods = ("shape","shape_instantaneous_contact_time","get_instantaneous_contact_times","clean_contact_times")
+    def get_instantaneous_contact_times(self):
+        contact_times=self.call_method("get_instantaneous_contact_times")
+        if contact_times is None:
+            return [contact_times]
+        else:
+            return np.array(self.call_method("get_instantaneous_contact_times")).reshape(self.call_method("shape_instantaneous_contact_time"))
     
 
 @script_interface_register

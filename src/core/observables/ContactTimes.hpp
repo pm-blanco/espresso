@@ -43,7 +43,7 @@ public:
   mutable std::vector<double> contact_times;
   mutable std::vector<std::vector<bool>> contacts;
   mutable std::vector<std::vector<double>> first_contact_times;
-  mutable std::vector<double> last_contact_times;
+  mutable std::vector<double> instantaneous_contact_times;
 
   explicit ContactTimes(std::vector<int> const &ids, std::vector<int> const &target_ids, double contact_threshold): 
   PidTimeObservable(ids,  target_ids, contact_threshold){
@@ -93,9 +93,11 @@ public:
 
   void clean_contact_times()const{
     this -> contact_times.clear();
-    this -> last_contact_times.clear();}
+    this -> instantaneous_contact_times.clear();}
 
-  std::vector<double> get_current_contact_times() const{
+  std::vector<double> get_contact_times_series() const{return this->contact_times;}
+
+  std::vector<double> get_instantaneous_contact_times() const{
     auto const &system = System::get_system();
     double time = system.get_sim_time();
     // Check for particles still in contact 
@@ -109,11 +111,11 @@ public:
           // # Calculate the current contact time
           auto first_contact_time = this->first_contact_times[index1][index2];
           auto contact_time = time - first_contact_time;
-          this->last_contact_times.push_back(contact_time);
+          this->instantaneous_contact_times.push_back(contact_time);
         }
       }
     }
-  return this->last_contact_times;
+  return this->instantaneous_contact_times;
   }
 
   std::vector<double> evaluate(boost::mpi::communicator const &comm,
@@ -150,17 +152,18 @@ public:
         }
         else{update_contact_times_when_not_in_contact(time, index1,index2);} // // pid1 and pid2 are not in contact now
       }
-    }   
-    return this->contact_times;
+    }
+    return {}; 
   }
-  std::vector<std::size_t> shape() const override {
-    assert(!contact_times.empty());
+  std::vector<std::size_t> shape_contact_time_series() const  {
     return {contact_times.size()};
   }
-  std::vector<std::size_t> shape_last_contact_time() const {
-    return {last_contact_times.size()};
+  std::vector<std::size_t> shape_instantaneous_contact_time() const {
+    return {instantaneous_contact_times.size()};
   }
-
+  std::vector<std::size_t> shape() const override {
+    return {};
+  }
 };
 
 } // namespace Observables
