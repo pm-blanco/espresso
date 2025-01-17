@@ -81,12 +81,16 @@ class CylindricalProfileObservable(ProfileObservable):
         kwargs['transform_params'] = transform_params
         super().__init__(**kwargs)
 
+@script_interface_register
 class TimeObservable(Observable):
     """
     Base class for observables that track time
     """
+    _so_bind_methods = ("shape","shape_last_contact_time","get_current_contact_times","clean_contact_times")
+    def current_contact_times(self):
+        return np.array(self.call_method("get_current_contact_times")).reshape(self.shape_last_contact_time())
     
-
+    
 @script_interface_register
 class ComPosition(Observable):
 
@@ -665,6 +669,10 @@ class ContactTimes(TimeObservable):
 
     """
     _so_name = "Observables::ContactTimes"
+    _so_bind_methods = ("shape","shape_last_contact_time","get_current_contact_times","clean_contact_times")
+    def current_contact_times(self):
+        print(self.call_method("shape_last_contact_time"))
+        return np.array(self.call_method("get_current_contact_times")).reshape(self.call_method("shape_last_contact_time"))
     
 
 @script_interface_register

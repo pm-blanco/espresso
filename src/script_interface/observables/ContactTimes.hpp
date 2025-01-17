@@ -19,14 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SCRIPT_INTERFACE_OBSERVABLES_TIMEOBSERVABLE_HPP
-#define SCRIPT_INTERFACE_OBSERVABLES_TIMEOBSERVABLE_HPP
+#ifndef SCRIPT_INTERFACE_OBSERVABLES_CONTACTTIME_HPP
+#define SCRIPT_INTERFACE_OBSERVABLES_CONTACTTIME_HPP
 
 #include "script_interface/auto_parameters/AutoParameters.hpp"
 #include "script_interface/observables/Observable.hpp"
 
 #include "core/observables/LBVelocityProfile.hpp"
-#include "core/observables/TimeObservable.hpp"
+#include "core/observables/ContactTimes.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -39,12 +39,30 @@ namespace ScriptInterface {
 namespace Observables {
 
 template <typename CoreObs>
-class TimeObservable
-    : public AutoParameters<TimeObservable<CoreObs>, Observable> {
-  using Base = AutoParameters<TimeObservable<CoreObs>, Observable>;
+class ContactTimes
+    : public AutoParameters<ContactTimes<CoreObs>, Observable> {
+  using Base = AutoParameters<ContactTimes<CoreObs>, Observable>;
 
 public:
   using Base::Base;
+  
+  ContactTimes() {
+    this->add_parameters(
+        {{"ids", AutoParameter::read_only,
+          [this]() { return time_observable()->ids(); }},
+          {"target_ids", AutoParameter::read_only,
+          [this]() { return time_observable()->target_ids; }},
+          {"contact_threshold", AutoParameter::read_only,
+          [this]() { return time_observable()->contact_threshold; }}});
+  }
+
+  void do_construct(VariantMap const &params) override {
+    ObjectHandle::context()->parallel_try_catch([&]() {
+      m_observable =
+          make_shared_from_args<CoreObs, std::vector<int>, std::vector<int>, double>(
+              params, "ids", "target_ids", "contact_threshold");
+    });
+  }
 
   Variant do_call_method(const std::string &method, VariantMap const &parameters) override {
   if (method == "clean_contact_times") {
@@ -59,7 +77,7 @@ public:
 }
 
 
-  std::shared_ptr<::Observables::TimeObservable> time_observable() const {
+  std::shared_ptr<::Observables::ContactTimes> time_observable() const {
     return m_observable;
   }
 

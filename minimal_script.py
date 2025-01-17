@@ -17,12 +17,14 @@ system.part.add(pos  = [6,6,6])
 
 obs = espressomd.observables.ContactTimes(ids=[0,1],
                                           target_ids=[2,3],
-                                          contact_threshold=2)
+                                          contact_threshold=4)
 accumulator = espressomd.accumulators.TimeSeries(obs=obs, 
                                                 delta_N=1)
 system.thermostat.set_langevin(kT=1, 
                                 gamma=1, 
                                 seed=1)
+
+system.auto_update_accumulators.add(accumulator)
 
 system.non_bonded_inter[0,0].lennard_jones.set_params(epsilon = 1,
                                                     sigma   = 1,
@@ -32,13 +34,14 @@ system.non_bonded_inter[0,0].lennard_jones.set_params(epsilon = 1,
                                                     )
 
 
-
-system.integrator.run(1)
+system.integrator.run(10)
+res=obs.calculate()
+current_times = obs.current_contact_times()
+print(res)
+print(len(res))
+obs.clean_contact_times()
 res=obs.calculate()
 print(res)
-system.integrator.run(10000)
-res=obs.calculate()
-print(res)
-system.integrator.run(10000)
-res=obs.calculate()
-print(res)
+print(len(res))
+current_times = obs.current_contact_times()
+print(current_times)

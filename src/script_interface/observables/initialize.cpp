@@ -27,6 +27,7 @@
 #include "ProfileObservable.hpp"
 #include "PidTimeObservable.hpp"
 #include "TimeObservable.hpp"
+#include "ContactTimes.hpp"
 #include "RDF.hpp"
 #include "config/config.hpp"
 
@@ -115,6 +116,13 @@ namespace Observables {
   om->register_new<PidTimeObservable<::Observables::name>>(                 \
       "Observables::" #name "");
 
+/** Register a @ref ScriptInterface::Observables::ContactTimes
+ *  "ContactTimes"
+ */
+#define REGISTER_CONTACTTIMES(name)                                         \
+  om->register_new<ContactTimes<::Observables::name>>(                 \
+      "Observables::" #name "");
+
 
 void initialize(Utils::Factory<ObjectHandle> *om) {
   // Manual registration:
@@ -154,7 +162,7 @@ void initialize(Utils::Factory<ObjectHandle> *om) {
   REGISTER_CYLPID_PROFILE_OBS(CylindricalVelocityProfile);
   REGISTER_CYLPID_PROFILE_OBS(CylindricalFluxDensityProfile);
   // Custom function
-  REGISTER_PID_TIME_OBS(ContactTimes);
+  REGISTER_CONTACTTIMES(ContactTimes);
 
 
 

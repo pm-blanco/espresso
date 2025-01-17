@@ -40,11 +40,11 @@ namespace Observables {
 class ContactTimes : public PidTimeObservable {
 public:
   using PidTimeObservable::PidTimeObservable;
-  mutable int number_of_zero_contact_time;
   mutable std::vector<double> contact_times;
   mutable std::vector<std::vector<bool>> contacts;
   mutable std::vector<std::vector<double>> first_contact_times;
-  
+  mutable std::vector<double> last_contact_times;
+
   explicit ContactTimes(std::vector<int> const &ids, std::vector<int> const &target_ids, double contact_threshold): 
   PidTimeObservable(ids,  target_ids, contact_threshold){
     if (this->ids().size() < 1) {throw std::runtime_error("At least 1 particle in ids is required");}
@@ -74,8 +74,6 @@ public:
         }
      }
     this -> contacts = contacts;
-    // initialize the number of zero contact times
-    this -> number_of_zero_contact_time = 0;
     }
 
   bool is_target_in_vec(const std::vector<int>& vec, int target) const {
@@ -91,6 +89,31 @@ public:
       this->contact_times.push_back(contact_time);
     }
     else{this->contact_times.push_back(0);} // index1 and index2 were also not in contact before
+  }
+
+  void clean_contact_times()const{
+    this -> contact_times.clear();
+    this -> last_contact_times.clear();}
+
+  std::vector<double> get_current_contact_times() const{
+    auto const &system = System::get_system();
+    double time = system.get_sim_time();
+    // Check for particles still in contact 
+    auto ids1=this->ids();
+    auto ids2=this->target_ids;
+    for (auto &id1: ids1){
+      for (auto &id2: ids2){
+        auto index1=std::find(ids1.begin(), ids1.end(), id1)-ids1.begin();
+        auto index2=std::find(ids2.begin(), ids2.end(), id2)-ids2.begin();
+        if (this->contacts[index1][index2]){ // index1 and index2 are now in contact
+          // # Calculate the current contact time
+          auto first_contact_time = this->first_contact_times[index1][index2];
+          auto contact_time = time - first_contact_time;
+          this->last_contact_times.push_back(contact_time);
+        }
+      }
+    }
+  return this->last_contact_times;
   }
 
   std::vector<double> evaluate(boost::mpi::communicator const &comm,
@@ -134,6 +157,10 @@ public:
     assert(!contact_times.empty());
     return {contact_times.size()};
   }
+  std::vector<std::size_t> shape_last_contact_time() const {
+    return {last_contact_times.size()};
+  }
+
 };
 
 } // namespace Observables
