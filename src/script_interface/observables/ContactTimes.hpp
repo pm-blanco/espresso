@@ -79,11 +79,11 @@ public:
   }
   if (method == "get_contact_times_series") {
     auto const series = time_observable()->get_contact_times_series();
-    return std::vector<int>{series.begin(), series.end()};
+    return std::vector<double>{series.begin(), series.end()};
   }
   if (method == "get_instantaneous_contact_times") {
     auto const series = time_observable()->get_instantaneous_contact_times();
-    return std::vector<int>{series.begin(), series.end()};
+    return std::vector<double>{series.begin(), series.end()};
   }
   return Base::do_call_method(method, parameters);  // Call base class for unsupported methods
 }

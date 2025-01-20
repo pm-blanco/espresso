@@ -149,6 +149,8 @@ public:
     for (auto &id1: ids1){
       auto neighbor_pids = neighbor_map[id1].neighbor_pids;
       for (auto &id2: ids2){
+        // avoid counting contact times of a particle with itself
+        if (id1 == id2){continue;}
         auto index1=std::find(ids1.begin(), ids1.end(), id1)-ids1.begin();
         auto index2=std::find(ids2.begin(), ids2.end(), id2)-ids2.begin();
         if (is_target_in_vec(neighbor_pids,id2)){ // id1 and id2 are in the same neighbor list
