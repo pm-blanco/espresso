@@ -143,7 +143,7 @@ private:
    */
   unsigned m_resort_particles = Cells::RESORT_NONE;
   bool m_rebuild_verlet_list = true;
-  //std::vector<std::pair<Particle *, Particle *>> m_verlet_list;
+  std::vector<std::pair<Particle *, Particle *>> m_verlet_list;
   double m_le_pos_offset_at_last_resort = 0.;
   /** @brief Verlet list skin. */
   double m_verlet_skin = 0.;
@@ -152,7 +152,6 @@ private:
 
 public:
   CellStructure(BoxGeometry const &box);
-  std::vector<std::pair<Particle *, Particle *>> m_verlet_list;
 
   bool use_verlet_list = true;
 
