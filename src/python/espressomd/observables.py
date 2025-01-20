@@ -649,21 +649,38 @@ class ParticleDistances(Observable):
 @script_interface_register
 class ContactTimes(TimeObservable):
 
-    """Calculates the contact time between the particles in ids.
+    """Tracks the time evolution of contacts between `ids` and `target_ids` within a given `contact_threshold`.
+        
 
     Parameters
     ----------
     ids : array_like of :obj:`int`
-        The ids of (existing) particles to take into account.
+        The first set of ids of particles.
+
+    target_ids : array_like of :obj:`int`
+        The second set of (target) ids of particles.
+
+    contact_threshold : :obj:`float`
+        Distance threshold to consider two particles in contact.
 
     Methods
     -------
-    calculate()
-        Run the observable.
+    contact_times_series()
+        Returns the time series of the contact times gathered during simulation time.
 
         Returns
         -------
         (N - 1,) :obj:`ndarray` of :obj:`float`
+
+    instantaneous_contact_times()
+        Returns the instantaneous contact times of the last system configuration (taking into account previous history).
+
+        Returns
+        -------
+        (N - 1,) :obj:`ndarray` of :obj:`float`
+
+    clean_contact_times()
+        Cleans the series of contact times in memory.    
 
     """
     _so_name = "Observables::ContactTimes"

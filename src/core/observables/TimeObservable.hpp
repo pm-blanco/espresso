@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2022 The ESPResSo project
+ * Copyright (C) 2025 The ESPResSo project
  *
  * This file is part of ESPResSo.
  *
@@ -32,7 +32,7 @@
 
 namespace Observables {
 
-/** Cartesian profile observable */
+/** Observable tracking time evolution of contacts between `ids` and `target_ids` within a given `contact_threshold` */
 class TimeObservable : virtual public Observable {
 public:
   double contact_threshold;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2022 The ESPResSo project
+ * Copyright (C) 2025 The ESPResSo project
  *
  * This file is part of ESPResSo.
  *
@@ -35,7 +35,7 @@
 
 namespace Observables {
 
-/** Calculates the contact times between the ids
+/**  Tracks the time evolution of contacts between `ids` and `target_ids` within a given `contact_threshold`
  */
 class ContactTimes : public PidTimeObservable {
 public:
@@ -76,10 +76,15 @@ public:
     this -> contacts = contacts;
     }
 
+/**  Checks if `target` is an element in `vec`
+ */
   bool is_target_in_vec(const std::vector<int>& vec, int target) const {
     return std::find(vec.begin(), vec.end(), target) != vec.end();
   }
   
+/**  When particles with indexes `index1` and `index2` are not in contact, 
+ *   update the contact map `contacts` and store a 0 contact time in the contact series `contact_times`
+ */
   void update_contact_times_when_not_in_contact(double time, int index1, int index2) const{
     if (this->contacts[index1][index2]){ // index1 and index2 are now not in contact but they were before
       // # Calculate the total contact time
@@ -91,12 +96,18 @@ public:
     else{this->contact_times.push_back(0);} // index1 and index2 were also not in contact before
   }
 
+/**  Cleans up the series of contact times in memory
+ */
   void clean_contact_times()const{
     this -> contact_times.clear();
     this -> instantaneous_contact_times.clear();}
 
+/**  Returns the series of contact times stored in memory
+ */
   std::vector<double> get_contact_times_series() const{return this->contact_times;}
 
+/**  Returns the contact times for the current configuration
+ */
   std::vector<double> get_instantaneous_contact_times() const{
     auto const &system = System::get_system();
     double time = system.get_sim_time();
@@ -118,6 +129,8 @@ public:
   return this->instantaneous_contact_times;
   }
 
+/**  Evaluates the current contact times
+ */
   std::vector<double> evaluate(boost::mpi::communicator const &comm,
            ParticleReferenceRange const &local_particles,
            const ParticleObservables::traits<Particle> &traits) const override {

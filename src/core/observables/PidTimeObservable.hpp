@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2022 The ESPResSo project
+ * Copyright (C) 2025 The ESPResSo project
  *
  * This file is part of ESPResSo.
  *
@@ -26,7 +26,7 @@
 
 namespace Observables {
 
-// Observable which acts on a given list of particle ids
+// Observable tracking time evolution of contacts between `ids` and `target_ids` within a given `contact_threshold`
 class PidTimeObservable : public PidObservable, public TimeObservable {
 public:
   PidTimeObservable(std::vector<int> const &ids, std::vector<int> const &target_ids, double contact_threshold)
