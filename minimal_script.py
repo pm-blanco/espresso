@@ -5,7 +5,7 @@ import numpy as np
 
 NPs_number=2
 system = espressomd.System(box_l=[10]*3)
-system.time_step = 0.001
+system.time_step = 0.01
 system.cell_system.skin = 1
 
 
@@ -28,19 +28,23 @@ system.auto_update_accumulators.add(accumulator)
 
 system.non_bonded_inter[0,0].lennard_jones.set_params(epsilon = 1,
                                                     sigma   = 1,
-                                                    cutoff  = 2**(1./6.),
+                                                    cutoff  = 3,
                                                     offset  = 1,
-                                                    shift   = "auto",
-                                                    )
+                                                    shift   = "auto")
 
 
-system.integrator.run(10)
-res=obs.get_contact_times_series()
+system.integrator.run(1000)
+res=obs.contact_times_series()
 current_times = obs.get_instantaneous_contact_times()
-print(res)
-print(current_times)
+print(type(res))
+# Get indices where res is non-zero
+indices, = np.nonzero(res)  # np.nonzero returns a tuple
+print(type(indices))
+# Access elements at those indices
+elements = res[indices]
+print(elements)
 obs.clean_contact_times()
-res=obs.get_contact_times_series()
+res=obs.contact_times_series()
 print(res)
 current_times = obs.get_instantaneous_contact_times()
 print(current_times)

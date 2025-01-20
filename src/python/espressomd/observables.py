@@ -667,13 +667,24 @@ class ContactTimes(TimeObservable):
 
     """
     _so_name = "Observables::ContactTimes"
-    _so_bind_methods = ("shape","shape_instantaneous_contact_time","get_instantaneous_contact_times","clean_contact_times")
-    def get_instantaneous_contact_times(self):
+    _so_bind_methods = ("shape",
+                        "shape_instantaneous_contact_time",
+                        "shape_contact_time_series",
+                        "get_instantaneous_contact_times",
+                        "clean_contact_times",
+                        "get_contact_times_series")
+    def instantaneous_contact_times(self):
         contact_times=self.call_method("get_instantaneous_contact_times")
         if contact_times is None:
-            return [contact_times]
+            return np.array([contact_times])
         else:
-            return np.array(self.call_method("get_instantaneous_contact_times")).reshape(self.call_method("shape_instantaneous_contact_time"))
+            return np.array(contact_times).reshape(self.call_method("shape_instantaneous_contact_time"))
+    def contact_times_series(self):
+        contact_times=self.call_method("get_contact_times_series")
+        if contact_times is None:
+            return np.array([contact_times])
+        else:
+            return np.array(contact_times).reshape(self.call_method("shape_contact_time_series"))
     
 
 @script_interface_register
