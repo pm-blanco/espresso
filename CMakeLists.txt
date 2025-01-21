@@ -51,8 +51,12 @@ endmacro()
 espresso_minimal_compiler_version("GNU" 10.5.0)
 espresso_minimal_compiler_version("Clang" 14.0.0)
 espresso_minimal_compiler_version("AppleClang" 14.0.0)
-espresso_minimal_compiler_version("Intel" 2021.9)
 espresso_minimal_compiler_version("IntelLLVM" 2023.1)
+
+set(UNSUPPORTED_COMPILERS "Intel;MSVC")
+if(CMAKE_CXX_COMPILER_ID IN_LIST UNSUPPORTED_COMPILERS)
+  message(FATAL_ERROR "Unsupported compiler ${CMAKE_CXX_COMPILER_ID}")
+endif()
 
 include(FeatureSummary)
 include(GNUInstallDirs)
@@ -323,7 +327,7 @@ target_compile_options(
     $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wunused-exception-parameter>
     $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wmissing-variable-declarations>
     $<$<CXX_COMPILER_ID:Clang>:-Wnon-c-typedef-for-linkage>
-    $<$<NOT:$<CXX_COMPILER_ID:Intel>>:-Wdelete-non-virtual-dtor>
+    -Wdelete-non-virtual-dtor
     # disable warnings from -Wall and -Wextra
     -Wno-sign-compare
     -Wno-unused-function
@@ -332,10 +336,11 @@ target_compile_options(
     $<$<CXX_COMPILER_ID:GNU>:-Wno-restrict>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-clobbered>
     $<$<CXX_COMPILER_ID:GNU>:-Wno-cast-function-type>
-    $<$<CXX_COMPILER_ID:Intel,IntelLLVM>:-diag-disable=592>
+    $<$<CXX_COMPILER_ID:IntelLLVM>:-diag-disable=592>
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-gnu-zero-variadic-macro-arguments>
-    $<$<NOT:$<CXX_COMPILER_ID:Intel,IntelLLVM>>:-Wno-implicit-fallthrough>
-    $<$<NOT:$<CXX_COMPILER_ID:Intel,IntelLLVM,GNU>>:-Wno-unused-private-field>
+    $<$<NOT:$<CXX_COMPILER_ID:IntelLLVM>>:-Wno-implicit-fallthrough>
+    $<$<NOT:$<CXX_COMPILER_ID:IntelLLVM,GNU>>:-Wno-unused-private-field>
+    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},arm>>:-Wno-psabi>
     # warnings are errors
     $<$<BOOL:${ESPRESSO_WARNINGS_ARE_ERRORS}>:-Werror>)
 
@@ -347,34 +352,26 @@ if(ESPRESSO_BUILD_WITH_CUDA)
       -Wextra
       -Wno-sign-compare
       -Wno-unused-parameter
-      $<$<NOT:$<CXX_COMPILER_ID:Intel,IntelLLVM>>:-Wno-implicit-fallthrough>
+      $<$<NOT:$<CXX_COMPILER_ID:IntelLLVM>>:-Wno-implicit-fallthrough>
       # warnings are errors
       $<$<AND:$<BOOL:${ESPRESSO_WARNINGS_ARE_ERRORS}>,$<CUDA_COMPILER_ID:NVIDIA>>:--Werror=all-warnings>
       $<$<AND:$<BOOL:${ESPRESSO_WARNINGS_ARE_ERRORS}>,$<CUDA_COMPILER_ID:Clang>>:-Werror>
   )
 endif()
 
-# disable warning from -Wextra on ARM processors
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_SYSTEM_PROCESSOR MATCHES
-                                            "arm")
-  target_compile_options(espresso_cpp_flags INTERFACE -Wno-psabi)
-endif()
-
 #
 # Code coverage
 #
 
-add_library(espresso_coverage_flags INTERFACE)
-add_library(espresso::coverage_flags ALIAS espresso_coverage_flags)
 if(ESPRESSO_BUILD_WITH_COVERAGE)
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_compile_options(
-      espresso_coverage_flags INTERFACE -g -fprofile-instr-generate
-                                        -fcoverage-mapping)
+      espresso_cpp_flags INTERFACE -g -fprofile-instr-generate
+                                   -fcoverage-mapping)
   else()
-    target_compile_options(espresso_coverage_flags INTERFACE -g --coverage
-                                                             -fprofile-abs-path)
-    target_link_libraries(espresso_coverage_flags INTERFACE gcov)
+    target_compile_options(espresso_cpp_flags INTERFACE -g --coverage
+                                                        -fprofile-abs-path)
+    target_link_libraries(espresso_cpp_flags INTERFACE gcov)
   endif()
 endif()
 
@@ -422,8 +419,6 @@ if(ESPRESSO_BUILD_WITH_UBSAN)
     target_link_libraries(espresso_cuda_flags INTERFACE -fsanitize=undefined)
   endif()
 endif()
-
-target_link_libraries(espresso_cpp_flags INTERFACE espresso::coverage_flags)
 
 #
 # Static analysis
@@ -629,6 +624,17 @@ if(ESPRESSO_BUILD_TESTS)
 endif()
 
 find_package(Boost 1.74.0 REQUIRED ${BOOST_COMPONENTS})
+
+# Patches for older Boost releases compiled with C++17 or above; while
+# originally meant for MSVC, the Clang compiler is also affected.
+# https://boost-users.boost.narkive.com/h2eXAUzU
+# https://devblogs.microsoft.com/cppblog/c17-feature-removals-and-deprecations/
+# https://github.com/PixarAnimationStudios/OpenUSD/issues/2634
+target_compile_options(
+  espresso_cpp_flags
+  INTERFACE
+    $<$<VERSION_LESS:${Boost_VERSION},1.83.0>:-D_HAS_AUTO_PTR_ETC=0>
+    $<$<VERSION_LESS:${Boost_VERSION},1.81.0>:-DBOOST_NO_CXX98_FUNCTION_BASE>)
 
 # enable boost::variant with more than 20 types
 target_compile_options(
