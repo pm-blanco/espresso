@@ -12,7 +12,6 @@ stages:
     - trying.tmp
   before_script:
     - git config --global --add safe.directory ${CI_PROJECT_DIR}
-    - git config --global --add safe.directory ${CI_PROJECT_DIR}/libs/h5xx
   timeout: 1h
   interruptible: true
 
@@ -20,7 +19,6 @@ stages:
   <<: *global_job_definition
   image: ghcr.io/espressomd/docker/fedora:f7f8ef2c0ca93c67aa16b9f91785492fb04ecc1b
   variables:
-    GIT_SUBMODULE_STRATEGY: none
     GET_SOURCES_ATTEMPTS: 3
   before_script:
     - git config --global --add safe.directory ${CI_PROJECT_DIR}
@@ -32,7 +30,6 @@ stages:
     - no-cuda
 
 variables:
-  GIT_SUBMODULE_STRATEGY: recursive
   GET_SOURCES_ATTEMPTS: 3
   CCACHE_DIR: /cache
   CCACHE_MAXSIZE: 100G
@@ -49,14 +46,11 @@ style:
   dependencies: []
   before_script:
     - git config --global --add safe.directory ${CI_PROJECT_DIR}
-    - git submodule deinit .
   script:
     - sh maintainer/CI/fix_style.sh
   tags:
     - espresso
     - no-cuda
-  variables:
-    GIT_SUBMODULE_STRATEGY: none
   artifacts:
     paths:
     - style.patch
