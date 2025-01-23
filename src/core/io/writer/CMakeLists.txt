@@ -18,7 +18,7 @@
 #
 
 if(ESPRESSO_BUILD_WITH_HDF5)
-  add_library(espresso_hdf5 STATIC h5md_core.cpp h5md_specification.cpp)
+  add_library(espresso_hdf5 SHARED h5md_core.cpp h5md_specification.cpp)
   add_library(espresso::hdf5 ALIAS espresso_hdf5)
   if(ESPRESSO_BUILD_WITH_CLANG_TIDY)
     set_target_properties(espresso_hdf5 PROPERTIES CXX_CLANG_TIDY
@@ -30,5 +30,7 @@ if(ESPRESSO_BUILD_WITH_HDF5)
     PRIVATE h5xx hdf5 espresso::cpp_flags espresso::h5xx_cpp_flags MPI::MPI_CXX
             Boost::mpi Boost::filesystem espresso::utils espresso::config
             espresso::instrumentation)
-  target_link_libraries(espresso_core PRIVATE espresso_hdf5)
+  target_link_libraries(espresso_core PUBLIC espresso_hdf5)
+  install(TARGETS espresso_hdf5
+          LIBRARY DESTINATION ${ESPRESSO_INSTALL_PYTHON}/espressomd)
 endif()
