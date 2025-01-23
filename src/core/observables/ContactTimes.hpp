@@ -50,32 +50,15 @@ public:
     if (this->ids().size() < 1) {throw std::runtime_error("At least 1 particle in ids is required");}
     if (this->target_ids.size() < 1) {throw std::runtime_error("At least 1 particle in target_ids is required");}
     if (contact_threshold < 0) {throw std::runtime_error("The contact threshold must be a positive number.");}
-    
     auto const &system = System::get_system();
     // Initialize the contact time
     int n_ids = this->ids().size();
     int n_target_ids = target_ids.size();  
     double time = system.get_sim_time();
     this->first_contact_times = std::vector<std::vector<double>>(n_ids, std::vector<double>(n_target_ids, time));
-    
-    // Initialize the contact map
-    this->contacts = std::vector<std::vector<bool>>(n_ids, std::vector<bool>(n_target_ids));
-    auto const &box_geo  = *system.box_geo;
-    auto &cell_structure = *system.cell_structure;
-    for (size_t i = 0; i < this->ids().size(); ++i) {
-      for (size_t j = 0; j < target_ids.size(); ++j) {
-        auto id1=this->ids()[i];
-        auto id2=this->target_ids[j];
-        auto p1 = cell_structure.get_local_particle(id1);
-        auto p2 = cell_structure.get_local_particle(id2);
-        auto const dist =  box_geo.get_mi_vector(p1->pos(), p2->pos()).norm();
-        if (dist < contact_threshold) {contacts[i][j] = true;}
-        else{contacts[i][j] = false;}
-        }
-     }
-    this -> contacts = contacts;
+    this->contacts = std::vector<std::vector<bool>>(n_ids, std::vector<bool>(n_target_ids, false));
     }
-
+    
 /**  Checks if `target` is an element in `vec`
  */
   bool is_target_in_vec(const std::vector<int>& vec, int target) const {
@@ -153,6 +136,19 @@ public:
         if (id1 == id2){continue;}
         auto index1=std::find(ids1.begin(), ids1.end(), id1)-ids1.begin();
         auto index2=std::find(ids2.begin(), ids2.end(), id2)-ids2.begin();
+        auto p1 = cell_structure.get_local_particle(id1);
+        auto p2 = cell_structure.get_local_particle(id2);
+        auto const dist =  box_geo.get_mi_vector(p1->pos(), p2->pos()).norm();  
+        if (dist < contact_threshold) { // pid1 and pid2 are in contact now
+          if (!(this->contacts[index1][index2])){ // but they were not in contact before!
+              this->contacts[index1][index2]=true;
+              this->first_contact_times[index1][index2]=time;
+            }}
+        else{update_contact_times_when_not_in_contact(time, index1,index2);} // // pid1 and pid2 are not in contact now
+        
+        
+        
+        /*
         if (is_target_in_vec(neighbor_pids,id2)){ // id1 and id2 are in the same neighbor list
           auto p1 = cell_structure.get_local_particle(id1);
           auto p2 = cell_structure.get_local_particle(id2);
@@ -166,6 +162,7 @@ public:
           else{update_contact_times_when_not_in_contact(time, index1,index2);} // // pid1 and pid2 are not in contact now               
         }
         else{update_contact_times_when_not_in_contact(time, index1,index2);} // // pid1 and pid2 are not in contact now
+        */
       }
     }
     return {}; 
