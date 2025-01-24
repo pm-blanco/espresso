@@ -85,6 +85,10 @@ public:
     auto const series = time_observable()->get_instantaneous_contact_times();
     return std::vector<double>{series.begin(), series.end()};
   }
+  if (method == "get_number_of_zero_contacts") {
+    auto const N_zero_contacts = time_observable()->get_number_of_zero_contacts();
+    return  N_zero_contacts;
+  }
   return Base::do_call_method(method, parameters);  // Call base class for unsupported methods
 }
 

@@ -44,6 +44,8 @@ public:
   mutable std::vector<std::vector<bool>> contacts;
   mutable std::vector<std::vector<double>> first_contact_times;
   mutable std::vector<double> instantaneous_contact_times;
+  mutable int N_zero_contacts;
+  mutable bool initialization;
 
   explicit ContactTimes(std::vector<int> const &ids, std::vector<int> const &target_ids, double contact_threshold): 
   PidTimeObservable(ids,  target_ids, contact_threshold){
@@ -57,26 +59,22 @@ public:
     double time = system.get_sim_time();
     this->first_contact_times = std::vector<std::vector<double>>(n_ids, std::vector<double>(n_target_ids, time));
     this->contacts = std::vector<std::vector<bool>>(n_ids, std::vector<bool>(n_target_ids, false));
+    this->N_zero_contacts=0;
     }
     
-/**  Checks if `target` is an element in `vec`
- */
-  bool is_target_in_vec(const std::vector<int>& vec, int target) const {
-    return std::find(vec.begin(), vec.end(), target) != vec.end();
-  }
-  
-/**  When particles with indexes `index1` and `index2` are not in contact, 
- *   update the contact map `contacts` and store a 0 contact time in the contact series `contact_times`
+ /**  When particles with indexes `index1` and `index2` are not in contact: 
+ *    if they were in contact before: update the contact map `contacts` and store the total contact time in `contact_times`
+ *    if they were not in contact before: update the count of zero contacts `N_zero_contacts`
  */
   void update_contact_times_when_not_in_contact(double time, int index1, int index2) const{
-    if (this->contacts[index1][index2]){ // index1 and index2 are now not in contact but they were before
+    if (this->contacts[index1][index2]){ // index1 and index2 are not in contact now but they were before
       // # Calculate the total contact time
       auto first_contact_time = this->first_contact_times[index1][index2];
       auto contact_time = time - first_contact_time;
       this->contacts[index1][index2] = false;
       this->contact_times.push_back(contact_time);
     }
-    else{this->contact_times.push_back(0);} // index1 and index2 were also not in contact before
+    else{this->N_zero_contacts+=1;} // index1 and index2 are not in contact now and they were not before
   }
 
 /**  Cleans up the series of contact times in memory
@@ -85,7 +83,11 @@ public:
     this -> contact_times.clear();
     this -> instantaneous_contact_times.clear();}
 
-/**  Returns the series of contact times stored in memory
+/**  Returns the total number of zero contacts
+ */
+  int get_number_of_zero_contacts() const{return this->N_zero_contacts;}
+
+/**  Returns the series of contact times stored in `contact_times`
  */
   std::vector<double> get_contact_times_series() const{return this->contact_times;}
 
@@ -111,6 +113,7 @@ public:
     }
   return this->instantaneous_contact_times;
   }
+
 
 /**  Evaluates the current contact times
  */
@@ -145,24 +148,6 @@ public:
               this->first_contact_times[index1][index2]=time;
             }}
         else{update_contact_times_when_not_in_contact(time, index1,index2);} // // pid1 and pid2 are not in contact now
-        
-        
-        
-        /*
-        if (is_target_in_vec(neighbor_pids,id2)){ // id1 and id2 are in the same neighbor list
-          auto p1 = cell_structure.get_local_particle(id1);
-          auto p2 = cell_structure.get_local_particle(id2);
-          auto const dist =  box_geo.get_mi_vector(p1->pos(), p2->pos()).norm();  
-          if (dist < contact_threshold) { // pid1 and pid2 are in contact now
-            if (!(this->contacts[index1][index2])){ // but they were not in contact before!
-              this->contacts[index1][index2]=true;
-              this->first_contact_times[index1][index2]=time;
-            }
-          }
-          else{update_contact_times_when_not_in_contact(time, index1,index2);} // // pid1 and pid2 are not in contact now               
-        }
-        else{update_contact_times_when_not_in_contact(time, index1,index2);} // // pid1 and pid2 are not in contact now
-        */
       }
     }
     return {}; 

@@ -684,12 +684,14 @@ class ContactTimes(TimeObservable):
 
     """
     _so_name = "Observables::ContactTimes"
-    _so_bind_methods = ("shape",
+    _so_bind_methods = ("clean_contact_times",
+                        "get_instantaneous_contact_times",
+                        "get_contact_times_series",
+                        "get_number_of_zero_contacts",
+                        "shape",
                         "shape_instantaneous_contact_time",
                         "shape_contact_time_series",
-                        "get_instantaneous_contact_times",
-                        "clean_contact_times",
-                        "get_contact_times_series")
+                        )
     def instantaneous_contact_times(self):
         contact_times=self.call_method("get_instantaneous_contact_times")
         if contact_times is None:
