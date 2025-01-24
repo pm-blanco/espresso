@@ -648,8 +648,12 @@ class ParticleDistances(Observable):
 
 @script_interface_register
 class ContactTimes(TimeObservable):
-
-    """Tracks the time evolution of contacts between `ids` and `target_ids` within a given `contact_threshold`.
+    """Tracks the contact time  between `ids` and `target_ids` within a given `contact_threshold`.
+       For a given pair of particles, their contact time is defined as $\tau = t_f - t_0$, where 
+       $t_f$ is the last measured time at which those particles were in contact and
+       $t_0$ the first measured time at which those particles were in contact.
+       For example, if two particles have been only in contact during one time step,
+       their contact time is $\tau = 0$.
         
 
     Parameters
@@ -687,7 +691,6 @@ class ContactTimes(TimeObservable):
     _so_bind_methods = ("clean_contact_times",
                         "get_instantaneous_contact_times",
                         "get_contact_times_series",
-                        "get_number_of_zero_contacts",
                         "shape",
                         "shape_instantaneous_contact_time",
                         "shape_contact_time_series",

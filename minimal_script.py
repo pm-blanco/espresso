@@ -24,23 +24,11 @@ def calculate_contact_times(accumulator_ids1,accumulator_ids2,contact_threshold,
     n_ids1=len(first_coord_set_ids)
     n_ids2=len(first_coord_set_target)
     contacts=np.zeros((n_ids1,n_ids2))
-    first_time_contact=np.zeros((n_ids1,n_ids2))
-    number_of_zero_contacts=0
-    # Check the contacts in the initial configuration
-    for index1 in range(n_ids1):
-        for index2 in range(n_ids2):
-            dist=calculate_minimum_image_distance(first_coord_set_ids[index1],
-                                                  first_coord_set_target[index2], 
-                                                  system.box_l)
-            if dist < contact_threshold:
-                contacts[index1][index2]=True
-            else:
-                contacts[index1][index2]=False
-                number_of_zero_contacts+=1
+    time_first_contact=np.zeros((n_ids1,n_ids2))
     # Calculate contact times:
-    frame_time=system.time_step
-    non_zero_contact_times=[]
-    for n_coord in range(1,n_coords):
+    frame_time=0
+    contact_times=[]
+    for n_coord in range(n_coords):
         coord_set_ids=coords_ids[n_coord]
         coord_set_target=coords_target[n_coord]
         for index1 in range(n_ids1):
@@ -53,17 +41,17 @@ def calculate_contact_times(accumulator_ids1,accumulator_ids2,contact_threshold,
                 if dist < contact_threshold:   # They are in contact now
                     if not contacts[index1][index2]: # but they were not contact before!   
                         contacts[index1][index2]=True
-                        first_time_contact[index1][index2]=frame_time
+                        time_first_contact[index1][index2]=frame_time
                 else: # They are not in contact
                     if contacts[index1][index2]: # but they were in contact before! 
                         # Calculate the total contact time
-                        contact_time=frame_time-first_time_contact[index1][index2]
+                        contact_time=frame_time-time_first_contact[index1][index2]-system.time_step
+                        if (contact_time < system.time_step): #Avoid rounding errors
+                            contact_time=0
                         contacts[index1][index2]=False
-                        non_zero_contact_times.append(float(contact_time))
-                    else:
-                        number_of_zero_contacts+=1
+                        contact_times.append(float(contact_time))
         frame_time+=system.time_step
-    return {"number_of_zero_contacts":number_of_zero_contacts, "non_zero_contact_times":non_zero_contact_times}
+    return contact_times
 
 def calculate_minimum_image_distance(coords1, coords2, size_box):
     """
@@ -102,7 +90,7 @@ def calculate_minimum_image_distance(coords1, coords2, size_box):
     return np.sqrt(dist2)
 
 # Switch to use the Python or the C++ implementation
-mode="python" # supported modes are 'python' and 'c++'
+mode="c++" # supported modes are 'python' and 'c++'
 
 # System: LJ fluid
 cutoff=3
@@ -115,7 +103,7 @@ seed=42
 volume_fraction=0.01
 effective_radi=(sigma+offset)/2
 # Simulation parameters
-N_steps=10000
+N_steps=100000
 box_l = (4./3.*N*np.pi*effective_radi**3/volume_fraction)**(1./3.)
 system = espressomd.System(box_l=[box_l]*3)
 system.time_step = 0.01
@@ -143,11 +131,12 @@ system.non_bonded_inter[0,0].lennard_jones.set_params(epsilon = epsilon,
                                                       offset  = offset,
                                                       shift   = "auto")
 
+
 # Setup the observables to track the contact time
 if mode == "c++":
     obs = espressomd.observables.ContactTimes(ids=ids,
-                                            target_ids=ids,
-                                            contact_threshold=contact_threshold)
+                                              target_ids=ids,
+                                              contact_threshold=contact_threshold)
     
 elif mode == "python":
     # in python, the contact time needs to be calculated a posteriori from the time series of the trajectories
@@ -156,8 +145,9 @@ elif mode == "python":
     accumulator_target_ids = espressomd.accumulators.TimeSeries(obs=obs_target_ids, 
                                                                 delta_N=1)
     system.auto_update_accumulators.add(accumulator_target_ids)    
+
 accumulator = espressomd.accumulators.TimeSeries(obs=obs, 
-                                                delta_N=1)
+                                                 delta_N=1)
 system.auto_update_accumulators.add(accumulator)
 
 # Run the simulation
@@ -165,18 +155,15 @@ system.integrator.run(N_steps)
 
 # Get the contact time
 if mode == "c++":
-    non_zero_contact_times=obs.contact_times_series()
-    N_zero_contacts = obs.get_number_of_zero_contacts()
-    res = {"number_of_zero_contacts":N_zero_contacts, "non_zero_contact_times": list(non_zero_contact_times)}
+    contact_times=list(obs.contact_times_series())
 elif mode == "python":
-    res = calculate_contact_times(accumulator_ids1=accumulator,
-                            accumulator_ids2=accumulator_target_ids,
-                            contact_threshold=contact_threshold,
-                            system=system)
-    other_contact_times=res["non_zero_contact_times"]
-    N_zero_contacts=res["number_of_zero_contacts"]
+    contact_times = calculate_contact_times(accumulator_ids1=accumulator,
+                                            accumulator_ids2=accumulator_target_ids,
+                                            contact_threshold=contact_threshold,
+                                            system=system)
+    
 
 # Output the data as a json dictionary
 with open(f"contact_times_{mode}.json", "w") as outfile: 
-    json.dump(res, outfile)
+    json.dump({"contact_times":contact_times}, outfile)
 

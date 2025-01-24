@@ -44,7 +44,6 @@ public:
   mutable std::vector<std::vector<bool>> contacts;
   mutable std::vector<std::vector<double>> first_contact_times;
   mutable std::vector<double> instantaneous_contact_times;
-  mutable int N_zero_contacts;
   mutable bool initialization;
 
   explicit ContactTimes(std::vector<int> const &ids, std::vector<int> const &target_ids, double contact_threshold): 
@@ -59,33 +58,14 @@ public:
     double time = system.get_sim_time();
     this->first_contact_times = std::vector<std::vector<double>>(n_ids, std::vector<double>(n_target_ids, time));
     this->contacts = std::vector<std::vector<bool>>(n_ids, std::vector<bool>(n_target_ids, false));
-    this->N_zero_contacts=0;
     }
     
- /**  When particles with indexes `index1` and `index2` are not in contact: 
- *    if they were in contact before: update the contact map `contacts` and store the total contact time in `contact_times`
- *    if they were not in contact before: update the count of zero contacts `N_zero_contacts`
- */
-  void update_contact_times_when_not_in_contact(double time, int index1, int index2) const{
-    if (this->contacts[index1][index2]){ // index1 and index2 are not in contact now but they were before
-      // # Calculate the total contact time
-      auto first_contact_time = this->first_contact_times[index1][index2];
-      auto contact_time = time - first_contact_time;
-      this->contacts[index1][index2] = false;
-      this->contact_times.push_back(contact_time);
-    }
-    else{this->N_zero_contacts+=1;} // index1 and index2 are not in contact now and they were not before
-  }
 
 /**  Cleans up the series of contact times in memory
  */
   void clean_contact_times()const{
     this -> contact_times.clear();
     this -> instantaneous_contact_times.clear();}
-
-/**  Returns the total number of zero contacts
- */
-  int get_number_of_zero_contacts() const{return this->N_zero_contacts;}
 
 /**  Returns the series of contact times stored in `contact_times`
  */
@@ -128,6 +108,7 @@ public:
     auto &cell_structure = *system.cell_structure;
     auto neighbor_map = get_neighbor_pids(system);
     double time = system.get_sim_time();
+    double dt = system.get_time_step();
     auto ids1=this->ids();
     auto ids2=this->target_ids;
 
@@ -147,7 +128,16 @@ public:
               this->contacts[index1][index2]=true;
               this->first_contact_times[index1][index2]=time;
             }}
-        else{update_contact_times_when_not_in_contact(time, index1,index2);} // // pid1 and pid2 are not in contact now
+        else{ // pid1 and pid2 are not in contact now
+          if (this->contacts[index1][index2]){ // index1 and index2 are not in contact now but they were before
+            // # Calculate the total contact time
+            auto first_contact_time = this->first_contact_times[index1][index2];
+            auto contact_time = time - first_contact_time - dt;
+            if (contact_time < dt){contact_time=0;}
+            this->contacts[index1][index2] = false;
+            this->contact_times.push_back(contact_time);
+          }
+        } 
       }
     }
     return {}; 
