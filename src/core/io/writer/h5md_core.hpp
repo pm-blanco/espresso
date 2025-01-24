@@ -19,8 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CORE_IO_WRITER_H5MD_CORE_HPP
-#define CORE_IO_WRITER_H5MD_CORE_HPP
+#pragma once
 
 #include "BoxGeometry.hpp"
 #include "ParticleRange.hpp"
@@ -31,9 +30,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/mpi/communicator.hpp>
 
-#include <h5xx/h5xx.hpp>
-
 #include <cstddef>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
@@ -41,8 +39,8 @@
 #include <utility>
 
 namespace h5xx {
-template <typename T, std::size_t size>
-struct is_array<Utils::Vector<T, size>> : std::true_type {};
+class file;
+class dataset;
 } // namespace h5xx
 
 namespace Writer {
@@ -89,7 +87,7 @@ static std::unordered_map<std::string, H5MDOutputFields> const fields_map = {
 inline auto fields_list_to_bitfield(std::vector<std::string> const &fields) {
   unsigned int bitfield = H5MD_OUT_NONE;
   for (auto const &field_name : fields) {
-    if (fields_map.count(field_name) == 0) {
+    if (not fields_map.contains(field_name)) {
       throw std::invalid_argument("Unknown field '" + field_name + "'");
     }
     bitfield |= fields_map.at(field_name);
@@ -113,24 +111,12 @@ public:
    * @param force_unit The unit for force.
    * @param velocity_unit The unit for velocity.
    * @param charge_unit The unit for charge.
-   * @param comm The MPI communicator.
    */
   File(std::string file_path, std::string script_path,
        std::vector<std::string> const &output_fields, std::string mass_unit,
        std::string length_unit, std::string time_unit, std::string force_unit,
-       std::string velocity_unit, std::string charge_unit,
-       boost::mpi::communicator comm = boost::mpi::communicator())
-      : m_script_path(std::move(script_path)),
-        m_mass_unit(std::move(mass_unit)),
-        m_length_unit(std::move(length_unit)),
-        m_time_unit(std::move(time_unit)), m_force_unit(std::move(force_unit)),
-        m_velocity_unit(std::move(velocity_unit)),
-        m_charge_unit(std::move(charge_unit)), m_comm(std::move(comm)),
-        m_fields(fields_list_to_bitfield(output_fields)),
-        m_h5md_specification(m_fields) {
-    init_file(file_path);
-  }
-  ~File() = default;
+       std::string velocity_unit, std::string charge_unit);
+  ~File();
 
   /**
    * @brief Method to perform the renaming of the temporary file from
@@ -152,7 +138,7 @@ public:
    * @brief Retrieve the path to the hdf5 file.
    * @return The path as a string.
    */
-  auto file_path() const { return m_h5md_file.name(); }
+  std::string file_path() const;
 
   /**
    * @brief Retrieve the path to the simulation script.
@@ -273,9 +259,9 @@ private:
   unsigned int m_fields;
   std::string m_backup_filename;
   boost::filesystem::path m_absolute_script_path;
-  h5xx::file m_h5md_file;
-  std::unordered_map<std::string, h5xx::dataset> datasets;
-  H5MD_Specification m_h5md_specification;
+  std::unique_ptr<h5xx::file> m_h5md_file;
+  std::unique_ptr<std::unordered_map<std::string, h5xx::dataset>> m_datasets;
+  Specification m_h5md_specification;
 };
 
 struct incompatible_h5mdfile : public std::exception {
@@ -293,4 +279,3 @@ struct left_backupfile : public std::exception {
 
 } /* namespace H5md */
 } /* namespace Writer */
-#endif

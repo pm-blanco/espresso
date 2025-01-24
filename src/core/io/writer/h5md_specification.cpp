@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2022 The ESPResSo project
+ * Copyright (C) 2010-2025 The ESPResSo project
  * Copyright (C) 2002,2003,2004,2005,2006,2007,2008,2009,2010
  *   Max-Planck-Institute for Polymer Research, Theory Group
  *
@@ -19,16 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "h5md_specification.hpp"
-#include "h5md_core.hpp"
-#include "hdf5.h"
+#include "hdf5_patches.hpp" // must appear first
 
+#include "h5md_core.hpp"
+#include "h5md_dataset.hpp"
+#include "h5md_specification.hpp"
+
+#include <h5xx/h5xx.hpp>
+
+#include <hdf5.h>
+
+#include <algorithm>
+#include <string>
 #include <utility>
 
 namespace Writer {
 namespace H5md {
 
-H5MD_Specification::H5MD_Specification(unsigned int fields) {
+Specification::Specification(unsigned int fields) {
   auto const add_time_series = [this](Dataset &&dataset, bool link = true) {
     auto const group = dataset.group;
     m_datasets.push_back(std::move(dataset));
@@ -86,6 +94,20 @@ H5MD_Specification::H5MD_Specification(unsigned int fields) {
     add_time_series(
         {"connectivity/atoms", "value", 3, H5T_NATIVE_INT, 2, false});
   }
+}
+
+bool Specification::is_compliant(std::string const &filename) const {
+  h5xx::file h5md_file(filename, h5xx::file::in);
+
+  auto const all_groups_exist =
+      std::ranges::all_of(m_datasets, [&h5md_file](auto const &d) {
+        return h5xx::exists_group(h5md_file, d.group);
+      });
+  auto const all_datasets_exist =
+      std::ranges::all_of(m_datasets, [&h5md_file](auto const &d) {
+        return h5xx::exists_dataset(h5md_file, d.path());
+      });
+  return all_groups_exist and all_datasets_exist;
 }
 
 } // namespace H5md

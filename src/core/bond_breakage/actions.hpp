@@ -39,12 +39,8 @@ struct DeleteBond {
     boost::hash_combine(seed, bond_type);
     return seed;
   }
-  bool operator==(DeleteBond const &rhs) const {
-    return rhs.particle_id == particle_id and
-           rhs.bond_partner_id == bond_partner_id and
-           rhs.bond_type == bond_type;
-  }
-  bool operator!=(DeleteBond const &rhs) const { return not(*this == rhs); }
+  bool operator==(DeleteBond const &) const = default;
+  bool operator!=(DeleteBond const &) const = default;
 };
 
 struct DeleteAngleBond {
@@ -58,14 +54,8 @@ struct DeleteAngleBond {
     boost::hash_combine(seed, bond_type);
     return seed;
   }
-  bool operator==(DeleteAngleBond const &rhs) const {
-    return rhs.particle_id == particle_id and
-           rhs.bond_partner_id == bond_partner_id and
-           rhs.bond_type == bond_type;
-  }
-  bool operator!=(DeleteAngleBond const &rhs) const {
-    return not(*this == rhs);
-  }
+  bool operator==(DeleteAngleBond const &) const = default;
+  bool operator!=(DeleteAngleBond const &) const = default;
 };
 
 struct DeleteAllBonds {
@@ -77,11 +67,8 @@ struct DeleteAllBonds {
     boost::hash_combine(seed, particle_id_2);
     return seed;
   }
-  bool operator==(DeleteAllBonds const &rhs) const {
-    return rhs.particle_id_1 == particle_id_1 and
-           rhs.particle_id_2 == particle_id_2;
-  }
-  bool operator!=(DeleteAllBonds const &rhs) const { return not(*this == rhs); }
+  bool operator==(DeleteAllBonds const &) const = default;
+  bool operator!=(DeleteAllBonds const &) const = default;
 };
 
 } // namespace BondBreakage

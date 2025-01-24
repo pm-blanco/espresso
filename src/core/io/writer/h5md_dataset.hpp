@@ -21,29 +21,24 @@
 
 #pragma once
 
+#include "hdf5_patches.hpp"
+
+#include <hdf5.h>
+
 #include <string>
-#include <vector>
 
 namespace Writer {
 namespace H5md {
 
-struct Dataset;
+struct Dataset {
+  std::string path() const { return group + "/" + name; }
 
-/**
- * @brief Layout information for H5MD files.
- * In order to add a new particle property you have to add an entry to the
- * H5MD_Specification::DATASETS member and extend the File::write() and the
- * File::write_units() functions accordingly.
- */
-struct Specification {
-  Specification(unsigned int fields);
-
-  auto const &get_datasets() const { return m_datasets; }
-
-  bool is_compliant(std::string const &filename) const;
-
-private:
-  std::vector<Dataset> m_datasets;
+  std::string group;
+  std::string name;
+  hsize_t rank;
+  hid_t type;
+  hsize_t data_dim;
+  bool is_link;
 };
 
 } // namespace H5md

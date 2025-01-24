@@ -44,7 +44,13 @@
 
 namespace ScriptInterface::walberla {
 
-class LBVTKHandle;
+class LBVTKHandle : public VTKHandleBase<::LBWalberlaBase> {
+  static std::unordered_map<std::string, int> const obs_map;
+
+  std::unordered_map<std::string, int> const &get_obs_map() const override {
+    return obs_map;
+  }
+};
 
 class LBFluid : public LatticeModel<::LBWalberlaBase, LBVTKHandle> {
 protected:
@@ -147,14 +153,6 @@ protected:
   void make_instance(VariantMap const &params) override;
 };
 #endif // CUDA
-
-class LBVTKHandle : public VTKHandleBase<::LBWalberlaBase> {
-  static std::unordered_map<std::string, int> const obs_map;
-
-  std::unordered_map<std::string, int> const &get_obs_map() const override {
-    return obs_map;
-  }
-};
 
 } // namespace ScriptInterface::walberla
 

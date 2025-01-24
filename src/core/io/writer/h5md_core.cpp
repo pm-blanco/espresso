@@ -19,18 +19,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "hdf5_patches.hpp" // must appear first
+
 #include "h5md_core.hpp"
+#include "h5md_dataset.hpp"
+#include "h5md_specification.hpp"
 
 #include "BoxGeometry.hpp"
 #include "Particle.hpp"
-#include "h5md_specification.hpp"
 #include "lees_edwards/LeesEdwardsBC.hpp"
 
 #include "config/version.hpp"
 
 #include <utils/Vector.hpp>
 
+#include <boost/array.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/mpi/collectives.hpp>
+#include <boost/multi_array.hpp>
+
+#include <h5xx/h5xx.hpp>
 
 #include <mpi.h>
 
@@ -39,9 +47,15 @@
 #include <fstream>
 #include <functional>
 #include <iterator>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <vector>
+
+namespace h5xx {
+template <typename T, std::size_t size>
+struct is_array<Utils::Vector<T, size>> : std::true_type {};
+} // namespace h5xx
 
 namespace Writer {
 namespace H5md {
@@ -71,7 +85,7 @@ static void extend_dataset(h5xx::dataset &dataset,
   auto const rank = static_cast<h5xx::dataspace>(dataset).rank();
   auto extents = static_cast<h5xx::dataspace>(dataset).extents();
   /* Extend the dataset for another timestep */
-  for (int i = 0; i < rank; i++) {
+  for (auto i = 0u; i < rank; i++) {
     extents[i] += change_extent[i];
   }
   H5Dset_extent(dataset.hid(), extents.data()); // extend all dims is collective
@@ -135,27 +149,28 @@ void File::init_file(std::string const &file_path) {
 }
 
 void File::load_datasets() {
-  for (auto const &d : m_h5md_specification.get_datasets()) {
-    if (d.is_link)
+  auto &datasets = *m_datasets;
+  for (auto const &ds : m_h5md_specification.get_datasets()) {
+    if (ds.is_link)
       continue;
-    datasets[d.path()] = h5xx::dataset(m_h5md_file, d.path());
+    datasets[ds.path()] = h5xx::dataset(*m_h5md_file, ds.path());
   }
 }
 
 void File::create_groups() {
-  h5xx::group group(m_h5md_file);
-  for (auto const &d : m_h5md_specification.get_datasets()) {
-    h5xx::group new_group(group, d.group);
+  h5xx::group group(*m_h5md_file);
+  for (auto const &ds : m_h5md_specification.get_datasets()) {
+    h5xx::group new_group(group, ds.group);
   }
 }
 
 static std::vector<hsize_t> create_dims(hsize_t rank, hsize_t data_dim) {
   switch (rank) {
-  case 3:
-    return std::vector<hsize_t>{0, 0, data_dim};
-  case 2:
-    return std::vector<hsize_t>{0, data_dim};
-  case 1:
+  case 3ul:
+    return std::vector<hsize_t>{0ul, 0ul, data_dim};
+  case 2ul:
+    return std::vector<hsize_t>{0ul, data_dim};
+  case 1ul:
     return std::vector<hsize_t>{data_dim};
   default:
     throw std::runtime_error(
@@ -164,13 +179,13 @@ static std::vector<hsize_t> create_dims(hsize_t rank, hsize_t data_dim) {
 }
 
 static std::vector<hsize_t> create_chunk_dims(hsize_t rank, hsize_t data_dim) {
-  hsize_t chunk_size = (rank > 1) ? 1000 : 1;
+  hsize_t chunk_size = (rank > 1ul) ? 1000ul : 1ul;
   switch (rank) {
-  case 3:
-    return {1, chunk_size, data_dim};
-  case 2:
-    return {1, chunk_size};
-  case 1:
+  case 3ul:
+    return {1ul, chunk_size, data_dim};
+  case 2ul:
+    return {1ul, chunk_size};
+  case 1ul:
     return {chunk_size};
   default:
     throw std::runtime_error(
@@ -180,27 +195,30 @@ static std::vector<hsize_t> create_chunk_dims(hsize_t rank, hsize_t data_dim) {
 
 void File::create_datasets() {
   namespace hps = h5xx::policy::storage;
-  for (const auto &d : m_h5md_specification.get_datasets()) {
-    if (d.is_link)
+  auto &datasets = *m_datasets;
+  for (auto const &ds : m_h5md_specification.get_datasets()) {
+    if (ds.is_link)
       continue;
-    auto maxdims = std::vector<hsize_t>(d.rank, H5S_UNLIMITED);
-    auto dataspace = h5xx::dataspace(create_dims(d.rank, d.data_dim), maxdims);
-    auto storage = hps::chunked(create_chunk_dims(d.rank, d.data_dim))
+    auto maxdims = std::vector<hsize_t>(ds.rank, H5S_UNLIMITED);
+    auto dataspace =
+        h5xx::dataspace(create_dims(ds.rank, ds.data_dim), maxdims);
+    auto storage = hps::chunked(create_chunk_dims(ds.rank, ds.data_dim))
                        .set(hps::fill_value(-10));
-    datasets[d.path()] = h5xx::dataset(m_h5md_file, d.path(), d.type, dataspace,
-                                       storage, H5P_DEFAULT, H5P_DEFAULT);
+    datasets[ds.path()] =
+        h5xx::dataset(*m_h5md_file, ds.path(), ds.type, dataspace, storage,
+                      H5P_DEFAULT, H5P_DEFAULT);
   }
 }
 
 void File::load_file(const std::string &file_path) {
-  m_h5md_file = h5xx::file(file_path, m_comm, MPI_INFO_NULL, h5xx::file::out);
+  *m_h5md_file = h5xx::file(file_path, m_comm, MPI_INFO_NULL, h5xx::file::out);
   load_datasets();
 }
 
 static void write_attributes(h5xx::file &h5md_file) {
   auto h5md_group = h5xx::group(h5md_file, "h5md");
   h5xx::write_attribute(h5md_group, "version",
-                        boost::array<hsize_t, 2>{{1, 1}});
+                        boost::array<hsize_t, 2>{{1ul, 1ul}});
   auto h5md_creator_group = h5xx::group(h5md_group, "creator");
   h5xx::write_attribute(h5md_creator_group, "name", "ESPResSo");
   h5xx::write_attribute(h5md_creator_group, "version", ESPRESSO_VERSION);
@@ -212,34 +230,36 @@ static void write_attributes(h5xx::file &h5md_file) {
 }
 
 void File::write_units() {
+  auto const &datasets = *m_datasets;
   if (!mass_unit().empty() and (m_fields & H5MD_OUT_MASS)) {
-    h5xx::write_attribute(datasets["particles/atoms/mass/value"], "unit",
+    h5xx::write_attribute(datasets.at("particles/atoms/mass/value"), "unit",
                           mass_unit());
   }
   if (!charge_unit().empty() and (m_fields & H5MD_OUT_CHARGE)) {
-    h5xx::write_attribute(datasets["particles/atoms/charge/value"], "unit",
+    h5xx::write_attribute(datasets.at("particles/atoms/charge/value"), "unit",
                           charge_unit());
   }
   if (!length_unit().empty() and (m_fields & H5MD_OUT_BOX_L)) {
-    h5xx::write_attribute(datasets["particles/atoms/position/value"], "unit",
+    h5xx::write_attribute(datasets.at("particles/atoms/position/value"), "unit",
                           length_unit());
-    h5xx::write_attribute(datasets["particles/atoms/box/edges/value"], "unit",
-                          length_unit());
-  }
-  if (!length_unit().empty() and (m_fields & H5MD_OUT_LE_OFF)) {
-    h5xx::write_attribute(datasets["particles/atoms/lees_edwards/offset/value"],
+    h5xx::write_attribute(datasets.at("particles/atoms/box/edges/value"),
                           "unit", length_unit());
   }
+  if (!length_unit().empty() and (m_fields & H5MD_OUT_LE_OFF)) {
+    h5xx::write_attribute(
+        datasets.at("particles/atoms/lees_edwards/offset/value"), "unit",
+        length_unit());
+  }
   if (!velocity_unit().empty() and (m_fields & H5MD_OUT_VEL)) {
-    h5xx::write_attribute(datasets["particles/atoms/velocity/value"], "unit",
+    h5xx::write_attribute(datasets.at("particles/atoms/velocity/value"), "unit",
                           velocity_unit());
   }
   if (!force_unit().empty() and (m_fields & H5MD_OUT_FORCE)) {
-    h5xx::write_attribute(datasets["particles/atoms/force/value"], "unit",
+    h5xx::write_attribute(datasets.at("particles/atoms/force/value"), "unit",
                           force_unit());
   }
   if (!time_unit().empty()) {
-    h5xx::write_attribute(datasets["particles/atoms/id/time"], "unit",
+    h5xx::write_attribute(datasets.at("particles/atoms/id/time"), "unit",
                           time_unit());
   }
 }
@@ -256,7 +276,7 @@ void File::create_hard_links() {
         from = path_time.c_str();
       }
       assert(from != nullptr);
-      if (H5Lcreate_hard(m_h5md_file.hid(), from, m_h5md_file.hid(),
+      if (H5Lcreate_hard(m_h5md_file->hid(), from, m_h5md_file->hid(),
                          ds.path().c_str(), H5P_DEFAULT, H5P_DEFAULT) < 0) {
         throw std::runtime_error("Error creating hard link for " + ds.path());
       }
@@ -268,10 +288,11 @@ void File::create_file(const std::string &file_path) {
   if (m_comm.rank() == 0)
     write_script(file_path, m_absolute_script_path);
   m_comm.barrier();
-  m_h5md_file = h5xx::file(file_path, m_comm, MPI_INFO_NULL, h5xx::file::out);
+  m_h5md_file = std::make_unique<h5xx::file>(file_path, m_comm, MPI_INFO_NULL,
+                                             h5xx::file::out);
   create_groups();
   create_datasets();
-  write_attributes(m_h5md_file);
+  write_attributes(*m_h5md_file);
   write_units();
   create_hard_links();
 }
@@ -355,6 +376,7 @@ static void write_le_normal(LeesEdwardsBC const &lebc, h5xx::dataset &dataset) {
 
 void File::write(const ParticleRange &particles, double time, int step,
                  BoxGeometry const &box_geo) {
+  auto &datasets = *m_datasets;
   if (m_fields & H5MD_OUT_BOX_L) {
     write_box(box_geo, datasets["particles/atoms/box/edges/value"]);
   }
@@ -458,6 +480,7 @@ void File::write_connectivity(const ParticleRange &particles) {
   }
 
   auto const n_bonds_local = static_cast<int>(bond.shape()[1]);
+  auto &datasets = *m_datasets;
   int prefix_bonds = 0;
   BOOST_MPI_CHECK_RESULT(
       MPI_Exscan, (&n_bonds_local, &prefix_bonds, 1, MPI_INT, MPI_SUM, m_comm));
@@ -475,7 +498,28 @@ void File::write_connectivity(const ParticleRange &particles) {
                 offset_bonds, count_bonds);
 }
 
-void File::flush() { m_h5md_file.flush(); }
+void File::flush() { m_h5md_file->flush(); }
+
+std::string File::file_path() const { return m_h5md_file->name(); }
+
+File::File(std::string file_path, std::string script_path,
+           std::vector<std::string> const &output_fields, std::string mass_unit,
+           std::string length_unit, std::string time_unit,
+           std::string force_unit, std::string velocity_unit,
+           std::string charge_unit)
+    : m_script_path(std::move(script_path)), m_mass_unit(std::move(mass_unit)),
+      m_length_unit(std::move(length_unit)), m_time_unit(std::move(time_unit)),
+      m_force_unit(std::move(force_unit)),
+      m_velocity_unit(std::move(velocity_unit)),
+      m_charge_unit(std::move(charge_unit)), m_comm(boost::mpi::communicator()),
+      m_fields(fields_list_to_bitfield(output_fields)),
+      m_h5md_file(std::make_unique<h5xx::file>()),
+      m_datasets(std::make_unique<decltype(m_datasets)::element_type>()),
+      m_h5md_specification(m_fields) {
+  init_file(file_path);
+}
+
+File::~File() = default;
 
 } /* namespace H5md */
 } /* namespace Writer */
