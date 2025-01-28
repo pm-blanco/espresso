@@ -25,9 +25,20 @@ import lbmpy.updatekernels
 import pystencils as ps
 import pystencils_walberla
 import pystencils_walberla.utility
+from pystencils import TypedSymbol
 
-from pystencils.astnodes import LoopOverCoordinate
-from pystencils.backends.cbackend import CustomCodeNode
+try:
+    # pystencils < 2.0
+    from pystencils.backends.cbackend import CustomCodeNode
+    from pystencils.astnodes import LoopOverCoordinate
+    get_loop_counter_symbol = LoopOverCoordinate.get_loop_counter_symbol
+except ImportError:
+    # pystencils >= 2.0
+    CustomCodeNode = None
+    from pystencils.defaults import DEFAULTS
+
+    def get_loop_counter_symbol(i):
+        return TypedSymbol(DEFAULTS.spatial_counters[i], np.uint32)
 
 
 def skip_philox_unthermalized(code, result_symbols, rng_name):
@@ -50,7 +61,7 @@ class PhiloxTwoDoubles(ps.rng.PhiloxTwoDoubles):
 
 
 class PhiloxTwoDoublesModulo(ps.rng.PhiloxTwoDoubles):
-    def __init__(self, dim, time_step=ps.typing.TypedSymbol(
+    def __init__(self, dim, time_step=TypedSymbol(
             "time_step", np.uint32), *args, **kwargs):
         super().__init__(dim, time_step=time_step, *args, **kwargs)
 
@@ -65,16 +76,13 @@ class PhiloxTwoDoublesModulo(ps.rng.PhiloxTwoDoubles):
             offsets = kwargs.get("offsets")
 
         coordinates = [
-            LoopOverCoordinate.get_loop_counter_symbol(i) +
-            offsets[i] for i in range(dim)]
+            get_loop_counter_symbol(i) + offsets[i] for i in range(dim)]
         if dim < 3:
             coordinates.append(0)
 
         # add folding to coordinates with symbols
         field_sizes = [
-            ps.typing.TypedSymbol(
-                f"field_size_{i}",
-                np.uint32) for i in range(dim)]
+            TypedSymbol(f"field_size_{i}", np.uint32) for i in range(dim)]
 
         new_coordinates = [
             (coord) %
@@ -88,11 +96,12 @@ class PhiloxTwoDoublesModulo(ps.rng.PhiloxTwoDoubles):
         headers = self.headers
         # set headers again, since the constructor of CustomCodeNode resets the
         # header-list
-        CustomCodeNode.__init__(
-            self,
-            "",
-            symbols_read=symbols_read,
-            symbols_defined=self.result_symbols)
+        if CustomCodeNode is not None:
+            CustomCodeNode.__init__(
+                self,
+                "",
+                symbols_read=symbols_read,
+                symbols_defined=self.result_symbols)
         self.headers = headers
 
 
@@ -103,7 +112,7 @@ class PhiloxFourFloats(ps.rng.PhiloxFourFloats):
 
 
 class PhiloxFourFloatsModulo(ps.rng.PhiloxFourFloats):
-    def __init__(self, dim, time_step=ps.typing.TypedSymbol(
+    def __init__(self, dim, time_step=TypedSymbol(
             "time_step", np.uint32), *args, **kwargs):
         super().__init__(dim, time_step=time_step, *args, **kwargs)
 
@@ -118,16 +127,13 @@ class PhiloxFourFloatsModulo(ps.rng.PhiloxFourFloats):
             offsets = kwargs.get("offsets")
 
         coordinates = [
-            LoopOverCoordinate.get_loop_counter_symbol(i) +
-            offsets[i] for i in range(dim)]
+            get_loop_counter_symbol(i) + offsets[i] for i in range(dim)]
         if dim < 3:
             coordinates.append(0)
 
         # add folding to coordinates with symbols
         field_sizes = [
-            ps.typing.TypedSymbol(
-                f"field_size_{i}",
-                np.uint32) for i in range(dim)]
+            TypedSymbol(f"field_size_{i}", np.uint32) for i in range(dim)]
 
         new_coordinates = [
             (coord) %
@@ -161,11 +167,9 @@ precision_rng = {
 precision_rng_modulo = {
     True: PhiloxTwoDoublesModulo,
     False: PhiloxFourFloatsModulo}
-data_type_np = {'double': 'float64', 'float': 'float32'}
 
 
-def generate_fields(config, stencil, field_layout='fzyx'):
-    dtype = data_type_np[config.data_type.default_factory().c_name]
+def generate_fields(stencil, data_type, field_layout='fzyx'):
     q = len(stencil)
     dim = len(stencil[0])
 
@@ -174,7 +178,7 @@ def generate_fields(config, stencil, field_layout='fzyx'):
     fields['pdfs'] = ps.Field.create_generic(
         'pdfs',
         dim,
-        dtype,
+        data_type,
         index_dimensions=1,
         layout=field_layout,
         index_shape=(q,)
@@ -182,7 +186,7 @@ def generate_fields(config, stencil, field_layout='fzyx'):
     fields['pdfs_tmp'] = ps.Field.create_generic(
         'pdfs_tmp',
         dim,
-        dtype,
+        data_type,
         index_dimensions=1,
         layout=field_layout,
         index_shape=(q,)
@@ -190,7 +194,7 @@ def generate_fields(config, stencil, field_layout='fzyx'):
     fields['velocity'] = ps.Field.create_generic(
         'velocity',
         dim,
-        dtype,
+        data_type,
         index_dimensions=1,
         layout=field_layout,
         index_shape=(dim,)
@@ -198,7 +202,7 @@ def generate_fields(config, stencil, field_layout='fzyx'):
     fields['force'] = ps.Field.create_generic(
         'force',
         dim,
-        dtype,
+        data_type,
         index_dimensions=1,
         layout=field_layout,
         index_shape=(dim,)
@@ -240,13 +244,13 @@ def generate_pack_info_pdfs_field_assignments(fields, streaming_pattern):
 
 
 def generate_pack_info_field_specifications(
-        config, stencil, layout, vec_len=3):
+        stencil, data_type, layout, vec_len=3):
     import collections
     import itertools
     field = ps.Field.create_generic(
         "field",
         3,
-        data_type_np[config.data_type.default_factory().c_name],
+        data_type,
         index_dimensions=1,
         layout=layout,
         index_shape=(vec_len,)
@@ -267,11 +271,11 @@ def generate_config(ctx, params):
 
 
 def generate_collision_sweep(
-        ctx, lb_method, collision_rule, class_name, params, **kwargs):
+        ctx, lb_method, data_type, collision_rule, class_name, params, **kwargs):
     config = generate_config(ctx, params)
 
     # Symbols for PDF (twice, due to double buffering)
-    fields = generate_fields(config, lb_method.stencil)
+    fields = generate_fields(lb_method.stencil, data_type)
 
     # Generate collision kernel
     collide_update_rule = lbmpy.updatekernels.create_lbm_kernel(
@@ -287,11 +291,11 @@ def generate_collision_sweep(
         ctx, class_name, collide_ast, **params, **kwargs)
 
 
-def generate_stream_sweep(ctx, lb_method, class_name, params):
+def generate_stream_sweep(ctx, lb_method, data_type, class_name, params):
     config = generate_config(ctx, params)
 
     # Symbols for PDF (twice, due to double buffering)
-    fields = generate_fields(config, lb_method.stencil)
+    fields = generate_fields(lb_method.stencil, data_type)
 
     # Generate stream kernel
     stream_update_rule = lbmpy.updatekernels.create_stream_pull_with_output_kernel(
@@ -305,9 +309,8 @@ def generate_stream_sweep(ctx, lb_method, class_name, params):
         field_swaps=[(fields['pdfs'], fields['pdfs_tmp'])], **params)
 
 
-def generate_setters(ctx, lb_method, params):
-    config = generate_config(ctx, params)
-    fields = generate_fields(config, lb_method.stencil)
+def generate_setters(lb_method, data_type):
+    fields = generate_fields(lb_method.stencil, data_type)
 
     initial_rho = sp.Symbol('rho_0')
     pdfs_setter = lbmpy.macroscopic_value_kernels.macroscopic_values_setter(
@@ -316,20 +319,3 @@ def generate_setters(ctx, lb_method, params):
         fields['velocity'].center_vector,
         fields['pdfs'].center_vector)
     return pdfs_setter
-
-
-# this can be removed when https://i10git.cs.fau.de/walberla/walberla/-/issues/247 is fixed
-def generate_staggered_flux_boundary(generation_context, class_name, boundary_object,
-                                     dim, neighbor_stencil, index_shape, target=ps.Target.CPU, **kwargs):
-    assert dim == len(neighbor_stencil[0])
-    pystencils_walberla.boundary.generate_boundary(
-        generation_context=generation_context,
-        class_name=class_name,
-        boundary_object=boundary_object,
-        field_name='flux',
-        neighbor_stencil=neighbor_stencil,
-        index_shape=index_shape,
-        field_type=ps.FieldType.STAGGERED_FLUX,
-        kernel_creation_function=None,
-        target=target,
-        **kwargs)

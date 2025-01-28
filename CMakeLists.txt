@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2009-2022 The ESPResSo project
+# Copyright (C) 2009-2025 The ESPResSo project
 # Copyright (C) 2009,2010
 #   Max-Planck-Institute for Polymer Research, Theory Group
 #
@@ -51,14 +51,26 @@ endmacro()
 espresso_minimal_compiler_version("GNU" 10.5.0)
 espresso_minimal_compiler_version("Clang" 14.0.0)
 espresso_minimal_compiler_version("AppleClang" 14.0.0)
-espresso_minimal_compiler_version("Intel" 2021.9)
 espresso_minimal_compiler_version("IntelLLVM" 2023.1)
+
+set(UNSUPPORTED_COMPILERS "Intel;MSVC")
+if(CMAKE_CXX_COMPILER_ID IN_LIST UNSUPPORTED_COMPILERS)
+  message(FATAL_ERROR "Unsupported compiler ${CMAKE_CXX_COMPILER_ID}")
+endif()
 
 include(FeatureSummary)
 include(GNUInstallDirs)
 include(FetchContent)
 include(espresso_option_enum)
 include(espresso_enable_avx2_support)
+include(espresso_override_clang_tidy_checks)
+
+if(EXISTS "${PROJECT_BINARY_DIR}/CMakeLists.txt")
+  message(
+    FATAL_ERROR
+      "${PROJECT_NAME} cannot be built in-place. Instead, create a build directory and run CMake from there. A new file 'CMakeCache.txt' and a new folder 'CMakeFiles' have just been created by CMake in the current folder and need to be removed."
+  )
+endif()
 
 #
 # CMake internal vars
@@ -71,6 +83,10 @@ espresso_option_enum(
   "Debug;Release;RelWithDebInfo;MinSizeRel;Coverage;RelWithAssert")
 set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_COVERAGE} -Og -g")
 set(CMAKE_CXX_FLAGS_RELWITHASSERT "${CMAKE_CXX_FLAGS_RELWITHASSERT} -O3 -g")
+
+# build targets as static libraries unless otherwise specified
+set(ESPRESSO_BUILD_SHARED_LIBS_DEFAULT OFF)
+set(BUILD_SHARED_LIBS ${ESPRESSO_BUILD_SHARED_LIBS_DEFAULT})
 
 # On Mac OS X, first look for other packages, then frameworks
 set(CMAKE_FIND_FRAMEWORK LAST)
@@ -86,7 +102,7 @@ set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 FetchContent_Declare(
   walberla
   GIT_REPOSITORY https://i10git.cs.fau.de/walberla/walberla.git
-  GIT_TAG        b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+  GIT_TAG        f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 )
 FetchContent_Declare(
   stokesian_dynamics
@@ -94,9 +110,14 @@ FetchContent_Declare(
   GIT_TAG        862a7537a366f0c32f0c25e46bd107bea590faea
 )
 FetchContent_Declare(
+  h5xx
+  GIT_REPOSITORY https://github.com/h5md/h5xx.git
+  GIT_TAG        0.9.1
+)
+FetchContent_Declare(
   caliper
   GIT_REPOSITORY https://github.com/LLNL/Caliper.git
-  GIT_TAG        v2.10.0
+  GIT_TAG        v2.12.0
 )
 # cmake-format: on
 
@@ -122,6 +143,8 @@ option(ESPRESSO_BUILD_BENCHMARKS "Enable benchmarks" OFF)
 option(ESPRESSO_BUILD_WITH_VALGRIND "Build with Valgrind instrumentation" OFF)
 option(ESPRESSO_BUILD_WITH_CALIPER "Build with Caliper instrumentation" OFF)
 option(ESPRESSO_BUILD_WITH_CPPCHECK "Run Cppcheck during compilation" OFF)
+option(ESPRESSO_BUILD_WITH_FPE
+       "Build with floating-point exceptions instrumentation" OFF)
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   option(ESPRESSO_BUILD_WITH_CLANG_TIDY "Run Clang-Tidy during compilation" OFF)
 endif()
@@ -251,7 +274,7 @@ endif()
 # Python interpreter and Cython interface library
 if(ESPRESSO_BUILD_WITH_PYTHON)
   find_package(Python 3.10 REQUIRED COMPONENTS Interpreter Development NumPy)
-  find_package(Cython 0.29.28...<3.0.10 REQUIRED)
+  find_package(Cython 0.29.28...<3.0.12 REQUIRED)
   find_program(IPYTHON_EXECUTABLE NAMES jupyter ipython3 ipython)
 endif()
 
@@ -267,6 +290,8 @@ set(ESPRESSO_INSTALL_BINDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}")
 # folder for C++ and CUDA shared objects
 set(ESPRESSO_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 
+set(ESPRESSO_OLD_CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_LIBDIR}")
+
 # python site-packages, can be overriden with CMake options
 if(ESPRESSO_BUILD_WITH_PYTHON)
   if(NOT ESPRESSO_INSTALL_PYTHON)
@@ -280,6 +305,174 @@ if(ESPRESSO_BUILD_WITH_PYTHON)
   endif()
   # override: package C++, CUDA and Cython shared objects together
   set(ESPRESSO_INSTALL_LIBDIR "${ESPRESSO_INSTALL_PYTHON}/espressomd")
+endif()
+
+#
+# Compiler flags: must be added to all ESPResSo targets
+#
+
+add_library(espresso_cpp_flags INTERFACE)
+add_library(espresso::cpp_flags ALIAS espresso_cpp_flags)
+
+#
+# Compiler diagnostics
+#
+
+target_compile_options(
+  espresso_cpp_flags
+  INTERFACE
+    -Wall
+    -Wextra
+    -pedantic
+    # add extra warnings
+    $<$<CXX_COMPILER_ID:Clang>:-Wextern-initializer>
+    $<$<CXX_COMPILER_ID:Clang>:-Wrange-loop-analysis>
+    -Wfloat-conversion
+    $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wimplicit-float-conversion>
+    $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wunused-exception-parameter>
+    $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wmissing-variable-declarations>
+    $<$<CXX_COMPILER_ID:Clang>:-Wnon-c-typedef-for-linkage>
+    -Wdelete-non-virtual-dtor
+    # disable warnings from -Wall and -Wextra
+    -Wno-sign-compare
+    -Wno-unused-function
+    -Wno-unused-parameter
+    -Wno-array-bounds
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-restrict>
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-clobbered>
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-cast-function-type>
+    $<$<CXX_COMPILER_ID:IntelLLVM>:-diag-disable=592>
+    $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-gnu-zero-variadic-macro-arguments>
+    $<$<NOT:$<CXX_COMPILER_ID:IntelLLVM>>:-Wno-implicit-fallthrough>
+    $<$<NOT:$<CXX_COMPILER_ID:IntelLLVM,GNU>>:-Wno-unused-private-field>
+    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},arm>>:-Wno-psabi>
+    # warnings are errors
+    $<$<BOOL:${ESPRESSO_WARNINGS_ARE_ERRORS}>:-Werror>)
+
+if(ESPRESSO_BUILD_WITH_CUDA)
+  target_compile_options(
+    espresso_cuda_flags
+    INTERFACE
+      -Wall
+      -Wextra
+      -Wno-sign-compare
+      -Wno-unused-parameter
+      $<$<NOT:$<CXX_COMPILER_ID:IntelLLVM>>:-Wno-implicit-fallthrough>
+      # warnings are errors
+      $<$<AND:$<BOOL:${ESPRESSO_WARNINGS_ARE_ERRORS}>,$<CUDA_COMPILER_ID:NVIDIA>>:--Werror=all-warnings>
+      $<$<AND:$<BOOL:${ESPRESSO_WARNINGS_ARE_ERRORS}>,$<CUDA_COMPILER_ID:Clang>>:-Werror>
+  )
+endif()
+
+#
+# Code coverage
+#
+
+if(ESPRESSO_BUILD_WITH_COVERAGE)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(
+      espresso_cpp_flags INTERFACE -g -fprofile-instr-generate
+                                   -fcoverage-mapping)
+  else()
+    target_compile_options(espresso_cpp_flags INTERFACE -g --coverage
+                                                        -fprofile-abs-path)
+    target_link_libraries(espresso_cpp_flags INTERFACE gcov)
+  endif()
+endif()
+
+#
+# Portability options
+#
+
+# prevent 80-bit arithmetic on old Intel processors
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_SIZEOF_VOID_P EQUAL 4
+   AND CMAKE_SYSTEM_PROCESSOR MATCHES "[xX]86")
+  target_compile_options(espresso_cpp_flags INTERFACE -ffloat-store)
+endif()
+
+#
+# Sanitizers
+#
+
+if(ESPRESSO_BUILD_WITH_ASAN AND ESPRESSO_BUILD_WITH_MSAN)
+  message(
+    FATAL_ERROR
+      "Address sanitizer and memory sanitizer cannot be enabled simultaneously")
+endif()
+if(ESPRESSO_BUILD_WITH_ASAN)
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g -O1")
+  target_compile_options(espresso_cpp_flags INTERFACE -fsanitize=address
+                                                      -fno-omit-frame-pointer)
+  target_link_libraries(espresso_cpp_flags INTERFACE -fsanitize=address)
+  if(ESPRESSO_BUILD_WITH_CUDA)
+    target_link_libraries(espresso_cuda_flags INTERFACE -fsanitize=address)
+  endif()
+endif()
+if(ESPRESSO_BUILD_WITH_MSAN)
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g -O1")
+  target_compile_options(espresso_cpp_flags INTERFACE -fsanitize=memory
+                                                      -fno-omit-frame-pointer)
+  target_link_libraries(espresso_cpp_flags INTERFACE -fsanitize=memory)
+  if(ESPRESSO_BUILD_WITH_CUDA)
+    target_link_libraries(espresso_cuda_flags INTERFACE -fsanitize=memory)
+  endif()
+endif()
+if(ESPRESSO_BUILD_WITH_UBSAN)
+  target_compile_options(espresso_cpp_flags INTERFACE -fsanitize=undefined)
+  target_link_libraries(espresso_cpp_flags INTERFACE -fsanitize=undefined)
+  if(ESPRESSO_BUILD_WITH_CUDA)
+    target_link_libraries(espresso_cuda_flags INTERFACE -fsanitize=undefined)
+  endif()
+endif()
+
+#
+# Static analysis
+#
+
+if(ESPRESSO_BUILD_WITH_CLANG_TIDY)
+  find_package(ClangTidy "${CMAKE_CXX_COMPILER_VERSION}" EXACT REQUIRED)
+  set(ESPRESSO_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+  set(ESPRESSO_CUDA_CLANG_TIDY "${CLANG_TIDY_EXE};--extra-arg=--cuda-host-only")
+  set(SKIP_CLANG_TIDY_CHECKS "")
+  set(SKIP_CLANG_TIDY_CHECKS_CXX "")
+  set(SKIP_CLANG_TIDY_CHECKS_CUDA "")
+  if(ESPRESSO_BUILD_WITH_CALIPER)
+    # Clang-Tidy sometimes emits diagnostics in code enclosed in `extern "C"`
+    # that are not always actionable, since they may rely on keywords only
+    # available in the C++ language. While some checks have an extra flag
+    # 'IgnoreExternC' to disable them inside C code, not all affected checks
+    # have been fixed yet. For an in-depth discussion on this topic, see
+    # https://github.com/llvm/llvm-project/issues/35272
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-auto")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-nullptr")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-deprecated-headers")
+  endif()
+  if(ESPRESSO_BUILD_WITH_CUDA)
+    # silence casts in cuda_runtime.h (for both C++ and CUDA source files)
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-casting-through-void")
+    # silence nullptr dereference in cuda::thrust
+    list(APPEND SKIP_CLANG_TIDY_CHECKS_CUDA
+         "-clang-analyzer-core.NonNullParamChecker")
+  endif()
+  espresso_override_clang_tidy_checks(
+    ESPRESSO_CXX_CLANG_TIDY "${SKIP_CLANG_TIDY_CHECKS}"
+    "${SKIP_CLANG_TIDY_CHECKS_CXX}")
+  espresso_override_clang_tidy_checks(
+    ESPRESSO_CUDA_CLANG_TIDY "${SKIP_CLANG_TIDY_CHECKS}"
+    "${SKIP_CLANG_TIDY_CHECKS_CUDA}")
+endif()
+
+if(ESPRESSO_BUILD_WITH_CPPCHECK)
+  find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
+  if(NOT CMAKE_CXX_CPPCHECK)
+    message(FATAL_ERROR "Could not find the program cppcheck.")
+  endif()
+  list(APPEND CMAKE_CXX_CPPCHECK "--enable=all"
+       "--std=c++${CMAKE_CXX_STANDARD}" "--quiet" "--inline-suppr"
+       "--suppressions-list=${CMAKE_CURRENT_SOURCE_DIR}/.cppcheck")
+  if(ESPRESSO_WARNINGS_ARE_ERRORS)
+    list(APPEND CMAKE_CXX_CPPCHECK "--error-exitcode=2")
+  endif()
 endif()
 
 #
@@ -306,22 +499,67 @@ if(ESPRESSO_BUILD_WITH_HDF5)
       set(HDF5_FOUND FALSE)
       message(FATAL_ERROR "HDF5 parallel version not found.")
     endif()
-  endif()
-endif()
-
-# Check for the h5xx submodule and try to check it out if not found or update it
-# if found.
-if(ESPRESSO_BUILD_WITH_HDF5 AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
-  # Try to find git
-  find_package(Git)
-  if(GIT_FOUND)
-    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/libs/h5xx/.git")
-      execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --
-                              libs/h5xx WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-    else()
-      execute_process(COMMAND ${GIT_EXECUTABLE} submodule update -- libs/h5xx
-                      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    if(${HDF5_VERSION} VERSION_GREATER_EQUAL 1.13.0)
+      message(
+        WARNING
+          "Library hdf5 >= 1.13.0 is incompatible with h5xx 0.9.1 on some platforms (https://github.com/fhoefling/h5xx/issues/11)"
+      )
     endif()
+  endif()
+  # We need to define our own h5xx target, since the project version we depend
+  # on is not fully compatible with modern CMake.
+  FetchContent_GetProperties(h5xx)
+  if(NOT h5xx_POPULATED)
+    FetchContent_Populate(h5xx)
+  endif()
+  add_library(h5xx INTERFACE)
+  add_library(hdf5 INTERFACE)
+  target_link_libraries(hdf5 INTERFACE $<BUILD_INTERFACE:${HDF5_LIBRARIES}>)
+  target_include_directories(hdf5
+                             INTERFACE $<BUILD_INTERFACE:${HDF5_INCLUDE_DIRS}>)
+  target_include_directories(h5xx
+                             INTERFACE $<BUILD_INTERFACE:${h5xx_SOURCE_DIR}>)
+  target_compile_features(h5xx INTERFACE cxx_std_11)
+  target_compile_definitions(h5xx INTERFACE H5XX_USE_MPI)
+  add_library(espresso_h5xx_cpp_flags INTERFACE)
+  add_library(espresso::h5xx_cpp_flags ALIAS espresso_h5xx_cpp_flags)
+  target_compile_options(
+    espresso_h5xx_cpp_flags
+    INTERFACE
+      $<$<CXX_COMPILER_ID:GNU>:-Wno-terminate>
+      $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-exceptions>
+      $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-unused-but-set-variable>
+      $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-delete-non-abstract-non-virtual-dtor>
+  )
+  if(ESPRESSO_BUILD_WITH_CLANG_TIDY)
+    set(H5XX_CXX_CLANG_TIDY "${ESPRESSO_CXX_CLANG_TIDY}")
+    set(SKIP_CLANG_TIDY_CHECKS "")
+    set(SKIP_CLANG_TIDY_CHECKS_CXX "")
+    # silence hdf5 and h5xx diagnostics
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-clang-analyzer-deadcode.DeadStores")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS
+         "-clang-analyzer-optin.performance.Padding")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS
+         "-clang-diagnostic-unused-but-set-variable")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-clang-diagnostic-exceptions")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS
+         "-bugprone-multi-level-implicit-pointer-conversion")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-assignment-in-if-condition")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-exception-escape")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-bugprone-narrowing-conversions")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-auto")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-nullptr")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-noexcept")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-override")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-use-equals-default")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-loop-convert")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-pass-by-value")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-modernize-redundant-void-arg")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-readability-else-after-return")
+    list(APPEND SKIP_CLANG_TIDY_CHECKS "-readability-container-size-empty")
+    espresso_override_clang_tidy_checks(
+      H5XX_CXX_CLANG_TIDY "${SKIP_CLANG_TIDY_CHECKS}"
+      "${SKIP_CLANG_TIDY_CHECKS_CXX}")
   endif()
 endif()
 
@@ -335,11 +573,12 @@ if(ESPRESSO_BUILD_WITH_GSL)
 endif()
 
 if(ESPRESSO_BUILD_WITH_STOKESIAN_DYNAMICS)
-  set(CMAKE_INSTALL_LIBDIR "${ESPRESSO_INSTALL_LIBDIR}")
   FetchContent_GetProperties(stokesian_dynamics)
   set(STOKESIAN_DYNAMICS 1)
   if(NOT stokesian_dynamics_POPULATED)
+    set(CMAKE_INSTALL_LIBDIR "${ESPRESSO_INSTALL_LIBDIR}")
     FetchContent_MakeAvailable(stokesian_dynamics)
+    set(CMAKE_INSTALL_LIBDIR "${ESPRESSO_OLD_CMAKE_INSTALL_LIBDIR}")
   endif()
 endif()
 
@@ -436,6 +675,22 @@ endif()
 
 find_package(Boost 1.74.0 REQUIRED ${BOOST_COMPONENTS})
 
+# Patches for older Boost releases compiled with C++17 or above; while
+# originally meant for MSVC, the Clang compiler is also affected.
+# https://boost-users.boost.narkive.com/h2eXAUzU
+# https://devblogs.microsoft.com/cppblog/c17-feature-removals-and-deprecations/
+# https://github.com/PixarAnimationStudios/OpenUSD/issues/2634
+target_compile_options(
+  espresso_cpp_flags
+  INTERFACE
+    $<$<VERSION_LESS:${Boost_VERSION},1.83.0>:-D_HAS_AUTO_PTR_ETC=0>
+    $<$<VERSION_LESS:${Boost_VERSION},1.81.0>:-DBOOST_NO_CXX98_FUNCTION_BASE>)
+
+# enable boost::variant with more than 20 types
+target_compile_options(
+  espresso_cpp_flags INTERFACE -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+                               -DBOOST_MPL_LIMIT_LIST_SIZE=30)
+
 #
 # Paths
 #
@@ -443,151 +698,14 @@ find_package(Boost 1.74.0 REQUIRED ${BOOST_COMPONENTS})
 set(CMAKE_INSTALL_RPATH "${ESPRESSO_INSTALL_LIBDIR}")
 
 #
-# Flags
+# Packaging
 #
 
 # drop 'lib' prefix from all libraries
-set(CMAKE_SHARED_LIBRARY_PREFIX "")
-
-add_library(espresso_coverage_flags INTERFACE)
-add_library(espresso::coverage_flags ALIAS espresso_coverage_flags)
-if(ESPRESSO_BUILD_WITH_COVERAGE)
-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_compile_options(
-      espresso_coverage_flags INTERFACE -g -fprofile-instr-generate
-                                        -fcoverage-mapping)
-  else()
-    target_compile_options(espresso_coverage_flags INTERFACE -g --coverage
-                                                             -fprofile-abs-path)
-    target_link_libraries(espresso_coverage_flags INTERFACE gcov)
-  endif()
-endif()
-
-add_library(espresso_cpp_flags INTERFACE)
-add_library(espresso::cpp_flags ALIAS espresso_cpp_flags)
-target_compile_options(
-  espresso_cpp_flags
-  INTERFACE
-    -Wall
-    -Wextra
-    -pedantic
-    # add extra warnings
-    $<$<CXX_COMPILER_ID:Clang>:-Wextern-initializer>
-    $<$<CXX_COMPILER_ID:Clang>:-Wrange-loop-analysis>
-    -Wfloat-conversion
-    $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wimplicit-float-conversion>
-    $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wunused-exception-parameter>
-    $<$<CXX_COMPILER_ID:Clang,AppleClang,IntelLLVM>:-Wmissing-variable-declarations>
-    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,11.0.0>>:-Wnon-c-typedef-for-linkage>
-    $<$<NOT:$<CXX_COMPILER_ID:Intel>>:-Wdelete-non-virtual-dtor>
-    # disable warnings from -Wall and -Wextra
-    -Wno-sign-compare
-    -Wno-unused-function
-    -Wno-unused-parameter
-    -Wno-array-bounds
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-restrict>
-    $<$<CXX_COMPILER_ID:GNU>:-Wno-clobbered>
-    $<$<CXX_COMPILER_ID:Intel,IntelLLVM>:-diag-disable=592>
-    $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-gnu-zero-variadic-macro-arguments>
-    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,8.1.0>>:-Wno-cast-function-type>
-    $<$<NOT:$<CXX_COMPILER_ID:Intel,IntelLLVM>>:-Wno-implicit-fallthrough>
-    $<$<NOT:$<CXX_COMPILER_ID:Intel,IntelLLVM,GNU>>:-Wno-unused-private-field>
-    # warnings are errors
-    $<$<BOOL:${ESPRESSO_WARNINGS_ARE_ERRORS}>:-Werror>)
-
-if(ESPRESSO_BUILD_WITH_CUDA)
-  target_compile_options(
-    espresso_cuda_flags
-    INTERFACE
-      -Wall
-      -Wextra
-      -Wno-sign-compare
-      -Wno-unused-parameter
-      $<$<NOT:$<CXX_COMPILER_ID:Intel,IntelLLVM>>:-Wno-implicit-fallthrough>
-      # warnings are errors
-      $<$<AND:$<BOOL:${ESPRESSO_WARNINGS_ARE_ERRORS}>,$<CUDA_COMPILER_ID:NVIDIA>>:--Werror=all-warnings>
-      $<$<AND:$<BOOL:${ESPRESSO_WARNINGS_ARE_ERRORS}>,$<CUDA_COMPILER_ID:Clang>>:-Werror>
-  )
-endif()
-
-# disable warning from -Wextra on ARM processors
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_SYSTEM_PROCESSOR MATCHES
-                                            "arm")
-  target_compile_options(espresso_cpp_flags INTERFACE -Wno-psabi)
-endif()
-
-# prevent 80-bit arithmetic on old Intel processors
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_SIZEOF_VOID_P EQUAL 4
-   AND CMAKE_SYSTEM_PROCESSOR MATCHES "[xX]86")
-  target_compile_options(espresso_cpp_flags INTERFACE -ffloat-store)
-endif()
-
-# enable boost::variant with more than 20 types
-target_compile_options(
-  espresso_cpp_flags INTERFACE -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-                               -DBOOST_MPL_LIMIT_LIST_SIZE=30)
+set(ESPRESSO_SHARED_LIBRARY_PREFIX "")
+set(CMAKE_SHARED_LIBRARY_PREFIX "${ESPRESSO_SHARED_LIBRARY_PREFIX}")
 
 set(CMAKE_MACOSX_RPATH TRUE)
-
-#
-# Sanitizers
-#
-
-if(ESPRESSO_BUILD_WITH_ASAN AND ESPRESSO_BUILD_WITH_MSAN)
-  message(
-    FATAL_ERROR
-      "Address sanitizer and memory sanitizer cannot be enabled simultaneously")
-endif()
-if(ESPRESSO_BUILD_WITH_ASAN)
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g -O1")
-  target_compile_options(espresso_cpp_flags INTERFACE -fsanitize=address
-                                                      -fno-omit-frame-pointer)
-  target_link_libraries(espresso_cpp_flags INTERFACE -fsanitize=address)
-  if(ESPRESSO_BUILD_WITH_CUDA)
-    target_link_libraries(espresso_cuda_flags INTERFACE -fsanitize=address)
-  endif()
-endif()
-if(ESPRESSO_BUILD_WITH_MSAN)
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g -O1")
-  target_compile_options(espresso_cpp_flags INTERFACE -fsanitize=memory
-                                                      -fno-omit-frame-pointer)
-  target_link_libraries(espresso_cpp_flags INTERFACE -fsanitize=memory)
-  if(ESPRESSO_BUILD_WITH_CUDA)
-    target_link_libraries(espresso_cuda_flags INTERFACE -fsanitize=memory)
-  endif()
-endif()
-if(ESPRESSO_BUILD_WITH_UBSAN)
-  target_compile_options(espresso_cpp_flags INTERFACE -fsanitize=undefined)
-  target_link_libraries(espresso_cpp_flags INTERFACE -fsanitize=undefined)
-  if(ESPRESSO_BUILD_WITH_CUDA)
-    target_link_libraries(espresso_cuda_flags INTERFACE -fsanitize=undefined)
-  endif()
-endif()
-
-target_link_libraries(espresso_cpp_flags INTERFACE espresso::coverage_flags)
-
-#
-# Static analysis
-#
-
-if(ESPRESSO_BUILD_WITH_CLANG_TIDY)
-  find_package(ClangTidy "${CMAKE_CXX_COMPILER_VERSION}" EXACT REQUIRED)
-  set(ESPRESSO_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
-  set(ESPRESSO_CUDA_CLANG_TIDY "${CLANG_TIDY_EXE};--extra-arg=--cuda-host-only")
-endif()
-
-if(ESPRESSO_BUILD_WITH_CPPCHECK)
-  find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
-  if(NOT CMAKE_CXX_CPPCHECK)
-    message(FATAL_ERROR "Could not find the program cppcheck.")
-  endif()
-  list(APPEND CMAKE_CXX_CPPCHECK "--enable=all"
-       "--std=c++${CMAKE_CXX_STANDARD}" "--quiet" "--inline-suppr"
-       "--suppressions-list=${CMAKE_CURRENT_SOURCE_DIR}/.cppcheck")
-  if(ESPRESSO_WARNINGS_ARE_ERRORS)
-    list(APPEND CMAKE_CXX_CPPCHECK "--error-exitcode=2")
-  endif()
-endif()
 
 #
 # Testing
@@ -643,22 +761,51 @@ if(ESPRESSO_BUILD_WITH_WALBERLA)
   endif()
   set(WALBERLA_BUILD_WITH_FASTMATH off CACHE BOOL "")
   if(NOT walberla_POPULATED)
+    set(BUILD_SHARED_LIBS ON)
+    set(CMAKE_SHARED_LIBRARY_PREFIX "libwalberla_")
     FetchContent_MakeAvailable(walberla)
+    set(BUILD_SHARED_LIBS ${ESPRESSO_BUILD_SHARED_LIBS_DEFAULT})
+    set(CMAKE_SHARED_LIBRARY_PREFIX "${ESPRESSO_SHARED_LIBRARY_PREFIX}")
   endif()
   set(WALBERLA_LIBS
       walberla::core walberla::domain_decomposition walberla::blockforest
       walberla::boundary walberla::field walberla::lbm walberla::timeloop
       walberla::vtk)
-  if(ESPRESSO_BUILD_WITH_WALBERLA_FFT)
+  if(WALBERLA_BUILD_WITH_FFTW)
     set(WALBERLA_LIBS ${WALBERLA_LIBS} walberla::fft)
   endif()
-  if(ESPRESSO_BUILD_WITH_CUDA AND WALBERLA_BUILD_WITH_CUDA)
+  if(WALBERLA_BUILD_WITH_CUDA)
     set(WALBERLA_LIBS ${WALBERLA_LIBS} walberla::gpu)
   endif()
+  set(WALBERLA_LIBS_EXPORT
+      ${WALBERLA_LIBS}
+      walberla::lodepng
+      walberla::sqlite3
+      walberla::lbm_generated
+      walberla::pe
+      walberla::pe_coupling
+      walberla::pde
+      walberla::mesa_pd
+      walberla::lbm_mesapd_coupling
+      walberla::sqlite
+      walberla::executiontree
+      walberla::geometry
+      walberla::postprocessing
+      walberla::gather
+      walberla::gui)
   # workaround for https://gitlab.kitware.com/cmake/cmake/-/issues/21283
   foreach(target_w_namespace IN LISTS WALBERLA_LIBS)
     string(REPLACE "walberla::" "" target_wo_namespace ${target_w_namespace})
     add_library(${target_w_namespace} ALIAS ${target_wo_namespace})
+  endforeach()
+  # install all waLBerla shared objects
+  foreach(target_w_namespace IN LISTS WALBERLA_LIBS_EXPORT)
+    string(REPLACE "walberla::" "" target_wo_namespace ${target_w_namespace})
+    get_target_property(target_type ${target_wo_namespace} TYPE)
+    if(${target_type} STREQUAL "SHARED_LIBRARY")
+      install(TARGETS ${target_wo_namespace}
+              LIBRARY DESTINATION "${ESPRESSO_INSTALL_LIBDIR}")
+    endif()
   endforeach()
   if(ESPRESSO_BUILD_WITH_WALBERLA_AVX)
     function(espresso_avx_flags_callback COMPILER_AVX2_FLAG)
@@ -676,10 +823,19 @@ if(ESPRESSO_BUILD_WITH_CALIPER)
   set(CALIPER_WITH_MPI on CACHE BOOL "")
   set(CALIPER_WITH_NVTX off CACHE BOOL "")
   set(CALIPER_WITH_CUPTI off CACHE BOOL "")
-  set(CALIPER_BUILD_SHARED_LIBS on CACHE BOOL "")
+  set(CALIPER_INSTALL_CONFIG off CACHE BOOL "")
+  set(CALIPER_INSTALL_HEADERS off CACHE BOOL "")
   if(NOT caliper_POPULATED)
+    set(BUILD_SHARED_LIBS ON)
+    set(CMAKE_INSTALL_LIBDIR "${ESPRESSO_INSTALL_LIBDIR}")
+    set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
     FetchContent_MakeAvailable(caliper)
+    set(BUILD_SHARED_LIBS ${ESPRESSO_BUILD_SHARED_LIBS_DEFAULT})
+    set(CMAKE_INSTALL_LIBDIR "${ESPRESSO_OLD_CMAKE_INSTALL_LIBDIR}")
+    set(CMAKE_SHARED_LIBRARY_PREFIX "${ESPRESSO_SHARED_LIBRARY_PREFIX}")
   endif()
+  target_compile_options(caliper-common
+                         PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wno-restrict>)
   target_compile_options(
     caliper-services
     PRIVATE
@@ -687,7 +843,9 @@ if(ESPRESSO_BUILD_WITH_CALIPER)
   target_compile_options(
     caliper-runtime
     PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wno-maybe-uninitialized>
-            $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-volatile>)
+            $<$<CXX_COMPILER_ID:GNU>:-Wno-volatile>
+            $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wno-deprecated-volatile>)
+  set_target_properties(caliper-runtime PROPERTIES CXX_CLANG_TIDY "")
 endif()
 
 #

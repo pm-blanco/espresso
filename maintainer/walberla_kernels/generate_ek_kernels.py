@@ -32,13 +32,13 @@ import ekin
 import custom_additional_extensions
 
 
-parser = argparse.ArgumentParser(description='Generate the waLBerla kernels.')
-parser.add_argument('--single-precision', action='store_true', required=False,
-                    help='Use single-precision')
+parser = argparse.ArgumentParser(description="Generate the waLBerla kernels.")
+parser.add_argument("--single-precision", action="store_true", required=False,
+                    help="Use single-precision")
 args = parser.parse_args()
 
 # Make sure we have the correct versions of the required dependencies
-for module, requirement in [(ps, "==1.3.3"), (lbmpy, "==1.3.3")]:
+for module, requirement in [(ps, "==1.3.7"), (lbmpy, "==1.3.7")]:
     assert packaging.specifiers.SpecifierSet(requirement).contains(module.__version__), \
         f"{module.__name__} version {module.__version__} " \
         f"doesn't match requirement {requirement}"
@@ -46,23 +46,29 @@ for module, requirement in [(ps, "==1.3.3"), (lbmpy, "==1.3.3")]:
 double_precision: bool = not args.single_precision
 
 data_type_cpp = "double" if double_precision else "float"
-data_type_np = pystencils_espresso.data_type_np[data_type_cpp]
+data_type_np = "float64" if double_precision else "float32"
 precision_suffix = pystencils_espresso.precision_suffix[double_precision]
 precision_rng = pystencils_espresso.precision_rng_modulo[double_precision]
 
 
-def replace_macros(filename: str) -> None:
-    with open(filename, "r+") as f:
-        content = f.read()
-        f.seek(0)
-        f.truncate(0)
-        # replace getData with uncheckedFastGetData
-        content = content.replace("block->getData<IndexVectors>(indexVectorID);",
-                                  "block->uncheckedFastGetData<IndexVectors>(indexVectorID);")
-        # remove dummy assignment
-        content = content.replace(
-            r"const int32_t dummy = *((int32_t *  )(& _data_indexVector[12*ctr_0]));", "")
-        f.write(content)
+def patch_reaction_indexed_kernel(content: str) -> str:
+    # replace getData with uncheckedFastGetData
+    access_slow = "block->getData<IndexVectors>(indexVectorID);"
+    access_fast = "block->uncheckedFastGetData<IndexVectors>(indexVectorID);"
+    assert access_slow in content
+    content = content.replace(access_slow, access_fast)
+    # remove dummy assignment
+    token = "const int32_t dummy = *((int32_t *  )(& _data_indexVector[12*ctr_0]));"
+    assert token in content
+    content = content.replace(token, "")
+    return content
+
+
+def patch_diffusive_flux_elec_kernel(content):
+    token = "BlockDataID phiID;\n"
+    assert token in content
+    content = content.replace(token, "BlockDataID phiID;\npublic:\n  inline void setPhiID(BlockDataID phiID_) { phiID = phiID_; }\nprivate:\n")  # nopep8
+    return content
 
 
 dim: int = 3
@@ -130,6 +136,7 @@ params = {
     "target": target,
     "cpu_vectorize_info": {"assume_inner_stride_one": False}, }
 
+
 with code_generation_context.CodeGeneration() as ctx:
     ctx.double_accuracy = double_precision
 
@@ -145,14 +152,15 @@ with code_generation_context.CodeGeneration() as ctx:
             staggered=True,
             block_offset=block_offsets if fluctuation else None,
             **params)
+        class_name = f"DiffusiveFluxKernelWithElectrostatic{midfix}_{precision_suffix}"  # nopep8
         pystencils_walberla.generate_sweep(
-            ctx,
-            f"DiffusiveFluxKernelWithElectrostatic{midfix}_{precision_suffix}",
+            ctx, class_name,
             ek_electrostatic.flux(include_vof=False, include_fluctuations=fluctuation,
                                   rng_node=precision_rng),
             staggered=True,
             block_offset=block_offsets if fluctuation else None,
             **params)
+        ctx.patch_file(class_name, "h", patch_diffusive_flux_elec_kernel)
 
     # the substitution for field reads is necessary, because otherwise there are
     # "ResolvedFieldAccess" nodes that fail in the code generation
@@ -184,7 +192,7 @@ with code_generation_context.CodeGeneration() as ctx:
     dynamic_flux_additional_data = custom_additional_extensions.FluxAdditionalDataHandler(
         stencil=stencil, boundary_object=dynamic_flux)
 
-    pystencils_espresso.generate_staggered_flux_boundary(
+    pystencils_walberla.boundary.generate_staggered_flux_boundary(
         generation_context=ctx,
         class_name=f"FixedFlux_{precision_suffix}",
         boundary_object=dynamic_flux,
@@ -214,21 +222,21 @@ with code_generation_context.CodeGeneration() as ctx:
     # ek reactions
     for i in range(1, max_num_reactants + 1):
         assignments = list(reaction_obj.generate_reaction(num_reactants=i))
-        filename_stem: str = f"ReactionKernelBulk_{i}_{precision_suffix}"
+        class_name: str = f"ReactionKernelBulk_{i}_{precision_suffix}"
         pystencils_walberla.generate_sweep(
             ctx,
-            filename_stem,
+            class_name,
             assignments)
 
-        filename_stem: str = f"ReactionKernelIndexed_{i}_{precision_suffix}"
+        class_name: str = f"ReactionKernelIndexed_{i}_{precision_suffix}"
         custom_additional_extensions.generate_boundary(
             generation_context=ctx,
             stencil=dirichlet_stencil,
-            class_name=filename_stem,
+            class_name=class_name,
             dim=dim,
             target=target,
             assignment=assignments)
-        replace_macros(filename=f"{filename_stem}.cpp")
+        ctx.patch_file(class_name, "cpp", patch_reaction_indexed_kernel)
 
     # ek reactions helper functions
     custom_additional_extensions.generate_kernel_selector(

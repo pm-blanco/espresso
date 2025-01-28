@@ -835,8 +835,8 @@ class CheckpointTest(ut.TestCase):
         state = actor.get_params()
         reference = {'prefactor': 1.0, 'accuracy': 0.01, 'mesh': 3 * [8],
                      'cao': 1, 'alpha': 12.0, 'r_cut': 2.4, 'tune': False,
-                     'mesh_off': [0.5, 0.5, 0.5], 'epsilon': 2.0,
-                     'timings': 15, 'single_precision': True}
+                     'mesh_off': [0.5, 0.5, 0.5], 'epsilon': 2.0, 'timings': 15,
+                     'tune_limits': [11, 15], 'single_precision': True}
         for key in reference:
             self.assertIn(key, state)
             np.testing.assert_almost_equal(state[key], reference[key],
@@ -852,6 +852,7 @@ class CheckpointTest(ut.TestCase):
         reference = {'prefactor': 1.0, 'accuracy': 0.1, 'mesh': 3 * [10],
                      'cao': 1, 'alpha': 1.0, 'r_cut': 1.0, 'tune': False,
                      'timings': 15, 'check_neutrality': True,
+                     'tune_limits': [8, 12],
                      'single_precision': single_precision,
                      'check_complex_residuals': False,
                      'charge_neutrality_tolerance': 1e-12}
@@ -870,6 +871,7 @@ class CheckpointTest(ut.TestCase):
         p3m_reference = {'prefactor': 1.0, 'accuracy': 0.1, 'mesh': 3 * [10],
                          'cao': 1, 'alpha': 1.0, 'r_cut': 1.0, 'tune': False,
                          'timings': 15, 'check_neutrality': True,
+                         'tune_limits': [8, 12],
                          'check_complex_residuals': False,
                          'charge_neutrality_tolerance': 7e-12}
         elc_reference = {'gap_size': 6.0, 'maxPWerror': 0.1,

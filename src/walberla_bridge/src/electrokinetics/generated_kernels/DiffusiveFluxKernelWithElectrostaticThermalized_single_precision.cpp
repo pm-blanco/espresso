@@ -17,7 +17,7 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3, lbmpy_walberla/pystencils_walberla from waLBerla commit b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1, lbmpy_walberla/pystencils_walberla from waLBerla commit f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #include <cmath>
 
@@ -58,25 +58,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
           float random_7_1;
           float random_7_2;
           float random_7_3;
-          philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+          philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
           float random_6_0;
           float random_6_1;
           float random_6_2;
           float random_6_3;
-          philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+          philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
           float random_5_0;
           float random_5_1;
           float random_5_2;
           float random_5_3;
-          philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+          philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
           float random_4_0;
           float random_4_1;
           float random_4_2;
           float random_4_3;
-          philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+          philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
           _data_j[_stride_j_0 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0] - f_ext_0 * z * _data_rho[_stride_rho_1 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0] + f_ext_1 * z * _data_rho[_stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0] + f_ext_2 * z * _data_rho[_stride_rho_1 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0] + z * _data_phi[_stride_phi_0] * _data_rho[_stride_rho_0] + z * _data_phi[_stride_phi_0] * _data_rho[_stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0] - z * _data_phi[_stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_1 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0] + 0.5f * _data_rho[_stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
         }
@@ -87,25 +87,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
             float random_7_1;
             float random_7_2;
             float random_7_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
             float random_6_0;
             float random_6_1;
             float random_6_2;
             float random_6_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
             float random_5_0;
             float random_5_1;
             float random_5_2;
             float random_5_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
             float random_4_0;
             float random_4_1;
             float random_4_2;
             float random_4_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
             _data_j[_stride_j_0 * ctr_0 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0] + z * _data_phi[_stride_phi_0 * ctr_0] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] + z * _data_phi[_stride_phi_0 * ctr_0] * _data_rho[_stride_rho_0 * ctr_0]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0]), 0.5f) * 1.5025119784898082f;
           }
@@ -116,25 +116,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
           float random_7_1;
           float random_7_2;
           float random_7_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
           float random_6_0;
           float random_6_1;
           float random_6_2;
           float random_6_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
           float random_5_0;
           float random_5_1;
           float random_5_2;
           float random_5_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
           float random_4_0;
           float random_4_1;
           float random_4_2;
           float random_4_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
           _data_j[_stride_j_0 * (_size_j_0 - 1) + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1)] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1)] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1)] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1)] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1)]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1)]), 0.5f) * 1.5025119784898082f;
         }
@@ -148,25 +148,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + 6 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] - _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_1 * ctr_1]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -176,25 +176,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + 8 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_6_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1]), 0.5f) * 1.6628028407278295f;
             }
@@ -204,27 +204,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] - f_ext_0 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] - f_ext_1 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + f_ext_2 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] - z * _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] - _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1] - _data_phi[_stride_phi_1 * ctr_1]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_1 * ctr_1])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
             if (0 < _size_j_2 - 1 && ctr_1 < _size_j_1 - 1) {
 
@@ -232,25 +232,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] - f_ext_0 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + f_ext_1 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + f_ext_2 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] - z * _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -262,25 +262,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + 6 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -290,25 +290,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + 8 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_6_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1]), 0.5f) * 1.6628028407278295f;
             }
@@ -318,27 +318,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
             if (0 < _size_j_2 - 1 && ctr_1 < _size_j_1 - 1) {
 
@@ -346,25 +346,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -376,25 +376,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + 6 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -404,27 +404,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 - _stride_phi_1] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 - _stride_phi_1] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
             if (0 < _size_j_2 - 1 && ctr_1 < _size_j_1 - 1) {
 
@@ -432,25 +432,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -465,25 +465,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
             float random_7_1;
             float random_7_2;
             float random_7_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
             float random_6_0;
             float random_6_1;
             float random_6_2;
             float random_6_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
             float random_5_0;
             float random_5_1;
             float random_5_2;
             float random_5_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
             float random_4_0;
             float random_4_1;
             float random_4_2;
             float random_4_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
             _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + 8 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1)]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1)])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_6_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)]), 0.5f) * 1.6628028407278295f;
           }
@@ -493,27 +493,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
             float random_7_1;
             float random_7_2;
             float random_7_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
             float random_6_0;
             float random_6_1;
             float random_6_2;
             float random_6_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
             float random_5_0;
             float random_5_1;
             float random_5_2;
             float random_5_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
             float random_4_0;
             float random_4_1;
             float random_4_2;
             float random_4_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-            _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] - f_ext_1 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + f_ext_2 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1)] * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1)] * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] - z * _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + 0.5f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+            _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] - _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] - _data_phi[_stride_phi_1 * (_size_j_1 - 1)]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] - _data_phi[_stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] - _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] - _data_phi[_stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] + _data_phi[_stride_phi_1 * (_size_j_1 - 1)])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1)] + 0.5f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
           }
         }
         for (int64_t ctr_0 = 2; ctr_0 < _size_j_0 - 1; ctr_0 += 1) {
@@ -523,25 +523,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
             float random_7_1;
             float random_7_2;
             float random_7_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
             float random_6_0;
             float random_6_1;
             float random_6_2;
             float random_6_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
             float random_5_0;
             float random_5_1;
             float random_5_2;
             float random_5_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
             float random_4_0;
             float random_4_1;
             float random_4_2;
             float random_4_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
             _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + 8 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1)]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1)])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_6_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)]), 0.5f) * 1.6628028407278295f;
           }
@@ -551,27 +551,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
             float random_7_1;
             float random_7_2;
             float random_7_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
             float random_6_0;
             float random_6_1;
             float random_6_2;
             float random_6_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
             float random_5_0;
             float random_5_1;
             float random_5_2;
             float random_5_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
             float random_4_0;
             float random_4_1;
             float random_4_2;
             float random_4_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-            _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1)] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1)] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+            _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1)]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1)])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
           }
         }
         if (_size_j_1 - 1 > 0 && 0 < _size_j_2 - 1) {
@@ -580,27 +580,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
           float random_7_1;
           float random_7_2;
           float random_7_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
           float random_6_0;
           float random_6_1;
           float random_6_2;
           float random_6_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
           float random_5_0;
           float random_5_1;
           float random_5_2;
           float random_5_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
           float random_4_0;
           float random_4_1;
           float random_4_2;
           float random_4_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, block_offset_2 % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-          _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * (_size_j_1 - 1) + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+          _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * (_size_j_1 - 1) + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1)]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1)])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1)] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
         }
       }
     }
@@ -614,25 +614,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_2 * ctr_2 + 4 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -642,27 +642,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_2 * ctr_2 - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
             if (0 < _size_j_1 - 1 && ctr_2 < _size_j_2 - 1) {
 
@@ -670,25 +670,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_2 * ctr_2 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -700,25 +700,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_2 * ctr_2 + 4 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -728,27 +728,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 * ctr_0 + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_2 * ctr_2 - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 * ctr_0 + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
             if (0 < _size_j_1 - 1 && ctr_2 < _size_j_2 - 1) {
 
@@ -756,25 +756,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_2 * ctr_2 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -786,25 +786,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_2 * ctr_2 + 4 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -814,27 +814,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_2 * ctr_2 - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
             if (0 < _size_j_1 - 1 && ctr_2 < _size_j_2 - 1) {
 
@@ -842,25 +842,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_2 * ctr_2 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -875,25 +875,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2] = D * (-f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]) + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]) * 2.0f + z * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2])) * 0.081462038946841925f * ((1.0f) / (kT)) + (random_4_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.977416969040271f;
               }
@@ -903,25 +903,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + _stride_j_3] = D * (-f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * 2.0f + z * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2])) * 0.081462038946841925f * ((1.0f) / (kT)) + (random_4_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.977416969040271f;
               }
@@ -931,25 +931,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 2 * _stride_j_3] = D * (f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]) + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]) * 2.0f + z * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2])) * -0.081462038946841925f * ((1.0f) / (kT)) + (random_4_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.977416969040271f;
               }
@@ -959,25 +959,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 3 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_4_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -987,25 +987,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 4 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1015,25 +1015,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 5 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1043,25 +1043,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 6 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1071,25 +1071,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 7 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1099,25 +1099,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 8 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_6_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1127,25 +1127,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
@@ -1155,27 +1155,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-                _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+                _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
               {
 
@@ -1183,27 +1183,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-                _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+                _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
               {
 
@@ -1211,25 +1211,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
@@ -1241,25 +1241,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2] = D * (-f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]) + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]) * 2.0f + z * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2])) * 0.081462038946841925f * ((1.0f) / (kT)) + (random_4_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.977416969040271f;
               }
@@ -1269,25 +1269,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + _stride_j_3] = D * (-f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * 2.0f + z * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2])) * 0.081462038946841925f * ((1.0f) / (kT)) + (random_4_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.977416969040271f;
               }
@@ -1297,25 +1297,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 2 * _stride_j_3] = D * (f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]) + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]) * 2.0f + z * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2])) * -0.081462038946841925f * ((1.0f) / (kT)) + (random_4_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.977416969040271f;
               }
@@ -1325,25 +1325,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 3 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_4_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1353,25 +1353,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 4 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1381,25 +1381,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 5 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1409,25 +1409,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 6 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1437,25 +1437,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 7 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1465,25 +1465,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 8 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_6_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1493,25 +1493,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
@@ -1521,27 +1521,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-                _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+                _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
               {
 
@@ -1549,27 +1549,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-                _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+                _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
               {
 
@@ -1577,25 +1577,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
@@ -1607,25 +1607,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2] = D * (-f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]) + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]) * 2.0f + z * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2])) * 0.081462038946841925f * ((1.0f) / (kT)) + (random_4_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.977416969040271f;
               }
@@ -1635,25 +1635,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 3 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_4_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1663,25 +1663,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 4 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1691,25 +1691,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 5 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1719,25 +1719,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 6 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_5_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.6628028407278295f;
               }
@@ -1747,25 +1747,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
@@ -1775,27 +1775,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-                _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+                _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
               {
 
@@ -1803,27 +1803,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-                _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2 - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+                _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
               {
 
@@ -1831,25 +1831,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
                 float random_7_1;
                 float random_7_2;
                 float random_7_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
                 float random_6_0;
                 float random_6_1;
                 float random_6_2;
                 float random_6_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
                 float random_5_0;
                 float random_5_1;
                 float random_5_2;
                 float random_5_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
                 float random_4_0;
                 float random_4_1;
                 float random_4_2;
                 float random_4_3;
-                philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+                philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
                 _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * ctr_2 + 12 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_7_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
               }
@@ -1864,25 +1864,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + _stride_j_3] = D * (-f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * 2.0f + z * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2])) * 0.081462038946841925f * ((1.0f) / (kT)) + (random_4_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.977416969040271f;
             }
@@ -1892,25 +1892,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 3 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_4_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -1920,25 +1920,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 7 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -1948,25 +1948,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 8 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_6_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -1976,25 +1976,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -2004,27 +2004,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
           }
           for (int64_t ctr_0 = 2; ctr_0 < _size_j_0 - 1; ctr_0 += 1) {
@@ -2034,25 +2034,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + _stride_j_3] = D * (-f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * 2.0f + z * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2])) * 0.081462038946841925f * ((1.0f) / (kT)) + (random_4_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.977416969040271f;
             }
@@ -2062,25 +2062,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 3 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_4_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -2090,25 +2090,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 7 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 - _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -2118,25 +2118,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 8 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_6_0 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -2146,25 +2146,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -2174,27 +2174,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
           }
           {
@@ -2204,25 +2204,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 3 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * -2.0f + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2])) * 0.028801180074297286f * ((1.0f) / (kT)) + (random_4_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -2232,25 +2232,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -2260,27 +2260,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((block_offset_2 + ctr_2) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (block_offset_2 + ctr_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * ctr_2 + 10 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 2.0f + kT * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] - _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * ctr_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2 + _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * ctr_2])) * 0.02351606505734748f * ((1.0f) / (kT)) + (random_6_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * ctr_2] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * ctr_2 + _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
           }
         }
@@ -2294,27 +2294,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
           float random_7_1;
           float random_7_2;
           float random_7_3;
-          philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+          philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
           float random_6_0;
           float random_6_1;
           float random_6_2;
           float random_6_3;
-          philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+          philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
           float random_5_0;
           float random_5_1;
           float random_5_2;
           float random_5_3;
-          philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+          philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
           float random_4_0;
           float random_4_1;
           float random_4_2;
           float random_4_3;
-          philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+          philox_float4(time_step, (block_offset_0 + 1) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-          _data_j[_stride_j_0 + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_2 * (_size_j_2 - 1)]) + z * (_data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+          _data_j[_stride_j_0 + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + f_ext_1 * z * _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
         }
         for (int64_t ctr_0 = 2; ctr_0 < _size_j_0 - 1; ctr_0 += 1) {
           if (_size_j_2 - 1 > 0 && 0 < _size_j_1 - 1) {
@@ -2323,27 +2323,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
             float random_7_1;
             float random_7_2;
             float random_7_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
             float random_6_0;
             float random_6_1;
             float random_6_2;
             float random_6_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
             float random_5_0;
             float random_5_1;
             float random_5_2;
             float random_5_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
             float random_4_0;
             float random_4_1;
             float random_4_2;
             float random_4_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-            _data_j[_stride_j_0 * ctr_0 + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1)]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+            _data_j[_stride_j_0 * ctr_0 + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
           }
         }
         if (_size_j_2 - 1 > 0 && 0 < _size_j_1 - 1) {
@@ -2352,27 +2352,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
           float random_7_1;
           float random_7_2;
           float random_7_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
           float random_6_0;
           float random_6_1;
           float random_6_2;
           float random_6_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
           float random_5_0;
           float random_5_1;
           float random_5_2;
           float random_5_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
           float random_4_0;
           float random_4_1;
           float random_4_2;
           float random_4_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, block_offset_1 % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-          _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1)]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+          _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
         }
       }
       for (int64_t ctr_1 = 1; ctr_1 < _size_j_1 - 1; ctr_1 += 1) {
@@ -2384,25 +2384,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 2 * _stride_j_3] = D * (f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)]) + kT * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)]) * 2.0f + z * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)])) * -0.081462038946841925f * ((1.0f) / (kT)) + (random_4_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)]), 0.5f) * 1.977416969040271f;
             }
@@ -2412,25 +2412,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 5 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -2440,25 +2440,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 7 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -2468,25 +2468,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_1 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -2496,27 +2496,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (-_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + f_ext_1 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
           }
           for (int64_t ctr_0 = 2; ctr_0 < _size_j_0 - 1; ctr_0 += 1) {
@@ -2526,25 +2526,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 2 * _stride_j_3] = D * (f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)]) + kT * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)]) * 2.0f + z * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)])) * -0.081462038946841925f * ((1.0f) / (kT)) + (random_4_2 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)]), 0.5f) * 1.977416969040271f;
             }
@@ -2554,25 +2554,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 5 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -2582,25 +2582,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 7 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -2610,25 +2610,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -2638,27 +2638,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (-_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
           }
           {
@@ -2668,25 +2668,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 5 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
             }
@@ -2696,25 +2696,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
               _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
@@ -2724,27 +2724,27 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
               float random_7_1;
               float random_7_2;
               float random_7_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
               float random_6_0;
               float random_6_1;
               float random_6_2;
               float random_6_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
               float random_5_0;
               float random_5_1;
               float random_5_2;
               float random_5_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
               float random_4_0;
               float random_4_1;
               float random_4_2;
               float random_4_3;
-              philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((block_offset_1 + ctr_1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+              philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (block_offset_1 + ctr_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
-              _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (f_ext_0 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_1 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * -2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (-_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) + z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2])) * -0.02351606505734748f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
+              _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * ctr_1 + _stride_j_2 * (_size_j_2 - 1) + 11 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * ctr_1 + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * ctr_1 + _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * ctr_1 + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * ctr_1 + _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
             }
           }
         }
@@ -2757,25 +2757,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
             float random_7_1;
             float random_7_2;
             float random_7_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
             float random_6_0;
             float random_6_1;
             float random_6_2;
             float random_6_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
             float random_5_0;
             float random_5_1;
             float random_5_2;
             float random_5_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
             float random_4_0;
             float random_4_1;
             float random_4_2;
             float random_4_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
             _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * (_size_j_2 - 1) + 7 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
           }
@@ -2785,25 +2785,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
             float random_7_1;
             float random_7_2;
             float random_7_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
             float random_6_0;
             float random_6_1;
             float random_6_2;
             float random_6_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
             float random_5_0;
             float random_5_1;
             float random_5_2;
             float random_5_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
             float random_4_0;
             float random_4_1;
             float random_4_2;
             float random_4_3;
-            philox_float4(time_step, ((block_offset_0 + 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+            philox_float4(time_step, (block_offset_0 + 1) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
             _data_j[_stride_j_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * (_size_j_2 - 1) + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_1 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
           }
@@ -2815,25 +2815,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
             float random_7_1;
             float random_7_2;
             float random_7_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
             float random_6_0;
             float random_6_1;
             float random_6_2;
             float random_6_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
             float random_5_0;
             float random_5_1;
             float random_5_2;
             float random_5_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
             float random_4_0;
             float random_4_1;
             float random_4_2;
             float random_4_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
             _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * (_size_j_2 - 1) + 7 * _stride_j_3] = D * (f_ext_1 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + f_ext_2 * z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 2.0f + kT * (-_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 4.0f + z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1)] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)]) - z * (_data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * (_data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] + _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1)] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] - _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1)])) * -0.028801180074297286f * ((1.0f) / (kT)) + (random_5_3 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.6628028407278295f;
           }
@@ -2843,25 +2843,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
             float random_7_1;
             float random_7_2;
             float random_7_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
             float random_6_0;
             float random_6_1;
             float random_6_2;
             float random_6_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
             float random_5_0;
             float random_5_1;
             float random_5_2;
             float random_5_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
             float random_4_0;
             float random_4_1;
             float random_4_2;
             float random_4_3;
-            philox_float4(time_step, ((block_offset_0 + ctr_0) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+            philox_float4(time_step, (block_offset_0 + ctr_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
             _data_j[_stride_j_0 * ctr_0 + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * (_size_j_2 - 1) + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_1 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * ctr_0 + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_0 * ctr_0 - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * ctr_0 + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * ctr_0 - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
           }
@@ -2872,25 +2872,25 @@ static FUNC_PREFIX void diffusivefluxkernelwithelectrostaticthermalized_single_p
           float random_7_1;
           float random_7_2;
           float random_7_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 3, seed, random_7_0, random_7_1, random_7_2, random_7_3);
 
           float random_6_0;
           float random_6_1;
           float random_6_2;
           float random_6_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 2, seed, random_6_0, random_6_1, random_6_2, random_6_3);
 
           float random_5_0;
           float random_5_1;
           float random_5_2;
           float random_5_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 1, seed, random_5_0, random_5_1, random_5_2, random_5_3);
 
           float random_4_0;
           float random_4_1;
           float random_4_2;
           float random_4_3;
-          philox_float4(time_step, ((_size_j_0 + block_offset_0 - 1) % (field_size_0)), ((_size_j_1 + block_offset_1 - 1) % (field_size_1)), ((_size_j_2 + block_offset_2 - 1) % (field_size_2)), 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
+          philox_float4(time_step, (((_size_j_0 + block_offset_0 - 1) % field_size_0) + field_size_0) % field_size_0, (((_size_j_1 + block_offset_1 - 1) % field_size_1) + field_size_1) % field_size_1, (((_size_j_2 + block_offset_2 - 1) % field_size_2) + field_size_2) % field_size_2, 0, seed, random_4_0, random_4_1, random_4_2, random_4_3);
 
           _data_j[_stride_j_0 * (_size_j_0 - 1) + _stride_j_1 * (_size_j_1 - 1) + _stride_j_2 * (_size_j_2 - 1) + 9 * _stride_j_3] = D * (-f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_0 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_1 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - f_ext_2 * z * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * -2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] + kT * 2.0f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) + _stride_phi_1 * (_size_j_1 - 1) + _stride_phi_2 * (_size_j_2 - 1)] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] - z * _data_phi[_stride_phi_0 * (_size_j_0 - 1) - _stride_phi_0 + _stride_phi_1 * (_size_j_1 - 1) - _stride_phi_1 + _stride_phi_2 * (_size_j_2 - 1) - _stride_phi_2] * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]) * 0.04703213011469496f * ((1.0f) / (kT)) + (random_6_1 - 0.5f) * powf(D * (0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) + _stride_rho_1 * (_size_j_1 - 1) + _stride_rho_2 * (_size_j_2 - 1)] + 0.5f * _data_rho[_stride_rho_0 * (_size_j_0 - 1) - _stride_rho_0 + _stride_rho_1 * (_size_j_1 - 1) - _stride_rho_1 + _stride_rho_2 * (_size_j_2 - 1) - _stride_rho_2]), 0.5f) * 1.5025119784898082f;
         }

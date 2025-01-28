@@ -21,8 +21,8 @@
 
 #include <walberla_bridge/Architecture.hpp>
 
-#include "generated_kernels/Dynamic_UBB_double_precision.h"
-#include "generated_kernels/Dynamic_UBB_single_precision.h"
+#include "generated_kernels/DynamicUBBDoublePrecision.h"
+#include "generated_kernels/DynamicUBBSinglePrecision.h"
 #include "generated_kernels/FieldAccessorsDoublePrecision.h"
 #include "generated_kernels/FieldAccessorsSinglePrecision.h"
 #include "generated_kernels/InitialPDFsSetterDoublePrecision.h"
@@ -93,11 +93,11 @@ template <> struct KernelTrait<float, Arch::CPU> {
 
 template <typename FT = double, Arch AT = Arch::CPU>
 struct BoundaryHandlingTrait {
-  using Dynamic_UBB = lbm::Dynamic_UBB_double_precision;
+  using DynamicUBB = lbm::DynamicUBBDoublePrecision;
 };
 
 template <> struct BoundaryHandlingTrait<float, Arch::CPU> {
-  using Dynamic_UBB = lbm::Dynamic_UBB_single_precision;
+  using DynamicUBB = lbm::DynamicUBBSinglePrecision;
 };
 
 } // namespace detail

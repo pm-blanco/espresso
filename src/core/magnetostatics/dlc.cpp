@@ -50,6 +50,7 @@
 #include <cmath>
 #include <cstdio>
 #include <functional>
+#include <limits>
 #include <numbers>
 #include <numeric>
 #include <stdexcept>
@@ -430,15 +431,26 @@ double DipolarLayerCorrection::tune_far_cut() const {
   }
 
   auto constexpr limitkc = 200;
+  auto constexpr exp_max = +709.8; // for IEEE-compatible double
+  auto constexpr exp_min = -708.4; // for IEEE-compatible double
+  auto const log_max = std::log(std::numeric_limits<double>::max());
   auto const piarea = std::numbers::pi / (lx * ly);
   auto const nmp = static_cast<double>(count_magnetic_particles(system));
   auto const h = dlc.box_h;
   auto far_cut = -1.;
   for (int kc = 1; kc < limitkc; kc++) {
     auto const gc = kc * 2. * std::numbers::pi / lx;
-    auto const fa0 = sqrt(9. * exp(+2. * gc * h) * g1_DLC_dip(gc, lz - h) +
-                          9. * exp(-2. * gc * h) * g1_DLC_dip(gc, lz + h) +
-                          22. * g1_DLC_dip(gc, lz));
+    auto const pref1 = g1_DLC_dip(gc, lz - h);
+    auto const pref2 = g1_DLC_dip(gc, lz + h);
+    auto const pref0 = g1_DLC_dip(gc, lz);
+    auto const exp_term = 2. * gc * h;
+    auto const log_term1 = exp_term + std::log(9. * pref1);
+    if (exp_term >= exp_max or log_term1 >= log_max or -exp_term <= exp_min) {
+      // no solution can be found at larger k values due to overflow/underflow
+      break;
+    }
+    auto const fa0 = std::sqrt(9. * std::exp(+exp_term) * pref1 +
+                               9. * std::exp(-exp_term) * pref2 + 22. * pref0);
     auto const fa1 = sqrt(0.125 * piarea) * fa0;
     auto const fa2 = g2_DLC_dip(gc, lz);
     auto const de = nmp * mu_max_sq / (4. * (exp(gc * lz) - 1.)) * (fa1 + fa2);

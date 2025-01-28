@@ -74,6 +74,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <tuple>
+#include <utility>
 #include <vector>
 
 #ifdef FFTW3_H
@@ -115,8 +116,9 @@ double
 DipolarP3MImpl<FloatType, Architecture>::calc_average_self_energy_k_space()
     const {
   auto const &box_geo = *get_system().box_geo;
-  auto const node_phi = grid_influence_function_self_energy(
-      dp3m.params, dp3m.mesh.start, dp3m.mesh.stop, dp3m.g_energy);
+  auto const node_phi =
+      grid_influence_function_self_energy<FloatType, P3M_BRILLOUIN>(
+          dp3m.params, dp3m.mesh.start, dp3m.mesh.stop, dp3m.g_energy);
 
   double phi = 0.;
   boost::mpi::reduce(comm_cart, node_phi, phi, std::plus<>(), 0);
@@ -518,14 +520,14 @@ double DipolarP3MImpl<FloatType, Architecture>::calc_surface_term(
 
 template <typename FloatType, Arch Architecture>
 void DipolarP3MImpl<FloatType, Architecture>::calc_influence_function_force() {
-  dp3m.g_force = grid_influence_function<FloatType, 3>(
+  dp3m.g_force = grid_influence_function<FloatType, 3, P3M_BRILLOUIN>(
       dp3m.params, dp3m.mesh.start, dp3m.mesh.stop,
       get_system().box_geo->length_inv());
 }
 
 template <typename FloatType, Arch Architecture>
 void DipolarP3MImpl<FloatType, Architecture>::calc_influence_function_energy() {
-  dp3m.g_energy = grid_influence_function<FloatType, 2>(
+  dp3m.g_energy = grid_influence_function<FloatType, 2, P3M_BRILLOUIN>(
       dp3m.params, dp3m.mesh.start, dp3m.mesh.stop,
       get_system().box_geo->length_inv());
 }
@@ -534,11 +536,14 @@ template <typename FloatType, Arch Architecture>
 class DipolarTuningAlgorithm : public TuningAlgorithm {
   p3m_data_struct_dipoles<FloatType> &dp3m;
   int m_mesh_max = -1, m_mesh_min = -1;
+  std::pair<std::optional<int>, std::optional<int>> m_tune_limits;
 
 public:
   DipolarTuningAlgorithm(System::System &system, decltype(dp3m) &input_dp3m,
-                         double prefactor, int timings)
-      : TuningAlgorithm(system, prefactor, timings), dp3m{input_dp3m} {}
+                         double prefactor, int timings,
+                         decltype(m_tune_limits) tune_limits)
+      : TuningAlgorithm(system, prefactor, timings), dp3m{input_dp3m},
+        m_tune_limits{std::move(tune_limits)} {}
 
   P3MParameters &get_params() override { return dp3m.params; }
 
@@ -603,6 +608,12 @@ public:
       m_mesh_min = static_cast<int>(std::round(std::pow(2., std::floor(expo))));
       /* avoid using more than 1 GB of FFT arrays */
       m_mesh_max = 128;
+      if (m_tune_limits.first) {
+        m_mesh_min = *m_tune_limits.first;
+      }
+      if (m_tune_limits.second) {
+        m_mesh_max = *m_tune_limits.second;
+      }
     } else {
       m_mesh_min = m_mesh_max = dp3m.params.mesh[0];
       m_logger->report_fixed_mesh(dp3m.params.mesh);
@@ -662,7 +673,7 @@ void DipolarP3MImpl<FloatType, Architecture>::tune() {
     }
     try {
       DipolarTuningAlgorithm<FloatType, Architecture> parameters(
-          system, dp3m, prefactor, tune_timings);
+          system, dp3m, prefactor, tune_timings, tune_limits);
       parameters.setup_logger(tune_verbose);
       // parameter ranges
       parameters.determine_mesh_limits();
@@ -757,6 +768,7 @@ static double dp3m_k_space_error(double box_size, int mesh, int cao,
 static double dp3m_real_space_error(double box_size, double r_cut_iL,
                                     int n_c_part, double sum_q2,
                                     double alpha_L) {
+  auto constexpr exp_min = -708.4; // for IEEE-compatible double
   double d_error_f, d_cc, d_dc, d_con;
 
   auto const d_rcut = r_cut_iL * box_size;
@@ -764,8 +776,9 @@ static double dp3m_real_space_error(double box_size, double r_cut_iL,
   auto const d_rcut4 = Utils::sqr(d_rcut2);
 
   auto const d_a2 = Utils::sqr(alpha_L) / Utils::sqr(box_size);
-
-  auto const d_c = sum_q2 * exp(-d_a2 * d_rcut2);
+  auto const exponent = -d_a2 * d_rcut2;
+  auto const exp_term = (exponent < exp_min) ? 0. : std::exp(exponent);
+  auto const d_c = sum_q2 * exp_term;
 
   d_cc = 4. * Utils::sqr(d_a2) * Utils::sqr(d_rcut2) + 6. * d_a2 * d_rcut2 + 3.;
 

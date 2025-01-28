@@ -33,6 +33,7 @@
 #include "script_interface/get_value.hpp"
 
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -47,6 +48,7 @@ namespace Dipoles {
 template <Arch Architecture>
 class DipolarP3M : public Actor<DipolarP3M<Architecture>, ::DipolarP3M> {
   int m_tune_timings;
+  std::pair<std::optional<int>, std::optional<int>> m_tune_limits;
   bool m_tune;
   bool m_tune_verbose;
 
@@ -90,6 +92,15 @@ public:
          [this]() { return m_tune_verbose; }},
         {"timings", AutoParameter::read_only,
          [this]() { return m_tune_timings; }},
+        {"tune_limits", AutoParameter::read_only,
+         [this]() {
+           auto const &[range_min, range_max] = m_tune_limits;
+           std::vector<Variant> retval = {
+               range_min ? Variant{*range_min} : Variant{None{}},
+               range_max ? Variant{*range_max} : Variant{None{}},
+           };
+           return retval;
+         }},
         {"tune", AutoParameter::read_only, [this]() { return m_tune; }},
     });
   }
@@ -98,6 +109,40 @@ public:
     m_tune = get_value<bool>(params, "tune");
     m_tune_timings = get_value<int>(params, "timings");
     m_tune_verbose = get_value<bool>(params, "verbose");
+    m_tune_limits = {std::nullopt, std::nullopt};
+    if (params.contains("tune_limits")) {
+      auto const &variant = params.at("tune_limits");
+      std::size_t range_length = 0u;
+      if (is_type<std::vector<int>>(variant)) {
+        auto const range = get_value<std::vector<int>>(variant);
+        range_length = range.size();
+        if (range_length == 2u) {
+          m_tune_limits = {range[0u], range[1u]};
+        }
+      } else {
+        auto const range = get_value<std::vector<Variant>>(variant);
+        range_length = range.size();
+        if (range_length == 2u) {
+          if (not is_none(range[0u])) {
+            m_tune_limits.first = get_value<int>(range[0u]);
+          }
+          if (not is_none(range[1u])) {
+            m_tune_limits.second = get_value<int>(range[1u]);
+          }
+        }
+      }
+      context()->parallel_try_catch([&]() {
+        if (range_length != 2u) {
+          throw std::invalid_argument("Parameter 'tune_limits' needs 2 values");
+        }
+        if (m_tune_limits.first and *m_tune_limits.first <= 0) {
+          throw std::domain_error("Parameter 'tune_limits' must be > 0");
+        }
+        if (m_tune_limits.second and *m_tune_limits.second <= 0) {
+          throw std::domain_error("Parameter 'tune_limits' must be > 0");
+        }
+      });
+    }
     auto const single_precision = get_value<bool>(params, "single_precision");
     static_assert(Architecture == Arch::CPU, "GPU not implemented");
     context()->parallel_try_catch([&]() {
@@ -111,7 +156,7 @@ public:
                                get_value<double>(params, "accuracy")};
       make_handle(single_precision, std::move(p3m),
                   get_value<double>(params, "prefactor"), m_tune_timings,
-                  m_tune_verbose);
+                  m_tune_verbose, m_tune_limits);
     });
   }
 

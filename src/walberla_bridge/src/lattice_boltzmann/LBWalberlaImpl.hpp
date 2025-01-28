@@ -102,7 +102,7 @@ protected:
   using BoundaryModel =
       BoundaryHandling<Vector3<FloatType>,
                        typename detail::BoundaryHandlingTrait<
-                           FloatType, Architecture>::Dynamic_UBB>;
+                           FloatType, Architecture>::DynamicUBB>;
   using CollisionModel =
       std::variant<CollisionModelThermalized, CollisionModelLeesEdwards>;
 
@@ -112,7 +112,7 @@ public:
   /** @brief Stencil for ghost communication (includes domain corners). */
   using StencilFull = stencil::D3Q27;
   /** @brief Lattice model (e.g. blockforest). */
-  using Lattice_T = LatticeWalberla::Lattice_T;
+  using BlockStorage = LatticeWalberla::Lattice_T;
 
 protected:
   template <typename FT, lbmpy::Arch AT = lbmpy::Arch::CPU> struct FieldTrait {
@@ -200,7 +200,7 @@ public:
     return static_cast<std::size_t>(Stencil::Size);
   }
 
-  [[nodiscard]] virtual bool is_double_precision() const noexcept override {
+  [[nodiscard]] bool is_double_precision() const noexcept override {
     return std::is_same_v<FloatType, double>;
   }
 
@@ -215,8 +215,8 @@ private:
     }
 
     void operator()(CollisionModelLeesEdwards &cm, IBlock *b) {
-      cm.v_s_ = static_cast<decltype(cm.v_s_)>(
-          m_lees_edwards_callbacks->get_shear_velocity());
+      cm.setV_s(static_cast<decltype(cm.getV_s())>(
+          m_lees_edwards_callbacks->get_shear_velocity()));
       cm(b);
     }
 
@@ -248,8 +248,7 @@ private:
             shear_relaxation);
   }
 
-  void reset_boundary_handling() {
-    auto const &blocks = get_lattice().get_blocks();
+  void reset_boundary_handling(std::shared_ptr<BlockStorage> const &blocks) {
     m_boundary = std::make_shared<BoundaryModel>(blocks, m_pdf_field_id,
                                                  m_flag_field_id);
   }
@@ -506,7 +505,7 @@ public:
     m_flag_field_id = field::addFlagFieldToStorage<FlagField>(
         blocks, "flag field", n_ghost_layers);
     // Initialize boundary sweep
-    reset_boundary_handling();
+    reset_boundary_handling(m_lattice->get_blocks());
 
     // Set up the communication and register fields
     setup_streaming_communicator();
@@ -556,17 +555,17 @@ public:
   }
 
 private:
-  void integrate_stream(std::shared_ptr<Lattice_T> const &blocks) {
+  void integrate_stream(std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_stream)(&*b);
   }
 
-  void integrate_collide(std::shared_ptr<Lattice_T> const &blocks) {
+  void integrate_collide(std::shared_ptr<BlockStorage> const &blocks) {
     auto &cm_variant = *m_collision_model;
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       std::visit(m_run_collide_sweep, cm_variant, std::variant<IBlock *>(&*b));
     if (auto *cm = std::get_if<CollisionModelThermalized>(&cm_variant)) {
-      cm->time_step_++;
+      cm->setTime_step(cm->getTime_step() + 1u);
     }
   }
 
@@ -576,29 +575,29 @@ private:
   }
 
   void apply_lees_edwards_pdf_interpolation(
-      std::shared_ptr<Lattice_T> const &blocks) {
+      std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_lees_edwards_pdf_interpol_sweep)(&*b);
   }
 
   void apply_lees_edwards_vel_interpolation_and_shift(
-      std::shared_ptr<Lattice_T> const &blocks) {
+      std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_lees_edwards_vel_interpol_sweep)(&*b);
   }
 
   void apply_lees_edwards_last_applied_force_interpolation(
-      std::shared_ptr<Lattice_T> const &blocks) {
+      std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_lees_edwards_last_applied_force_interpol_sweep)(&*b);
   }
 
-  void integrate_reset_force(std::shared_ptr<Lattice_T> const &blocks) {
+  void integrate_reset_force(std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_reset_force)(&*b);
   }
 
-  void integrate_boundaries(std::shared_ptr<Lattice_T> const &blocks) {
+  void integrate_boundaries(std::shared_ptr<BlockStorage> const &blocks) {
     for (auto b = blocks->begin(); b != blocks->end(); ++b)
       (*m_boundary)(&*b);
   }
@@ -641,7 +640,7 @@ private:
     m_pending_ghost_comm.set(GhostComm::VEL);
     m_pending_ghost_comm.set(GhostComm::LAF);
     // Refresh ghost layers
-    ghost_communication_pdfs();
+    ghost_communication_full();
   }
 
 protected:
@@ -669,7 +668,7 @@ public:
   void ghost_communication() override {
     if (m_pending_ghost_comm.any()) {
       ghost_communication_boundary();
-      ghost_communication_pdfs();
+      ghost_communication_full();
     }
   }
 
@@ -695,7 +694,7 @@ public:
     }
   }
 
-  void ghost_communication_laf() {
+  void ghost_communication_laf() override {
     if (m_pending_ghost_comm.test(GhostComm::LAF)) {
       m_laf_communicator->communicate();
       if (has_lees_edwards_bc()) {
@@ -713,7 +712,7 @@ public:
     }
   }
 
-  void ghost_communication_pdfs() {
+  void ghost_communication_full() {
     m_full_communicator->communicate();
     if (has_lees_edwards_bc()) {
       auto const &blocks = get_lattice().get_blocks();
@@ -976,15 +975,14 @@ public:
     if (pos.empty()) {
       return {};
     }
+    std::vector<Utils::Vector3d> vel{};
     if constexpr (Architecture == lbmpy::Arch::CPU) {
-      std::vector<Utils::Vector3d> vel{};
       vel.reserve(pos.size());
       for (auto const &vec : pos) {
         auto res = get_velocity_at_pos(vec, true);
         assert(res.has_value());
         vel.emplace_back(*res);
       }
-      return vel;
     }
 #if defined(__CUDACC__)
     if constexpr (Architecture == lbmpy::Arch::GPU) {
@@ -1004,17 +1002,15 @@ public:
       auto field =
           block.template uncheckedFastGetData<VectorField>(m_velocity_field_id);
       auto const res = lbm::accessor::Interpolation::get(field, host_pos, gl);
-      std::vector<Utils::Vector3d> vel{};
       vel.reserve(res.size() / 3ul);
       for (auto it = res.begin(); it != res.end(); it += 3) {
         vel.emplace_back(Utils::Vector3d{static_cast<double>(*(it + 0)),
                                          static_cast<double>(*(it + 1)),
                                          static_cast<double>(*(it + 2))});
       }
-      return vel;
     }
 #endif
-    return {};
+    return vel;
   }
 
   std::optional<Utils::Vector3d>
@@ -1463,7 +1459,7 @@ public:
   }
 
   void clear_boundaries() override {
-    reset_boundary_handling();
+    reset_boundary_handling(get_lattice().get_blocks());
     m_pending_ghost_comm.set(GhostComm::UBB);
     ghost_communication();
     m_has_boundaries = false;
@@ -1569,7 +1565,7 @@ public:
     if (!cm or m_kT == 0.) {
       return std::nullopt;
     }
-    return {static_cast<uint64_t>(cm->time_step_)};
+    return {static_cast<uint64_t>(cm->getTime_step())};
   }
 
   void set_rng_state(uint64_t counter) override {
@@ -1579,7 +1575,7 @@ public:
     }
     assert(counter <=
            static_cast<uint32_t>(std::numeric_limits<uint_t>::max()));
-    cm->time_step_ = static_cast<uint32_t>(counter);
+    cm->setTime_step(static_cast<uint32_t>(counter));
   }
 
   [[nodiscard]] LatticeWalberla const &get_lattice() const noexcept override {

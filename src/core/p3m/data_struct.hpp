@@ -66,7 +66,7 @@ template <typename FloatType> struct p3m_data_struct {
    *  i.e. the prefactor @f$ 2i\pi/L @f$ is missing!
    */
   void calc_differential_operator() {
-    d_op = detail::calc_meshift(params.mesh, true);
+    d_op = calc_p3m_mesh_shift(params.mesh, true);
   }
 
   /** @brief Force optimised influence function (k-space) */

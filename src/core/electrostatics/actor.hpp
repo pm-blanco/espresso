@@ -34,6 +34,10 @@ void check_charge_neutrality(System::System const &system,
                              double relative_tolerance);
 
 template <typename Class> class Actor : public System::Leaf<Actor<Class>> {
+private:
+  Actor() = default;
+  friend Class;
+
 public:
   static auto constexpr charge_neutrality_tolerance_default = 2e-12;
   /**

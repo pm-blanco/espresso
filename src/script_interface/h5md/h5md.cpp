@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2022 The ESPResSo project
+ * Copyright (C) 2010-2025 The ESPResSo project
  * Copyright (C) 2002,2003,2004,2005,2006,2007,2008,2009,2010
  *   Max-Planck-Institute for Polymer Research, Theory Group
  *
@@ -25,14 +25,52 @@
 
 #include "h5md.hpp"
 
-#include "cell_system/CellStructure.hpp"
+#include "core/MpiCallbacks.hpp"
+#include "core/cell_system/CellStructure.hpp"
+#include "core/communication.hpp"
+#include "core/io/writer/h5md_core.hpp"
 #include "core/system/System.hpp"
 
+#include <cassert>
 #include <cmath>
 #include <string>
+#include <vector>
 
 namespace ScriptInterface {
 namespace Writer {
+
+H5md::H5md() {
+  add_parameters(
+      {{"file_path", m_h5md, &::Writer::H5md::File::file_path},
+       {"script_path", m_h5md, &::Writer::H5md::File::script_path},
+       {"fields", AutoParameter::read_only,
+        [this]() { return make_vector_of_variants(m_output_fields); }},
+       {"mass_unit", m_h5md, &::Writer::H5md::File::mass_unit},
+       {"length_unit", m_h5md, &::Writer::H5md::File::length_unit},
+       {"time_unit", m_h5md, &::Writer::H5md::File::time_unit},
+       {"force_unit", m_h5md, &::Writer::H5md::File::force_unit},
+       {"velocity_unit", m_h5md, &::Writer::H5md::File::velocity_unit},
+       {"charge_unit", m_h5md, &::Writer::H5md::File::charge_unit}});
+};
+
+void H5md::do_construct(VariantMap const &params) {
+  m_output_fields = get_value<std::vector<std::string>>(params, "fields");
+  m_h5md =
+      make_shared_from_args<::Writer::H5md::File, std::string, std::string,
+                            std::vector<std::string>, std::string, std::string,
+                            std::string, std::string, std::string, std::string>(
+          params, "file_path", "script_path", "fields", "mass_unit",
+          "length_unit", "time_unit", "force_unit", "velocity_unit",
+          "charge_unit");
+  // MPI communicator is needed to close parallel file handles
+  m_mpi_env_lock = ::Communication::mpiCallbacksHandle()->share_mpi_env();
+}
+
+H5md::~H5md() {
+  m_h5md.reset();
+  assert(m_h5md.use_count() == 0u);
+  m_mpi_env_lock.reset();
+}
 
 Variant H5md::do_call_method(const std::string &name,
                              const VariantMap &parameters) {

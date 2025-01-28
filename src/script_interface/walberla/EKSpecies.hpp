@@ -42,7 +42,13 @@
 
 namespace ScriptInterface::walberla {
 
-class EKVTKHandle;
+class EKVTKHandle : public VTKHandleBase<::EKinWalberlaBase> {
+  static std::unordered_map<std::string, int> const obs_map;
+
+  std::unordered_map<std::string, int> const &get_obs_map() const override {
+    return obs_map;
+  }
+};
 
 class EKSpecies : public LatticeModel<::EKinWalberlaBase, EKVTKHandle> {
 protected:
@@ -154,14 +160,6 @@ public:
 private:
   void load_checkpoint(std::string const &filename, int mode);
   void save_checkpoint(std::string const &filename, int mode);
-};
-
-class EKVTKHandle : public VTKHandleBase<::EKinWalberlaBase> {
-  static std::unordered_map<std::string, int> const obs_map;
-
-  std::unordered_map<std::string, int> const &get_obs_map() const override {
-    return obs_map;
-  }
 };
 
 } // namespace ScriptInterface::walberla

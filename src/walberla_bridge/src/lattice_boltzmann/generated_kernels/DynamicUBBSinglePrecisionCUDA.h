@@ -13,13 +13,13 @@
 //  You should have received a copy of the GNU General Public License along
 //  with waLBerla (see COPYING.txt). If not, see <http://www.gnu.org/licenses/>.
 //
-//! \\file Dynamic_UBB_double_precision.h
+//! \\file DynamicUBBSinglePrecisionCUDA.h
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -30,7 +30,9 @@
 #include "domain_decomposition/BlockDataID.h"
 #include "domain_decomposition/IBlock.h"
 #include "field/FlagField.h"
-#include "field/GhostLayerField.h"
+#include "gpu/FieldCopy.h"
+#include "gpu/GPUField.h"
+#include "gpu/GPUWrapper.h"
 
 #include <set>
 #include <vector>
@@ -50,16 +52,16 @@ using walberla::half;
 namespace walberla {
 namespace lbm {
 
-class Dynamic_UBB_double_precision {
+class DynamicUBBSinglePrecisionCUDA {
 public:
   struct IndexInfo {
     int32_t x;
     int32_t y;
     int32_t z;
     int32_t dir;
-    double vel_0;
-    double vel_1;
-    double vel_2;
+    float vel_0;
+    float vel_1;
+    float vel_2;
     IndexInfo(int32_t x_, int32_t y_, int32_t z_, int32_t dir_)
         : x(x_), y(y_), z(z_), dir(dir_), vel_0(), vel_1(), vel_2() {}
     bool operator==(const IndexInfo &o) const {
@@ -80,46 +82,78 @@ public:
       return other.cpuVectors_ == cpuVectors_;
     }
 
+    ~IndexVectors() {
+      for (auto &gpuVec : gpuVectors_)
+        WALBERLA_GPU_CHECK(gpuFree(gpuVec));
+    }
     CpuIndexVector &indexVector(Type t) { return cpuVectors_[t]; }
     IndexInfo *pointerCpu(Type t) { return cpuVectors_[t].data(); }
 
-    void syncGPU() {}
+    IndexInfo *pointerGpu(Type t) { return gpuVectors_[t]; }
+    void syncGPU() {
+      for (auto &gpuVec : gpuVectors_)
+        WALBERLA_GPU_CHECK(gpuFree(gpuVec));
+      gpuVectors_.resize(cpuVectors_.size());
+
+      WALBERLA_ASSERT_EQUAL(cpuVectors_.size(), NUM_TYPES);
+      for (size_t i = 0; i < cpuVectors_.size(); ++i) {
+        auto &gpuVec = gpuVectors_[i];
+        auto &cpuVec = cpuVectors_[i];
+        WALBERLA_GPU_CHECK(
+            gpuMalloc(&gpuVec, sizeof(IndexInfo) * cpuVec.size()));
+        WALBERLA_GPU_CHECK(gpuMemcpy(gpuVec, &cpuVec[0],
+                                     sizeof(IndexInfo) * cpuVec.size(),
+                                     gpuMemcpyHostToDevice));
+      }
+    }
 
   private:
     std::vector<CpuIndexVector> cpuVectors_{NUM_TYPES};
+
+    using GpuIndexVector = IndexInfo *;
+    std::vector<GpuIndexVector> gpuVectors_;
   };
 
-  Dynamic_UBB_double_precision(
+  DynamicUBBSinglePrecisionCUDA(
       const shared_ptr<StructuredBlockForest> &blocks, BlockDataID pdfsID_,
-      std::function<Vector3<double>(const Cell &,
-                                    const shared_ptr<StructuredBlockForest> &,
-                                    IBlock &)> &velocityCallback)
+      std::function<Vector3<float32>(const Cell &,
+                                     const shared_ptr<StructuredBlockForest> &,
+                                     IBlock &)> &velocityCallback)
       : elementInitialiser(velocityCallback), pdfsID(pdfsID_) {
     auto createIdxVector = [](IBlock *const, StructuredBlockStorage *const) {
       return new IndexVectors();
     };
     indexVectorID = blocks->addStructuredBlockData<IndexVectors>(
-        createIdxVector, "IndexField_Dynamic_UBB_double_precision");
-  };
-
-  void run(IBlock *block);
-
-  void operator()(IBlock *block) { run(block); }
-
-  void inner(IBlock *block);
-
-  void outer(IBlock *block);
-
-  std::function<void(IBlock *)> getSweep() {
-    return [this](IBlock *b) { this->run(b); };
+        createIdxVector, "IndexField_DynamicUBBSinglePrecisionCUDA");
   }
 
-  std::function<void(IBlock *)> getInnerSweep() {
-    return [this](IBlock *b) { this->inner(b); };
+  void run(IBlock *block, gpuStream_t stream = nullptr);
+
+  void operator()(IBlock *block, gpuStream_t stream = nullptr) {
+    run(block, stream);
   }
 
-  std::function<void(IBlock *)> getOuterSweep() {
-    return [this](IBlock *b) { this->outer(b); };
+  void inner(IBlock *block, gpuStream_t stream = nullptr);
+
+  void outer(IBlock *block, gpuStream_t stream = nullptr);
+
+  Vector3<double> getForce(IBlock * /*block*/) {
+
+    WALBERLA_ABORT(
+        "Boundary condition was not generated including force calculation.")
+    return Vector3<double>(double_c(0.0));
+  }
+
+  std::function<void(IBlock *)> getSweep(gpuStream_t stream = nullptr) {
+    return [this, stream](IBlock *b) { this->run(b, stream); };
+  }
+
+  std::function<void(IBlock *)> getInnerSweep(gpuStream_t stream = nullptr) {
+    return [this, stream](IBlock *b) { this->inner(b, stream); };
+  }
+
+  std::function<void(IBlock *)> getOuterSweep(gpuStream_t stream = nullptr) {
+    return [this, stream](IBlock *b) { this->outer(b, stream); };
   }
 
   template <typename FlagField_T>
@@ -559,10 +593,12 @@ public:
   }
 
 private:
-  void run_impl(IBlock *block, IndexVectors::Type type);
+  void run_impl(IBlock *block, IndexVectors::Type type,
+                gpuStream_t stream = nullptr);
 
   BlockDataID indexVectorID;
-  std::function<Vector3<double>(
+
+  std::function<Vector3<float32>(
       const Cell &, const shared_ptr<StructuredBlockForest> &, IBlock &)>
       elementInitialiser;
 

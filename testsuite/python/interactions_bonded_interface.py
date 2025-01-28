@@ -30,7 +30,7 @@ class BondedInteractions(ut.TestCase):
     system = espressomd.System(box_l=[20.0, 20.0, 20.0])
 
     def setUp(self):
-        self.system.part.add(pos=4 * [[0, 0, 0]])
+        self.system.part.add(pos=[[i, (i + 1) % 2, 0] for i in range(4)])
 
     def tearDown(self):
         self.system.part.clear()
@@ -142,7 +142,7 @@ class BondedInteractions(ut.TestCase):
         0, espressomd.interactions.IBM_Tribend,
         {"ind1": 0, "ind2": 1, "ind3": 2, "ind4": 3,
             "kb": 1.1, "refShape": "Initial"},
-        {"kb": 1.1, "theta0": 0.0})
+        {"kb": 1.1, "theta0": np.pi})
     test_ibm_tribend_flat = generateTestForBondParams(
         0, espressomd.interactions.IBM_Tribend,
         {"ind1": 0, "ind2": 1, "ind3": 2, "ind4": 3,

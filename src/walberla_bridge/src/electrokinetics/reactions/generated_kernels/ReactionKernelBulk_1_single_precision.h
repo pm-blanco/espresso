@@ -17,9 +17,9 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "core/DataTypes.h"
@@ -30,7 +30,9 @@
 #include "domain_decomposition/StructuredBlockStorage.h"
 #include "field/GhostLayerField.h"
 #include "field/SwapableCompare.h"
-#include <set>
+
+#include <functional>
+#include <unordered_map>
 
 #ifdef __GNUC__
 #define RESTRICT __restrict__
@@ -55,7 +57,7 @@ public:
   ReactionKernelBulk_1_single_precision(BlockDataID rho_0ID_, float order_0,
                                         float rate_coefficient, float stoech_0)
       : rho_0ID(rho_0ID_), order_0_(order_0),
-        rate_coefficient_(rate_coefficient), stoech_0_(stoech_0){};
+        rate_coefficient_(rate_coefficient), stoech_0_(stoech_0) {}
 
   void run(IBlock *block);
 
@@ -92,9 +94,19 @@ public:
     };
   }
 
-  void configure(const shared_ptr<StructuredBlockStorage> &blocks,
-                 IBlock *block) {}
+  void configure(const shared_ptr<StructuredBlockStorage> & /*blocks*/,
+                 IBlock * /*block*/) {}
 
+  inline float getOrder_0() const { return order_0_; }
+  inline float getRate_coefficient() const { return rate_coefficient_; }
+  inline float getStoech_0() const { return stoech_0_; }
+  inline void setOrder_0(const float value) { order_0_ = value; }
+  inline void setRate_coefficient(const float value) {
+    rate_coefficient_ = value;
+  }
+  inline void setStoech_0(const float value) { stoech_0_ = value; }
+
+private:
   BlockDataID rho_0ID;
   float order_0_;
   float rate_coefficient_;

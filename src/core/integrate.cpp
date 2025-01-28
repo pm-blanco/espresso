@@ -620,6 +620,7 @@ int System::System::integrate(int n_steps, int reuse_forces) {
               << "LB and EK are active but with different time steps.";
         }
 
+        assert(not lb.is_gpu());
         assert(propagation.lb_skipped_md_steps ==
                propagation.ek_skipped_md_steps);
 

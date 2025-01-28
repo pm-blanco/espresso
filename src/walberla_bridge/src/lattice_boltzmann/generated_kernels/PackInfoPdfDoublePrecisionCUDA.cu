@@ -17,7 +17,14 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3, lbmpy_walberla/pystencils_walberla from waLBerla commit b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1, lbmpy_walberla/pystencils_walberla from waLBerla commit f36fa0a68bae59f0b516f6587ea8fa7c24a41141
+
+#include "core/DataTypes.h"
+#include "core/cell/CellInterval.h"
+
+#include "domain_decomposition/IBlock.h"
+
+#include "stencil/Directions.h"
 
 #include "core/DataTypes.h"
 #include "core/cell/CellInterval.h"

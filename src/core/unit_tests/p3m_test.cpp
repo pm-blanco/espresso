@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(calc_meshift_false) {
        std::vector<int>{0, 1, 2, 3, -3, -2, -1}}};
 
   auto const mesh = Utils::Vector3i{{1, 4, 7}};
-  auto const val = detail::calc_meshift(mesh, false);
+  auto const val = calc_p3m_mesh_shift(mesh, false);
 
   for (std::size_t i = 0u; i < 3u; ++i) {
     for (std::size_t j = 0u; j < ref[i].size(); ++j) {
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(calc_meshift_true) {
        std::vector<int>{0, 1, 2, 0, -3, -2, -1}}};
 
   auto const mesh = Utils::Vector3i{{1, 4, 7}};
-  auto const val = detail::calc_meshift(mesh, true);
+  auto const val = calc_p3m_mesh_shift(mesh, true);
 
   for (std::size_t i = 0u; i < 3u; ++i) {
     for (std::size_t j = 0u; j < ref[i].size(); ++j) {

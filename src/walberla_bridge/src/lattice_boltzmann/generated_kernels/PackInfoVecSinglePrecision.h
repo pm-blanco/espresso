@@ -17,9 +17,9 @@
 //! \\author pystencils
 //======================================================================================================================
 
-// kernel generated with pystencils v1.3.3, lbmpy v1.3.3,
+// kernel generated with pystencils v1.3.7, lbmpy v1.3.7, sympy v1.12.1,
 // lbmpy_walberla/pystencils_walberla from waLBerla commit
-// b0842e1a493ce19ef1bbb8d2cf382fc343970a7f
+// f36fa0a68bae59f0b516f6587ea8fa7c24a41141
 
 #pragma once
 #include "communication/UniformPackInfo.h"
@@ -28,6 +28,8 @@
 #include "domain_decomposition/IBlock.h"
 #include "field/GhostLayerField.h"
 #include "stencil/Directions.h"
+
+#include <memory>
 
 #define FUNC_PREFIX
 
@@ -45,20 +47,23 @@ namespace pystencils {
 class PackInfoVecSinglePrecision
     : public ::walberla::communication::UniformPackInfo {
 public:
-  PackInfoVecSinglePrecision(BlockDataID fieldID_) : fieldID(fieldID_){};
-  virtual ~PackInfoVecSinglePrecision() {}
+  PackInfoVecSinglePrecision(BlockDataID fieldID_) : fieldID(fieldID_) {}
+  ~PackInfoVecSinglePrecision() override = default;
 
-  bool constantDataExchange() const { return true; }
-  bool threadsafeReceiving() const { return true; }
+  bool constantDataExchange() const override { return true; }
+  bool threadsafeReceiving() const override { return true; }
 
   void unpackData(IBlock *receiver, stencil::Direction dir,
-                  mpi::RecvBuffer &buffer) {
+                  mpi::RecvBuffer &buffer) override {
     const auto dataSize = size(dir, receiver);
-    unpack(dir, buffer.skip(dataSize + sizeof(float)), receiver);
+    auto bufferSize = dataSize + sizeof(float);
+    auto bufferPtr = reinterpret_cast<void *>(buffer.skip(bufferSize));
+    std::align(alignof(float), dataSize, bufferPtr, bufferSize);
+    unpack(dir, reinterpret_cast<unsigned char *>(bufferPtr), receiver);
   }
 
   void communicateLocal(const IBlock *sender, IBlock *receiver,
-                        stencil::Direction dir) {
+                        stencil::Direction dir) override {
     mpi::SendBuffer sBuffer;
     packData(sender, dir, sBuffer);
     mpi::RecvBuffer rBuffer(sBuffer);
@@ -66,9 +71,12 @@ public:
   }
 
   void packDataImpl(const IBlock *sender, stencil::Direction dir,
-                    mpi::SendBuffer &outBuffer) const {
+                    mpi::SendBuffer &outBuffer) const override {
     const auto dataSize = size(dir, sender);
-    pack(dir, outBuffer.forward(dataSize + sizeof(float)),
+    auto bufferSize = dataSize + sizeof(float);
+    auto bufferPtr = reinterpret_cast<void *>(outBuffer.forward(bufferSize));
+    std::align(alignof(float), dataSize, bufferPtr, bufferSize);
+    pack(dir, reinterpret_cast<unsigned char *>(bufferPtr),
          const_cast<IBlock *>(sender));
   }
 

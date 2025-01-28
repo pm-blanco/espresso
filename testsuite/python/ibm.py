@@ -279,7 +279,8 @@ class IBM(ut.TestCase):
         triel_unpickled = pickle.loads(pickle.dumps(triel_original))
         for triel in [triel_original, triel_unpickled]:
             self.assertFalse(triel.is_initialized)
-            np.testing.assert_allclose(np.copy(triel._cache), 0.)
+            np.testing.assert_allclose(np.copy(triel._cache), 0., atol=1e-12,
+                                       rtol=0.)
             self.assertEqual(triel.ind1, p1.id)
             self.assertEqual(triel.ind2, p2.id)
             self.assertEqual(triel.ind3, p3.id)
@@ -292,7 +293,8 @@ class IBM(ut.TestCase):
         triel_skip_init = pickle.loads(pickle.dumps(triel_original))
         for triel in [triel_original, triel_unpickled, triel_skip_init]:
             self.assertTrue(triel.is_initialized)
-            np.testing.assert_allclose(np.copy(triel._cache), cache)
+            np.testing.assert_allclose(np.copy(triel._cache), cache,
+                                       atol=1e-12, rtol=1e-7)
             self.assertEqual(triel.ind1, p1.id)
             self.assertEqual(triel.ind2, p2.id)
             self.assertEqual(triel.ind3, p3.id)

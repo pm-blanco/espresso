@@ -105,6 +105,7 @@ void EKSpecies::make_instance(VariantMap const &params) {
       get_value<bool>(params, "single_precision"),
       get_value_or<bool>(params, "thermalized", false),
       static_cast<uint>(get_value_or<int>(params, "seed", 0)));
+  m_instance->ghost_communication();
 }
 
 void EKSpecies::do_construct(VariantMap const &params) {

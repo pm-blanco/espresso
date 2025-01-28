@@ -100,6 +100,7 @@ set_default_value with_ubsan false
 set_default_value with_asan false
 set_default_value with_static_analysis false
 set_default_value with_caliper false
+set_default_value with_fpe false
 set_default_value myconfig "default"
 set_default_value build_procs ${ci_procs}
 set_default_value check_procs ${build_procs}
@@ -147,6 +148,7 @@ cmake_params="${cmake_params} -D ESPRESSO_CTEST_ARGS:STRING=-j${check_procs} -D 
 cmake_params="${cmake_params} -D ESPRESSO_BUILD_BENCHMARKS=${make_check_benchmarks}"
 cmake_params="${cmake_params} -D ESPRESSO_BUILD_WITH_CCACHE=${with_ccache}"
 cmake_params="${cmake_params} -D ESPRESSO_BUILD_WITH_CALIPER=${with_caliper}"
+cmake_params="${cmake_params} -D ESPRESSO_BUILD_WITH_FPE=${with_fpe}"
 cmake_params="${cmake_params} -D ESPRESSO_BUILD_WITH_HDF5=${with_hdf5}"
 cmake_params="${cmake_params} -D ESPRESSO_BUILD_WITH_FFTW=${with_fftw}"
 cmake_params="${cmake_params} -D ESPRESSO_BUILD_WITH_GSL=${with_gsl}"

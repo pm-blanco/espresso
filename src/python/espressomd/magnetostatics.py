@@ -104,6 +104,9 @@ class DipolarP3M(MagnetostaticInteraction):
     tune : :obj:`bool`, optional
         Activate/deactivate the tuning method on activation
         (default is ``True``, i.e., activated).
+    tune_limits : (2,) array_like of :obj:`int`, optional
+        Lower and upper limits (inclusive) for the mesh size during tuning.
+        Use ``None`` to not impose a limit. Defaults to ``[None, None]``.
     timings : :obj:`int`
         Number of force calculations during tuning.
     single_precision : :obj:`bool`

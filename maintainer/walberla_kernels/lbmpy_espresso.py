@@ -20,7 +20,7 @@
 import pystencils as ps
 
 import lbmpy.boundaries
-import lbmpy.custom_code_nodes
+import lbmpy.boundaries.boundaryconditions
 
 import lbmpy_walberla.additional_data_handler
 
@@ -62,13 +62,11 @@ class UBB(lbmpy.boundaries.UBB):
     currently doesn't support the bounce back scheme we need.
     '''
 
-    def __call__(self, f_out, f_in, dir_symbol,
-                 inv_dir, lb_method, index_field):
+    def __call__(self, f_out, f_in, dir_symbol, inv_dir, lb_method, *args):
         '''
         Modify the assignments such that the source and target pdfs are swapped.
         '''
-        assignments = super().__call__(
-            f_out, f_in, dir_symbol, inv_dir, lb_method, index_field)
+        assignments = super().__call__(f_out, f_in, dir_symbol, inv_dir, lb_method, *args)
 
         assert len(assignments) > 0
 
@@ -76,7 +74,7 @@ class UBB(lbmpy.boundaries.UBB):
         if len(assignments) > 1:
             out.extend(assignments[:-1])
 
-        neighbor_offset = lbmpy.custom_code_nodes.NeighbourOffsetArrays.neighbour_offset(
+        neighbor_offset = lbmpy.boundaries.boundaryconditions.NeighbourOffsetArrays.neighbour_offset(
             dir_symbol, lb_method.stencil)
 
         assignment = assignments[-1]

@@ -68,6 +68,16 @@ struct ArrayFormatter {
   }
 };
 
+/**
+ * @brief Alias to create prvalue C-style arrays.
+ *
+ * This type is necessary when converting arrays from one type to another type
+ * within functions marked as @c noexcept. The @c std::initializer_list<T>
+ * type doesn't include the backing array length as part of the type,
+ * and is therefore not strictly equivalent.
+ */
+template <typename T, std::size_t N> using carray_alias = T const[N];
+
 } // namespace detail
 
 template <typename T, std::size_t N> struct Array {

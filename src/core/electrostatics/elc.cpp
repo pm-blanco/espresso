@@ -368,10 +368,6 @@ ElectrostaticLayerCorrection::z_energy(ParticleRange const &particles) const {
   auto const &box_geo = *get_system().box_geo;
   auto const xy_area_inv = box_geo.length_inv()[0] * box_geo.length_inv()[1];
   auto const pref = prefactor * 2. * std::numbers::pi * xy_area_inv;
-  auto const delta = elc.delta_mid_top * elc.delta_mid_bot;
-  auto const fac_delta_mid_bot = elc.delta_mid_bot / (1. - delta);
-  auto const fac_delta_mid_top = elc.delta_mid_top / (1. - delta);
-  auto const fac_delta = delta / (1. - delta);
 
   /* for non-neutral systems, this shift gives the background contribution
    * (rsp. for this shift, the DM of the background is zero) */
@@ -380,6 +376,7 @@ ElectrostaticLayerCorrection::z_energy(ParticleRange const &particles) const {
 
   if (elc.dielectric_contrast_on) {
     if (elc.const_pot) {
+      // metallic boundaries
       clear_vec(gblcblk, size);
       for (auto const &p : particles) {
         auto const z = p.pos()[2];
@@ -396,7 +393,11 @@ ElectrostaticLayerCorrection::z_energy(ParticleRange const &particles) const {
         }
       }
     } else {
-      // metallic boundaries
+      // dielectric boundaries
+      auto const delta = elc.delta_mid_top * elc.delta_mid_bot;
+      auto const fac_delta_mid_bot = elc.delta_mid_bot / (1. - delta);
+      auto const fac_delta_mid_top = elc.delta_mid_top / (1. - delta);
+      auto const fac_delta = delta / (1. - delta);
       clear_vec(gblcblk, size);
       auto const h = elc.box_h;
       ImageSum const image_sum{delta, shift, lz};
@@ -444,13 +445,10 @@ void ElectrostaticLayerCorrection::add_z_force(
   auto const &box_geo = *get_system().box_geo;
   auto const xy_area_inv = box_geo.length_inv()[0] * box_geo.length_inv()[1];
   auto const pref = prefactor * 2. * std::numbers::pi * xy_area_inv;
-  auto const delta = elc.delta_mid_top * elc.delta_mid_bot;
-  auto const fac_delta_mid_bot = elc.delta_mid_bot / (1. - delta);
-  auto const fac_delta_mid_top = elc.delta_mid_top / (1. - delta);
-  auto const fac_delta = delta / (1. - delta);
 
   if (elc.dielectric_contrast_on) {
     if (elc.const_pot) {
+      // metallic boundaries
       clear_vec(gblcblk, size);
       /* just counter the 2 pi |z| contribution stemming from P3M */
       for (auto const &p : particles) {
@@ -462,6 +460,11 @@ void ElectrostaticLayerCorrection::add_z_force(
           gblcblk[0] += elc.delta_mid_top * q;
       }
     } else {
+      // dielectric boundaries
+      auto const delta = elc.delta_mid_top * elc.delta_mid_bot;
+      auto const fac_delta_mid_bot = elc.delta_mid_bot / (1. - delta);
+      auto const fac_delta_mid_top = elc.delta_mid_top / (1. - delta);
+      auto const fac_delta = delta / (1. - delta);
       clear_vec(gblcblk, size);
       for (auto const &p : particles) {
         auto const z = p.pos()[2];

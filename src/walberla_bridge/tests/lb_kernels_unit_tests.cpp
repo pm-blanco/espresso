@@ -21,44 +21,20 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "../src/lattice_boltzmann/generated_kernels/Dynamic_UBB_double_precision.h"
-#include "../src/lattice_boltzmann/generated_kernels/Dynamic_UBB_single_precision.h"
-#include "../src/lattice_boltzmann/generated_kernels/FieldAccessorsDoublePrecision.h"
-#include "../src/lattice_boltzmann/generated_kernels/FieldAccessorsSinglePrecision.h"
+#include "../src/lattice_boltzmann/lb_kernels.hpp"
 #include "../src/utils/types_conversion.hpp"
+
+#include <walberla_bridge/Architecture.hpp>
 
 #include <utils/Vector.hpp>
 
 #include <cmath>
 #include <limits>
 
-bool operator!=(
-    walberla::lbm::Dynamic_UBB_single_precision::IndexInfo const &lhs,
-    walberla::lbm::Dynamic_UBB_single_precision::IndexInfo const &rhs) {
-  return not(lhs == rhs);
-}
-
-bool operator!=(
-    walberla::lbm::Dynamic_UBB_double_precision::IndexInfo const &lhs,
-    walberla::lbm::Dynamic_UBB_double_precision::IndexInfo const &rhs) {
-  return not(lhs == rhs);
-}
-
-bool operator!=(
-    walberla::lbm::Dynamic_UBB_single_precision::IndexVectors const &lhs,
-    walberla::lbm::Dynamic_UBB_single_precision::IndexVectors const &rhs) {
-  return not(lhs == rhs);
-}
-
-bool operator!=(
-    walberla::lbm::Dynamic_UBB_double_precision::IndexVectors const &lhs,
-    walberla::lbm::Dynamic_UBB_double_precision::IndexVectors const &rhs) {
-  return not(lhs == rhs);
-}
-
 BOOST_AUTO_TEST_CASE(dynamic_ubb) {
-  using Dynamic_UBB_f = walberla::lbm::Dynamic_UBB_single_precision;
-  using Dynamic_UBB_d = walberla::lbm::Dynamic_UBB_double_precision;
+  using namespace walberla::detail;
+  using Dynamic_UBB_f = BoundaryHandlingTrait<float>::DynamicUBB;
+  using Dynamic_UBB_d = BoundaryHandlingTrait<double>::DynamicUBB;
 
   // check IndexInfo
   auto vel1_f = Dynamic_UBB_f::IndexInfo(1, 2, 3, 0);

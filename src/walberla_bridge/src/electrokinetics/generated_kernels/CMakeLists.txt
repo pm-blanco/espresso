@@ -19,7 +19,7 @@
 
 foreach(precision double_precision single_precision)
   target_sources(
-    espresso_walberla
+    espresso_walberla_codegen
     PRIVATE DiffusiveFluxKernel_${precision}.cpp
             DiffusiveFluxKernelThermalized_${precision}.cpp
             DiffusiveFluxKernelWithElectrostatic_${precision}.cpp
