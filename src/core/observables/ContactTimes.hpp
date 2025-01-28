@@ -106,7 +106,6 @@ public:
     auto const &system = System::get_system();
     auto const &box_geo  = *system.box_geo;
     auto &cell_structure = *system.cell_structure;
-    auto neighbor_map = get_neighbor_pids(system);
     double time = system.get_sim_time();
     double dt = system.get_time_step();
     auto ids1=this->ids();
@@ -114,7 +113,6 @@ public:
 
     // Update the contact times
     for (auto &id1: ids1){
-      auto neighbor_pids = neighbor_map[id1].neighbor_pids;
       for (auto &id2: ids2){
         // avoid counting contact times of a particle with itself
         if (id1 == id2){continue;}
