@@ -81,14 +81,14 @@ class CylindricalProfileObservable(ProfileObservable):
         kwargs['transform_params'] = transform_params
         super().__init__(**kwargs)
 
+
 @script_interface_register
 class TimeObservable(Observable):
     """
     Base class for observables that track time
     """
 
-    
-    
+
 @script_interface_register
 class ComPosition(Observable):
 
@@ -646,6 +646,7 @@ class ParticleDistances(Observable):
     """
     _so_name = "Observables::ParticleDistances"
 
+
 @script_interface_register
 class ContactTimes(TimeObservable):
     """Tracks the contact time  between `ids` and `target_ids` within a given `contact_threshold`.
@@ -654,7 +655,7 @@ class ContactTimes(TimeObservable):
        $t_0$ the first measured time at which those particles were in contact.
        For example, if two particles have been only in contact during one time step,
        their contact time is $\tau = 0$.
-        
+
 
     Parameters
     ----------
@@ -695,19 +696,21 @@ class ContactTimes(TimeObservable):
                         "shape_instantaneous_contact_time",
                         "shape_contact_time_series",
                         )
+
     def instantaneous_contact_times(self):
-        contact_times=self.call_method("get_instantaneous_contact_times")
+        contact_times = self.call_method("get_instantaneous_contact_times")
         if contact_times is None:
             return np.array([contact_times])
         else:
             return np.array(contact_times).reshape(self.call_method("shape_instantaneous_contact_time"))
+
     def contact_times_series(self):
-        contact_times=self.call_method("get_contact_times_series")
+        contact_times = self.call_method("get_contact_times_series")
         if contact_times is None:
             return np.array([contact_times])
         else:
             return np.array(contact_times).reshape(self.call_method("shape_contact_time_series"))
-    
+
 
 @script_interface_register
 class TotalForce(Observable):
