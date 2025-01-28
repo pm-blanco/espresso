@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2022 The ESPResSo project
+ * Copyright (C) 2025 The ESPResSo project
  *
  * This file is part of ESPResSo.
  *
@@ -16,22 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef OBSERVABLES_PIDTIMEOBSERVABLE_HPP
+#define OBSERVABLES_PIDTIMEOBSERVABLE_HPP
+
 #include "PidObservable.hpp"
+#include "TimeObservable.hpp"
 
-#include "ParticleTraits.hpp"
-#include "fetch_particles.hpp"
-
-#include <functional>
 #include <vector>
 
 namespace Observables {
-std::vector<double> PidObservable::operator()() const {
-  std::vector<Particle> particles = fetch_particles(ids());
 
-  std::vector<std::reference_wrapper<const Particle>> particle_refs(
-      particles.begin(), particles.end());
-  return this->evaluate(ParticleReferenceRange(particle_refs),
-                        ParticleObservables::traits<Particle>{});
-  
-}
-} // namespace Observables
+// Observable tracking time evolution of contacts between `ids` and `target_ids` within a given `contact_threshold`
+class PidTimeObservable : public PidObservable, public TimeObservable {
+public:
+  PidTimeObservable(std::vector<int> const &ids, std::vector<int> const &target_ids, double contact_threshold)
+      : PidObservable(ids),
+        TimeObservable(contact_threshold,target_ids) {}
+};
+
+} // Namespace Observables
+#endif

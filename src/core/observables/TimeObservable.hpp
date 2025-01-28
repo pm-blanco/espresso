@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2022 The ESPResSo project
+ * Copyright (C) 2025 The ESPResSo project
  *
  * This file is part of ESPResSo.
  *
@@ -16,22 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "PidObservable.hpp"
+#ifndef OBSERVABLES_TIMEOBSERVABLE_HPP
+#define OBSERVABLES_TIMEOBSERVABLE_HPP
 
-#include "ParticleTraits.hpp"
-#include "fetch_particles.hpp"
+#include "Observable.hpp"
 
-#include <functional>
+#include <utils/math/make_lin_space.hpp>
+
+#include <algorithm>
+#include <array>
+#include <cstddef>
+#include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace Observables {
-std::vector<double> PidObservable::operator()() const {
-  std::vector<Particle> particles = fetch_particles(ids());
 
-  std::vector<std::reference_wrapper<const Particle>> particle_refs(
-      particles.begin(), particles.end());
-  return this->evaluate(ParticleReferenceRange(particle_refs),
-                        ParticleObservables::traits<Particle>{});
+/** Observable tracking time evolution of contacts between `ids` and `target_ids` within a given `contact_threshold` */
+class TimeObservable : virtual public Observable {
+public:
+  double contact_threshold;
+  std::vector<int> const target_ids;
+  TimeObservable(double contact_threshold,std::vector<int> const &target_ids)
+      : contact_threshold(contact_threshold), target_ids(target_ids) {}
   
-}
-} // namespace Observables
+  };
+
+} // Namespace Observables
+#endif

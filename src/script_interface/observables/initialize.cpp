@@ -26,7 +26,8 @@
 #include "PidProfileObservable.hpp"
 #include "ProfileObservable.hpp"
 #include "RDF.hpp"
-#include "config.hpp"
+#include "ContactTimes.hpp"
+#include "config/config.hpp"
 
 #include "core/observables/BondAngles.hpp"
 #include "core/observables/BondDihedrals.hpp"
@@ -51,11 +52,12 @@
 #include "core/observables/ParticleVelocities.hpp"
 #include "core/observables/RDF.hpp"
 #include "core/observables/TotalForce.hpp"
+#include "core/observables/ContactTimes.hpp"
 
 namespace ScriptInterface {
 namespace Observables {
 
-/** @name %Observables registration
+/** @name Observables registration
  *  Convenience macro functions to automatize the registration of observable
  *  interfaces via a factory.
  */
@@ -65,13 +67,6 @@ namespace Observables {
  *  "ParamlessObservableInterface"
  */
 #define REGISTER(name) om->register_new<name>("Observables::" #name "");
-
-/** Register a @ref ScriptInterface::Observables::ProfileObservable
- *  "ProfileObservable"
- */
-#define REGISTER_PROFILE_OBS(name)                                             \
-  om->register_new<ProfileObservable<::Observables::name>>(                    \
-      "Observables::" #name "");
 
 /** Register a @ref ScriptInterface::Observables::PidObservable
  *  "PidObservable"
@@ -110,6 +105,11 @@ namespace Observables {
       "Observables::" #name "");
 /**@}*/
 
+#define REGISTER_CONTACTTIMES(name)                                         \
+  om->register_new<ContactTimes<::Observables::name>>(                 \
+      "Observables::" #name "");
+
+
 void initialize(Utils::Factory<ObjectHandle> *om) {
   // Manual registration:
   //  om->register_new<ScriptInterface::Observables::ParticleVelocities>::
@@ -145,6 +145,8 @@ void initialize(Utils::Factory<ObjectHandle> *om) {
   REGISTER_CYLPID_PROFILE_OBS(CylindricalDensityProfile);
   REGISTER_CYLPID_PROFILE_OBS(CylindricalVelocityProfile);
   REGISTER_CYLPID_PROFILE_OBS(CylindricalFluxDensityProfile);
+  REGISTER_CONTACTTIMES(ContactTimes);
+
 #ifdef DPD
   REGISTER(DPDStress)
 #endif

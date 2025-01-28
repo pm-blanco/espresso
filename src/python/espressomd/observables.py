@@ -32,7 +32,7 @@ class Observable(ScriptInterfaceHelper):
     """
     _so_name = "Observables::Observable"
     _so_bind_methods = ("shape",)
-    _so_creation_policy = "LOCAL"
+    _so_creation_policy = "GLOBAL"
 
     def calculate(self):
         return np.array(self.call_method("calculate")).reshape(self.shape())
@@ -81,7 +81,14 @@ class CylindricalProfileObservable(ProfileObservable):
         kwargs['transform_params'] = transform_params
         super().__init__(**kwargs)
 
+@script_interface_register
+class TimeObservable(Observable):
+    """
+    Base class for observables that track time
+    """
 
+    
+    
 @script_interface_register
 class ComPosition(Observable):
 
@@ -563,6 +570,60 @@ class ParticleVelocities(Observable):
 
 
 @script_interface_register
+class ParticleDirectors(Observable):
+
+    """Calculates the particle directors for particles with given ids.
+
+    Output format: :math:`(d^x_1,\\ d^y_1,\\ d^z_1),\\ (d^x_2,\\ d^y_2,\\ d^z_2),\\ \\dots,\\ (d^x_n,\\ d^y_n,\\ d^z_n)`.
+
+    The particles are ordered according to the list of ids passed to the observable.
+
+    Parameters
+    ----------
+    ids : array_like of :obj:`int`
+        The ids of (existing) particles to take into account.
+
+    Methods
+    -------
+    calculate()
+        Run the observable.
+
+        Returns
+        -------
+        (N, 3) :obj:`ndarray` of :obj:`float`
+
+    """
+    _so_name = "Observables::ParticleDirectors"
+
+
+@script_interface_register
+class ParticleDipoleFields(Observable):
+
+    """Calculates the particle dipole fields for particles with given ids.
+
+    Output format: :math:`(h^x_1,\\ h^y_1,\\ h^z_1),\\ (h^x_2,\\ h^y_2,\\ h^z_2),\\ \\dots,\\ (h^x_n,\\ h^y_n,\\ h^z_n)`.
+
+    The particles are ordered according to the list of ids passed to the observable.
+
+    Parameters
+    ----------
+    ids : array_like of :obj:`int`
+        The ids of (existing) particles to take into account.
+
+    Methods
+    -------
+    calculate()
+        Run the observable.
+
+        Returns
+        -------
+        (N, 3) :obj:`ndarray` of :obj:`float`
+
+    """
+    _so_name = "Observables::ParticleDipoleFields"
+
+
+@script_interface_register
 class ParticleDistances(Observable):
 
     """Calculates the distances between particles with given ids along a
@@ -585,6 +646,68 @@ class ParticleDistances(Observable):
     """
     _so_name = "Observables::ParticleDistances"
 
+@script_interface_register
+class ContactTimes(TimeObservable):
+    """Tracks the contact time  between `ids` and `target_ids` within a given `contact_threshold`.
+       For a given pair of particles, their contact time is defined as $\tau = t_f - t_0$, where 
+       $t_f$ is the last measured time at which those particles were in contact and
+       $t_0$ the first measured time at which those particles were in contact.
+       For example, if two particles have been only in contact during one time step,
+       their contact time is $\tau = 0$.
+        
+
+    Parameters
+    ----------
+    ids : array_like of :obj:`int`
+        The first set of ids of particles.
+
+    target_ids : array_like of :obj:`int`
+        The second set of (target) ids of particles.
+
+    contact_threshold : :obj:`float`
+        Distance threshold to consider two particles in contact.
+
+    Methods
+    -------
+    contact_times_series()
+        Returns the time series of the contact times gathered during simulation time.
+
+        Returns
+        -------
+        (N - 1,) :obj:`ndarray` of :obj:`float`
+
+    instantaneous_contact_times()
+        Returns the instantaneous contact times of the last system configuration (taking into account previous history).
+
+        Returns
+        -------
+        (N - 1,) :obj:`ndarray` of :obj:`float`
+
+    clean_contact_times()
+        Cleans the series of contact times in memory.    
+
+    """
+    _so_name = "Observables::ContactTimes"
+    _so_bind_methods = ("clean_contact_times",
+                        "get_instantaneous_contact_times",
+                        "get_contact_times_series",
+                        "shape",
+                        "shape_instantaneous_contact_time",
+                        "shape_contact_time_series",
+                        )
+    def instantaneous_contact_times(self):
+        contact_times=self.call_method("get_instantaneous_contact_times")
+        if contact_times is None:
+            return np.array([contact_times])
+        else:
+            return np.array(contact_times).reshape(self.call_method("shape_instantaneous_contact_time"))
+    def contact_times_series(self):
+        contact_times=self.call_method("get_contact_times_series")
+        if contact_times is None:
+            return np.array([contact_times])
+        else:
+            return np.array(contact_times).reshape(self.call_method("shape_contact_time_series"))
+    
 
 @script_interface_register
 class TotalForce(Observable):
