@@ -26,12 +26,14 @@
 
 namespace Observables {
 
-// Observable tracking time evolution of contacts between `ids` and `target_ids` within a given `contact_threshold`
+// Observable tracking time evolution of contacts between `ids` and `target_ids`
+// within a given `contact_threshold`
 class PidTimeObservable : public PidObservable, public TimeObservable {
 public:
-  PidTimeObservable(std::vector<int> const &ids, std::vector<int> const &target_ids, double contact_threshold)
-      : PidObservable(ids),
-        TimeObservable(contact_threshold,target_ids) {}
+  PidTimeObservable(std::vector<int> const &ids,
+                    std::vector<int> const &target_ids,
+                    double contact_threshold)
+      : PidObservable(ids), TimeObservable(contact_threshold, target_ids) {}
 };
 
 } // Namespace Observables

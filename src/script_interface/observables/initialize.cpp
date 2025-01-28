@@ -18,6 +18,7 @@
  */
 
 #include "initialize.hpp"
+#include "ContactTimes.hpp"
 #include "CylindricalLBProfileObservable.hpp"
 #include "CylindricalPidProfileObservable.hpp"
 #include "LBProfileObservable.hpp"
@@ -26,13 +27,13 @@
 #include "PidProfileObservable.hpp"
 #include "ProfileObservable.hpp"
 #include "RDF.hpp"
-#include "ContactTimes.hpp"
 #include "config/config.hpp"
 
 #include "core/observables/BondAngles.hpp"
 #include "core/observables/BondDihedrals.hpp"
 #include "core/observables/ComPosition.hpp"
 #include "core/observables/ComVelocity.hpp"
+#include "core/observables/ContactTimes.hpp"
 #include "core/observables/CosPersistenceAngles.hpp"
 #include "core/observables/CylindricalDensityProfile.hpp"
 #include "core/observables/CylindricalFluxDensityProfile.hpp"
@@ -54,7 +55,6 @@
 #include "core/observables/ParticleVelocities.hpp"
 #include "core/observables/RDF.hpp"
 #include "core/observables/TotalForce.hpp"
-#include "core/observables/ContactTimes.hpp"
 
 namespace ScriptInterface {
 namespace Observables {
@@ -107,10 +107,8 @@ namespace Observables {
       "Observables::" #name "");
 /**@}*/
 
-#define REGISTER_CONTACTTIMES(name)                                         \
-  om->register_new<ContactTimes<::Observables::name>>(                 \
-      "Observables::" #name "");
-
+#define REGISTER_CONTACTTIMES(name)                                            \
+  om->register_new<ContactTimes<::Observables::name>>("Observables::" #name "");
 
 void initialize(Utils::Factory<ObjectHandle> *om) {
   // Manual registration:

@@ -32,15 +32,15 @@
 
 namespace Observables {
 
-/** Observable tracking time evolution of contacts between `ids` and `target_ids` within a given `contact_threshold` */
+/** Observable tracking time evolution of contacts between `ids` and
+ * `target_ids` within a given `contact_threshold` */
 class TimeObservable : virtual public Observable {
 public:
   double contact_threshold;
   std::vector<int> const target_ids;
-  TimeObservable(double contact_threshold,std::vector<int> const &target_ids)
+  TimeObservable(double contact_threshold, std::vector<int> const &target_ids)
       : contact_threshold(contact_threshold), target_ids(target_ids) {}
-  
-  };
+};
 
 } // Namespace Observables
 #endif

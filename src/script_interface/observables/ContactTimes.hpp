@@ -25,8 +25,8 @@
 #include "script_interface/auto_parameters/AutoParameters.hpp"
 #include "script_interface/observables/Observable.hpp"
 
-#include "core/observables/LBVelocityProfile.hpp"
 #include "core/observables/ContactTimes.hpp"
+#include "core/observables/LBVelocityProfile.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -39,55 +39,55 @@ namespace ScriptInterface {
 namespace Observables {
 
 template <typename CoreObs>
-class ContactTimes
-    : public AutoParameters<ContactTimes<CoreObs>, Observable> {
+class ContactTimes : public AutoParameters<ContactTimes<CoreObs>, Observable> {
   using Base = AutoParameters<ContactTimes<CoreObs>, Observable>;
 
 public:
   using Base::Base;
-  
+
   ContactTimes() {
     this->add_parameters(
         {{"ids", AutoParameter::read_only,
           [this]() { return time_observable()->ids(); }},
-          {"target_ids", AutoParameter::read_only,
+         {"target_ids", AutoParameter::read_only,
           [this]() { return time_observable()->target_ids; }},
-          {"contact_threshold", AutoParameter::read_only,
+         {"contact_threshold", AutoParameter::read_only,
           [this]() { return time_observable()->contact_threshold; }}});
   }
 
   void do_construct(VariantMap const &params) override {
     ObjectHandle::context()->parallel_try_catch([&]() {
-      m_observable =
-          make_shared_from_args<CoreObs, std::vector<int>, std::vector<int>, double>(
-              params, "ids", "target_ids", "contact_threshold");
+      m_observable = make_shared_from_args<CoreObs, std::vector<int>,
+                                           std::vector<int>, double>(
+          params, "ids", "target_ids", "contact_threshold");
     });
   }
 
-  Variant do_call_method(const std::string &method, VariantMap const &parameters) override {
-  if (method == "clean_contact_times") {
-    time_observable()->clean_contact_times();
-    return {};
+  Variant do_call_method(const std::string &method,
+                         VariantMap const &parameters) override {
+    if (method == "clean_contact_times") {
+      time_observable()->clean_contact_times();
+      return {};
+    }
+    if (method == "shape_instantaneous_contact_time") {
+      auto const shape = time_observable()->shape_instantaneous_contact_time();
+      return std::vector<int>{shape.begin(), shape.end()};
+    }
+    if (method == "shape_contact_time_series") {
+      auto const shape = time_observable()->shape_contact_time_series();
+      return std::vector<int>{shape.begin(), shape.end()};
+    }
+    if (method == "get_contact_times_series") {
+      auto const series = time_observable()->get_contact_times_series();
+      return std::vector<double>{series.begin(), series.end()};
+    }
+    if (method == "get_instantaneous_contact_times") {
+      auto const series = time_observable()->get_instantaneous_contact_times();
+      return std::vector<double>{series.begin(), series.end()};
+    }
+    return Base::do_call_method(
+        method, parameters); // Call base class for unsupported methods
   }
-  if (method == "shape_instantaneous_contact_time") {
-    auto const shape = time_observable()->shape_instantaneous_contact_time();
-    return std::vector<int>{shape.begin(), shape.end()};
-  }
-  if (method == "shape_contact_time_series") {
-    auto const shape = time_observable()->shape_contact_time_series();
-    return std::vector<int>{shape.begin(), shape.end()};
-  }
-  if (method == "get_contact_times_series") {
-    auto const series = time_observable()->get_contact_times_series();
-    return std::vector<double>{series.begin(), series.end()};
-  }
-  if (method == "get_instantaneous_contact_times") {
-    auto const series = time_observable()->get_instantaneous_contact_times();
-    return std::vector<double>{series.begin(), series.end()};
-  }
-  return Base::do_call_method(method, parameters);  // Call base class for unsupported methods
-}
-
 
   std::shared_ptr<::Observables::ContactTimes> time_observable() const {
     return m_observable;
@@ -101,9 +101,7 @@ private:
   std::shared_ptr<CoreObs> m_observable;
 };
 
-}  // namespace Observables
-}  // namespace ScriptInterface
-
-
+} // namespace Observables
+} // namespace ScriptInterface
 
 #endif
