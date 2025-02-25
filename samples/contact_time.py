@@ -32,7 +32,7 @@ def calculate_contact_times(accumulator_ids1,accumulator_ids2,contact_threshold,
         coord_set_ids=coords_ids[n_coord]
         coord_set_target=coords_target[n_coord]
         for index1 in range(n_ids1):
-            for index2 in range(n_ids2):
+            for index2 in range(index1,n_ids2):
                 if index1 == index2:
                     continue
                 dist=calculate_minimum_image_distance(coord_set_ids[index1],
@@ -162,7 +162,6 @@ elif mode == "python":
                                             contact_threshold=contact_threshold,
                                             system=system)
     
-
 # Output the data as a json dictionary
 with open(f"contact_times_{mode}.json", "w") as outfile: 
     json.dump({"contact_times":contact_times}, outfile)

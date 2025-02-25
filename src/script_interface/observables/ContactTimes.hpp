@@ -69,10 +69,7 @@ public:
     time_observable()->clean_contact_times();
     return {};
   }
-  if (method == "shape_instantaneous_contact_time") {
-    auto const shape = time_observable()->shape_instantaneous_contact_time();
-    return std::vector<int>{shape.begin(), shape.end()};
-  }
+  
   if (method == "shape_contact_time_series") {
     auto const shape = time_observable()->shape_contact_time_series();
     return std::vector<int>{shape.begin(), shape.end()};
@@ -81,10 +78,7 @@ public:
     auto const series = time_observable()->get_contact_times_series();
     return std::vector<double>{series.begin(), series.end()};
   }
-  if (method == "get_instantaneous_contact_times") {
-    auto const series = time_observable()->get_instantaneous_contact_times();
-    return std::vector<double>{series.begin(), series.end()};
-  }
+  
   return Base::do_call_method(method, parameters);  // Call base class for unsupported methods
 }
 

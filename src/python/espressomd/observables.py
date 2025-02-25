@@ -676,31 +676,17 @@ class ContactTimes(TimeObservable):
         -------
         (N - 1,) :obj:`ndarray` of :obj:`float`
 
-    instantaneous_contact_times()
-        Returns the instantaneous contact times of the last system configuration (taking into account previous history).
-
-        Returns
-        -------
-        (N - 1,) :obj:`ndarray` of :obj:`float`
-
     clean_contact_times()
         Cleans the series of contact times in memory.    
 
     """
     _so_name = "Observables::ContactTimes"
     _so_bind_methods = ("clean_contact_times",
-                        "get_instantaneous_contact_times",
                         "get_contact_times_series",
                         "shape",
-                        "shape_instantaneous_contact_time",
                         "shape_contact_time_series",
                         )
-    def instantaneous_contact_times(self):
-        contact_times=self.call_method("get_instantaneous_contact_times")
-        if contact_times is None:
-            return np.array([contact_times])
-        else:
-            return np.array(contact_times).reshape(self.call_method("shape_instantaneous_contact_time"))
+
     def contact_times_series(self):
         contact_times=self.call_method("get_contact_times_series")
         if contact_times is None:
